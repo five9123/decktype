@@ -6,6 +6,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { HtmlLangSetter } from '@/components/HtmlLangSetter';
 import { BASE_URL } from '@/lib/constants';
 import { THEMES } from '@/lib/themes';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </AuthProvider>
           </LanguageProvider>
         </PreferencesProvider>
+        <Analytics />
       </body>
     </html>
   );
