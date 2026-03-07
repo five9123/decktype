@@ -120,16 +120,19 @@ export default function HomePage() {
               <p className="text-xs font-medium mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
                 FRONT
               </p>
-              <p className="text-3xl font-bold mb-6" style={{ color: 'var(--text)' }}>
-                脳
+              <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text)' }}>
+                자전거
+              </p>
+              <p className="text-base mb-6" style={{ color: 'var(--muted)' }}>
+                bicycle
               </p>
               <div className="flex justify-center flex-wrap gap-0.5 font-mono text-xl mb-6">
-                {['の','う'].map((ch, i) => (
+                {['자','전','거'].map((ch, i) => (
                   <span
                     key={i}
                     style={{
                       color: i < 1 ? 'var(--correct)' : i === 1 ? 'var(--incorrect)' : 'var(--muted)',
-                      opacity: 1,
+                      opacity: i === 2 ? 0.4 : 1,
                     }}
                   >
                     {ch}
@@ -144,7 +147,7 @@ export default function HomePage() {
                   color: 'var(--text)',
                 }}
               >
-                の<span style={{ borderRight: '2px solid var(--accent)' }}>&nbsp;</span>
+                자<span style={{ borderRight: '2px solid var(--accent)' }}>&nbsp;</span>
               </div>
               <div className="flex justify-center gap-6 mt-5 text-sm" style={{ color: 'var(--muted)' }}>
                 <span><span style={{ color: 'var(--accent)', fontWeight: 700 }}>74</span> WPM</span>
