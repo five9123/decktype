@@ -123,6 +123,9 @@ export default function HomePage() {
               <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text)' }}>
                 자전거
               </p>
+              <p className="text-sm mb-1" style={{ color: 'var(--accent)', opacity: 0.8 }}>
+                jajeongeo
+              </p>
               <p className="text-base mb-6" style={{ color: 'var(--muted)' }}>
                 bicycle
               </p>
