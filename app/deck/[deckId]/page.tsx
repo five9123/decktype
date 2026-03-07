@@ -24,6 +24,9 @@ export default function DeckDetailPage() {
   const [mode, setMode] = useState<PracticeMode>('front_to_back');
   const [order, setOrder] = useState<CardOrder>('sequential');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [editingCardId, setEditingCardId] = useState<string | null>(null);
+  const [editValues, setEditValues] = useState<{ front: string; back: string }>({ front: '', back: '' });
+  const [savingCard, setSavingCard] = useState(false);
 
   const { masteryMap, getDeckProgress } = useMastery(deckId);
   const progress = getDeckProgress();
@@ -45,6 +48,29 @@ export default function DeckDetailPage() {
       setLoading(false);
     });
   }, [user, deckId]);
+
+  const startEdit = (card: Card) => {
+    setEditingCardId(card.id);
+    setEditValues({ front: card.front, back: card.back });
+  };
+
+  const cancelEdit = () => {
+    setEditingCardId(null);
+  };
+
+  const saveEdit = async (cardId: string) => {
+    setSavingCard(true);
+    const supabase = createBrowserClient();
+    const { error } = await supabase
+      .from('cards')
+      .update({ front: editValues.front, back: editValues.back })
+      .eq('id', cardId);
+    if (!error) {
+      setCards((prev) => prev.map((c) => c.id === cardId ? { ...c, ...editValues } : c));
+      setEditingCardId(null);
+    }
+    setSavingCard(false);
+  };
 
   const handleDelete = async () => {
     const supabase = createBrowserClient();
@@ -215,31 +241,94 @@ export default function DeckDetailPage() {
           </Link>
         </div>
 
-        {/* Card List Preview */}
+        {/* Card List */}
         <h2 className="font-bold mb-4" style={{ color: 'var(--text)' }}>{t.cardPreview}</h2>
         <div className="space-y-2">
-          {cards.slice(0, 10).map((card, i) => {
+          {cards.map((card, i) => {
             const mastery = masteryMap.get(card.id);
+            const isEditing = editingCardId === card.id;
             return (
               <div
                 key={card.id}
-                className="flex items-center gap-4 px-4 py-3 rounded-xl text-sm"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                className="px-4 py-3 rounded-xl text-sm"
+                style={{ background: 'var(--surface)', border: `1px solid ${isEditing ? 'var(--accent)' : 'var(--border)'}` }}
               >
-                <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
-                <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
-                <span className="flex-1" style={{ color: 'var(--muted)' }}>{card.back}</span>
-                {mastery && (
-                  <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
+                {isEditing ? (
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <div className="flex-1">
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>FRONT</p>
+                        <textarea
+                          value={editValues.front}
+                          onChange={(e) => setEditValues((v) => ({ ...v, front: e.target.value }))}
+                          rows={2}
+                          className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                          style={{
+                            background: 'var(--bg)',
+                            border: '1px solid var(--border)',
+                            color: 'var(--text)',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>BACK</p>
+                        <textarea
+                          value={editValues.back}
+                          onChange={(e) => setEditValues((v) => ({ ...v, back: e.target.value }))}
+                          rows={2}
+                          className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                          style={{
+                            background: 'var(--bg)',
+                            border: '1px solid var(--border)',
+                            color: 'var(--text)',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={cancelEdit}
+                        className="px-3 py-1 rounded-lg text-xs"
+                        style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
+                      >
+                        {t.cancel}
+                      </button>
+                      <button
+                        onClick={() => saveEdit(card.id)}
+                        disabled={savingCard}
+                        className="px-3 py-1 rounded-lg text-xs font-medium"
+                        style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', opacity: savingCard ? 0.6 : 1 }}
+                      >
+                        {savingCard ? t.loading : t.confirm}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-4">
+                    <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
+                    <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
+                    <span className="flex-1" style={{ color: 'var(--muted)' }}>{card.back}</span>
+                    {mastery && (
+                      <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
+                    )}
+                    <button
+                      onClick={() => startEdit(card)}
+                      className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+                      aria-label="Edit card"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                  </div>
                 )}
               </div>
             );
           })}
-          {cards.length > 10 && (
-            <p className="text-center text-sm py-2" style={{ color: 'var(--muted)' }}>
-              + {cards.length - 10} more cards
-            </p>
-          )}
         </div>
       </main>
     </>
