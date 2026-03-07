@@ -53,8 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       var old = localStorage.getItem('atype-theme');
       if (old && THEMES[old]) { prefs = { theme: old }; }
     }
-    var id = (prefs && prefs.theme && THEMES[prefs.theme]) ? prefs.theme : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    var c = THEMES[id] || THEMES['dark'];
+    var id = (prefs && prefs.theme && THEMES[prefs.theme]) ? prefs.theme : 'light';
+    var c = THEMES[id] || THEMES['light'];
     var r = document.documentElement;
     r.setAttribute('data-theme', id);
     for (var k in c) { r.style.setProperty('--' + k, c[k]); }

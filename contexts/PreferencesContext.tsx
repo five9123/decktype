@@ -14,7 +14,7 @@ interface Preferences {
 }
 
 const DEFAULTS: Preferences = {
-  theme: 'dark',
+  theme: 'light',
   fontSize: 'medium',
   soundEnabled: false,
   soundType: 'mechanical',
