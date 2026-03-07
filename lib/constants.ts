@@ -6,7 +6,9 @@ export const LANGS: { code: Lang; label: string; flag: string }[] = [
   { code: 'en', label: 'English',  flag: '🇬🇧' },
   { code: 'ko', label: '한국어',   flag: '🇰🇷' },
   { code: 'ja', label: '日本語',   flag: '🇯🇵' },
+  { code: 'zh', label: '中文',     flag: '🇨🇳' },
   { code: 'es', label: 'Español',  flag: '🇪🇸' },
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
 ];
 
 /** Max upload file size: 20MB */
