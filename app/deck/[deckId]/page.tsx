@@ -257,7 +257,7 @@ export default function DeckDetailPage() {
                   <div className="space-y-2">
                     <div className="flex gap-2">
                       <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>단어 (FRONT)</p>
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnFront}</p>
                         <textarea
                           value={editValues.front}
                           onChange={(e) => setEditValues((v) => ({ ...v, front: e.target.value }))}
@@ -272,7 +272,7 @@ export default function DeckDetailPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>뜻 (BACK)</p>
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnBack}</p>
                         <textarea
                           value={editValues.back}
                           onChange={(e) => setEditValues((v) => ({ ...v, back: e.target.value }))}
@@ -287,7 +287,7 @@ export default function DeckDetailPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>발음</p>
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnPronunciation}</p>
                         <textarea
                           value={editValues.pronunciation}
                           onChange={(e) => setEditValues((v) => ({ ...v, pronunciation: e.target.value }))}

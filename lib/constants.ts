@@ -15,8 +15,8 @@ export const LANGS: { code: Lang; label: string; flag: string }[] = [
 export const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
 
 /** Free plan limits */
-export const FREE_DECK_LIMIT = 3;
-export const FREE_CARDS_PER_DECK = 200;
+export const FREE_DECK_LIMIT = 1;
+export const FREE_CARDS_PER_DECK = 100;
 
 /** Scoring weights */
 export const ACCURACY_WEIGHT = 0.7;

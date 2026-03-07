@@ -56,8 +56,8 @@ export default function CreateDeckPage() {
 
   const handleSave = async () => {
     if (!user) return;
-    if (!deckName.trim()) { setError('덱 이름을 입력해주세요.'); return; }
-    if (filledRows.length === 0) { setError('카드를 1개 이상 입력해주세요.'); return; }
+    if (!deckName.trim()) { setError(t.deckNameRequired); return; }
+    if (filledRows.length === 0) { setError(t.cardsRequired); return; }
     setError('');
     setSaving(true);
 
@@ -95,7 +95,7 @@ export default function CreateDeckPage() {
       }));
       const { error: cardsErr } = await supabase.from('cards').insert(batch);
       if (cardsErr) {
-        setError('카드 저장 중 오류가 발생했습니다.');
+        setError(t.cardSaveError);
         setSaving(false);
         return;
       }
@@ -111,9 +111,9 @@ export default function CreateDeckPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>새 덱 만들기</h1>
+            <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{t.createDeckTitle}</h1>
             <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
-              카드를 직접 입력해서 덱을 만드세요 (최대 {FREE_CARDS_PER_DECK}개)
+              {t.createDeckSubtitle} (max {FREE_CARDS_PER_DECK})
             </p>
           </div>
           <button
@@ -128,20 +128,20 @@ export default function CreateDeckPage() {
               opacity: saving ? 0.7 : 1,
             }}
           >
-            {saving ? '저장 중...' : `저장 (${filledRows.length}장)`}
+            {saving ? t.savingLabel : `${t.saveDeck} (${filledRows.length})`}
           </button>
         </div>
 
         {/* Deck Name */}
         <div className="mb-6">
           <label className="text-xs font-medium block mb-1.5" style={{ color: 'var(--muted)' }}>
-            덱 이름 *
+            {t.deckNameLabel} *
           </label>
           <input
             type="text"
             value={deckName}
             onChange={(e) => setDeckName(e.target.value)}
-            placeholder="예) 한국어 기초 단어"
+            placeholder={t.deckNamePlaceholder}
             className="w-full px-4 py-2.5 rounded-xl text-sm"
             style={{
               background: 'var(--surface)',
@@ -177,9 +177,9 @@ export default function CreateDeckPage() {
             }}
           >
             <span>#</span>
-            <span>단어 (앞면)</span>
-            <span>뜻 (뒷면)</span>
-            <span>발음기호</span>
+            <span>{t.columnFront}</span>
+            <span>{t.columnBack}</span>
+            <span>{t.columnPronunciation}</span>
             <span />
           </div>
 
@@ -265,20 +265,20 @@ export default function CreateDeckPage() {
                 className="px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
               >
-                + 행 추가
+                {t.addRow}
               </button>
               <button
                 onClick={() => addRows(10)}
                 className="px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
               >
-                + 10행 추가
+                {t.addTenRows}
               </button>
             </>
           )}
           <span className="text-xs ml-2" style={{ color: 'var(--muted)' }}>
-            {rows.length} / {FREE_CARDS_PER_DECK}행
-            {atLimit && <span style={{ color: '#fbbf24' }}> (최대)</span>}
+            {rows.length} / {FREE_CARDS_PER_DECK}
+            {atLimit && <span style={{ color: '#fbbf24' }}> {t.maxLabel}</span>}
           </span>
         </div>
       </main>

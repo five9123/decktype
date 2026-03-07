@@ -65,7 +65,7 @@ export default function DashboardPage() {
                 pointerEvents: atLimit ? 'none' : 'auto',
               }}
             >
-              + 직접 만들기
+              {t.createDeck}
             </Link>
             <Link
               href={atLimit ? '#' : '/upload'}

@@ -17,7 +17,7 @@ export default function HomePage() {
   }
 
   const ctaHref = user ? '/dashboard' : '/auth/login';
-  const ctaLabel = user ? t.myDecks : 'Start for Free';
+  const ctaLabel = user ? t.myDecks : t.startForFree;
 
   return (
     <>
@@ -47,16 +47,16 @@ export default function HomePage() {
             }}
           >
             <span style={{ color: 'var(--accent)', fontSize: '0.6rem' }}>●</span>
-            Free to start · No credit card required
+            {t.landingBadge}
           </div>
 
           {/* Headline */}
           <h1 className="font-bold leading-tight mb-6" style={{ maxWidth: 700 }}>
             <span className="block" style={{ fontSize: 'clamp(2.5rem, 7vw, 5rem)', color: 'var(--text)' }}>
-              Type it. Learn it.
+              {t.landingHero1}
             </span>
             <span className="block" style={{ fontSize: 'clamp(2.5rem, 7vw, 5rem)', color: 'var(--accent)' }}>
-              Master any deck.
+              {t.landingHero2}
             </span>
           </h1>
 
@@ -65,7 +65,7 @@ export default function HomePage() {
             className="text-lg mb-10 leading-relaxed"
             style={{ maxWidth: 520, color: 'var(--muted)' }}
           >
-            Turn your Anki flashcards into a typing practice session. Build muscle memory, track WPM, and actually remember what you study.
+            {t.landingSubtext}
           </p>
 
           {/* CTAs */}
@@ -78,7 +78,7 @@ export default function HomePage() {
               {ctaLabel} →
             </Link>
             <Link
-              href="#how-it-works"
+              href="/demo"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-medium no-underline transition-opacity hover:opacity-80"
               style={{
                 background: 'var(--surface)',
@@ -86,7 +86,7 @@ export default function HomePage() {
                 color: 'var(--text)',
               }}
             >
-              See how it works
+              {t.tryDemo} →
             </Link>
           </div>
 
@@ -161,32 +161,17 @@ export default function HomePage() {
         {/* ── How It Works ── */}
         <section id="how-it-works" className="px-4 py-24 text-center">
           <p className="text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--accent)' }}>
-            HOW IT WORKS
+            {t.howItWorksLabel}
           </p>
           <h2 className="text-4xl font-bold mb-16" style={{ color: 'var(--text)' }}>
-            Three steps. Zero friction.
+            {t.howItWorksTitle}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
-              {
-                step: '01',
-                title: 'Upload your deck',
-                desc: 'Drop any .apkg Anki file. We parse it instantly — cards, fields, and all.',
-                icon: '📦',
-              },
-              {
-                step: '02',
-                title: 'Type your answers',
-                desc: 'See the front of each card. Type the answer. Get instant feedback on every keystroke.',
-                icon: '⌨️',
-              },
-              {
-                step: '03',
-                title: 'Watch yourself improve',
-                desc: 'Track WPM, accuracy, and mastery level for every single card over time.',
-                icon: '📈',
-              },
+              { step: '01', title: t.step01Title, desc: t.step01Desc, icon: '📦' },
+              { step: '02', title: t.step02Title, desc: t.step02Desc, icon: '⌨️' },
+              { step: '03', title: t.step03Title, desc: t.step03Desc, icon: '📈' },
             ].map((s) => (
               <div
                 key={s.step}
@@ -205,19 +190,19 @@ export default function HomePage() {
         {/* ── Features ── */}
         <section className="px-4 py-16 text-center">
           <p className="text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--accent)' }}>
-            FEATURES
+            {t.featuresLabel}
           </p>
           <h2 className="text-4xl font-bold mb-16" style={{ color: 'var(--text)' }}>
-            Built for real learning.
+            {t.featuresTitle}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {/* Card 1 — Smart Review */}
             <div className="p-8 rounded-2xl text-left" style={{ background: '#3730a3', border: '1px solid #4338ca' }}>
               <div className="text-3xl mb-4">🧠</div>
-              <h3 className="text-xl font-bold mb-3 text-white">Smart Review Algorithm</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">{t.feature1Title}</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Cards you keep getting wrong appear more often. Cards you&apos;ve mastered fade back. Powered by a confidence score that updates in real time.
+                {t.feature1Desc}
               </p>
               <div className="mt-5 flex gap-2 flex-wrap">
                 {['SRS', 'Adaptive', 'Per-card confidence'].map((tag) => (
@@ -229,9 +214,9 @@ export default function HomePage() {
             {/* Card 2 — Themes */}
             <div className="p-8 rounded-2xl text-left" style={{ background: '#831843', border: '1px solid #9d174d' }}>
               <div className="text-3xl mb-4">🎨</div>
-              <h3 className="text-xl font-bold mb-3 text-white">10 Beautiful Themes</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">{t.feature2Title}</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Dark, Light, Dracula, Nord, Tokyo Night, and more. Switch instantly. Your preference is saved locally — no account needed.
+                {t.feature2Desc}
               </p>
               <div className="mt-5 flex gap-1.5">
                 {['#1e1e2e','#faf4ed','#282a36','#2e3440','#1a1b26','#282828'].map((c) => (
@@ -243,9 +228,9 @@ export default function HomePage() {
             {/* Card 3 — WPM & Stats */}
             <div className="p-8 rounded-2xl text-left" style={{ background: '#78350f', border: '1px solid #92400e' }}>
               <div className="text-3xl mb-4">📊</div>
-              <h3 className="text-xl font-bold mb-3 text-white">Deep Progress Tracking</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">{t.feature3Title}</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Activity heatmap, WPM trend chart, personal bests, and per-card stats. Know exactly which cards you&apos;re struggling with.
+                {t.feature3Desc}
               </p>
               <div className="mt-5 flex items-end gap-1 h-10">
                 {[30, 50, 40, 70, 55, 80, 65, 90, 75, 95].map((h, i) => (
@@ -257,9 +242,9 @@ export default function HomePage() {
             {/* Card 4 — Any Language */}
             <div className="p-8 rounded-2xl text-left" style={{ background: '#14532d', border: '1px solid #166534' }}>
               <div className="text-3xl mb-4">🌍</div>
-              <h3 className="text-xl font-bold mb-3 text-white">Any Language, Any Deck</h3>
+              <h3 className="text-xl font-bold mb-3 text-white">{t.feature4Title}</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Japanese kanji, Korean vocab, Spanish verbs, medical terminology. If it&apos;s in Anki, it works here.
+                {t.feature4Desc}
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {['日本語', '한국어', 'Español', 'Français', 'Medical', '+ more'].map((lang) => (
@@ -280,13 +265,13 @@ export default function HomePage() {
             }}
           >
             <p className="text-xs font-bold tracking-widest mb-4" style={{ color: 'var(--accent)' }}>
-              GET STARTED
+              {t.getStartedLabel}
             </p>
             <h2 className="text-4xl font-bold mb-6" style={{ color: 'var(--text)' }}>
-              Start typing in seconds.
+              {t.getStartedTitle}
             </h2>
             <p className="text-base mb-10" style={{ color: 'var(--muted)', maxWidth: 400, margin: '0 auto 2.5rem' }}>
-              Upload your deck, pick a mode, and start building real memory. No setup. No config.
+              {t.getStartedDesc}
             </p>
             <Link
               href={ctaHref}
