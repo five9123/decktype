@@ -54,17 +54,31 @@ export default function DashboardPage() {
               {decks.length} / {FREE_DECK_LIMIT} {t.myDecks.toLowerCase()}
             </p>
           </div>
-          <Link
-            href={atLimit ? '#' : '/upload'}
-            className={`px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
-            style={{
-              background: 'var(--accent)',
-              color: '#FFFFFF',
-              pointerEvents: atLimit ? 'none' : 'auto',
-            }}
-          >
-            + {t.uploadDeck}
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href={atLimit ? '#' : '/create'}
+              className={`px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                pointerEvents: atLimit ? 'none' : 'auto',
+              }}
+            >
+              + 직접 만들기
+            </Link>
+            <Link
+              href={atLimit ? '#' : '/upload'}
+              className={`px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+              style={{
+                background: 'var(--accent)',
+                color: '#FFFFFF',
+                pointerEvents: atLimit ? 'none' : 'auto',
+              }}
+            >
+              + {t.uploadDeck}
+            </Link>
+          </div>
         </div>
 
         {atLimit && (
