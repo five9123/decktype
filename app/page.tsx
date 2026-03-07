@@ -214,7 +214,7 @@ export default function HomePage() {
               <div className="text-3xl mb-4">🧠</div>
               <h3 className="text-xl font-bold mb-3 text-white">Smart Review Algorithm</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Cards you keep getting wrong appear more often. Cards you've mastered fade back. Powered by a confidence score that updates in real time.
+                Cards you keep getting wrong appear more often. Cards you&apos;ve mastered fade back. Powered by a confidence score that updates in real time.
               </p>
               <div className="mt-5 flex gap-2 flex-wrap">
                 {['SRS', 'Adaptive', 'Per-card confidence'].map((tag) => (
@@ -242,7 +242,7 @@ export default function HomePage() {
               <div className="text-3xl mb-4">📊</div>
               <h3 className="text-xl font-bold mb-3 text-white">Deep Progress Tracking</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Activity heatmap, WPM trend chart, personal bests, and per-card stats. Know exactly which cards you're struggling with.
+                Activity heatmap, WPM trend chart, personal bests, and per-card stats. Know exactly which cards you&apos;re struggling with.
               </p>
               <div className="mt-5 flex items-end gap-1 h-10">
                 {[30, 50, 40, 70, 55, 80, 65, 90, 75, 95].map((h, i) => (
@@ -256,7 +256,7 @@ export default function HomePage() {
               <div className="text-3xl mb-4">🌍</div>
               <h3 className="text-xl font-bold mb-3 text-white">Any Language, Any Deck</h3>
               <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-                Japanese kanji, Korean vocab, Spanish verbs, medical terminology. If it's in Anki, it works here.
+                Japanese kanji, Korean vocab, Spanish verbs, medical terminology. If it&apos;s in Anki, it works here.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {['日本語', '한국어', 'Español', 'Français', 'Medical', '+ more'].map((lang) => (
