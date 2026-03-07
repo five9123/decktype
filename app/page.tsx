@@ -147,7 +147,7 @@ export default function HomePage() {
                   color: 'var(--text)',
                 }}
               >
-                자<span style={{ borderRight: '2px solid var(--accent)' }}>&nbsp;</span>
+                자저<span style={{ borderRight: '2px solid var(--accent)' }}>&nbsp;</span>
               </div>
               <div className="flex justify-center gap-6 mt-5 text-sm" style={{ color: 'var(--muted)' }}>
                 <span><span style={{ color: 'var(--accent)', fontWeight: 700 }}>74</span> WPM</span>
