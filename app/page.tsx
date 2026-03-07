@@ -117,9 +117,6 @@ export default function HomePage() {
             </div>
             {/* Typing UI preview */}
             <div className="p-8 text-center">
-              <p className="text-xs font-medium mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
-                FRONT
-              </p>
               <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text)' }}>
                 자전거
               </p>

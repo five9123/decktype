@@ -106,9 +106,11 @@ export default function PracticePage() {
   }, [user, deckId, order, masteryLoading, masteryMap]);
 
   const currentCard = cards[currentIdx];
-  const prompt = currentCard
-    ? mode === 'front_to_back' ? currentCard.front : currentCard.back
-    : '';
+  // Both modes show the word (front) as the main prompt
+  const prompt = currentCard ? currentCard.front : '';
+  // back_to_front (단어 타이핑): show meaning as a hint reference below the word
+  const meaningHint = currentCard && mode === 'back_to_front' ? currentCard.back : null;
+  // front_to_back: type the meaning; back_to_front: type the word
   const target = currentCard
     ? mode === 'front_to_back' ? currentCard.back : currentCard.front
     : '';
@@ -273,9 +275,6 @@ export default function PracticePage() {
         <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6">
           {/* Prompt */}
           <div className="text-center">
-            <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>
-              {mode === 'front_to_back' ? t.front : t.back}
-            </p>
             <p
               className={`text-2xl ${compact ? 'sm:text-3xl' : 'sm:text-4xl'} font-bold`}
               style={{ color: 'var(--text)' }}
@@ -283,8 +282,13 @@ export default function PracticePage() {
               {prompt}
             </p>
             {currentCard?.pronunciation && (
-              <p className="text-base mt-2" style={{ color: 'var(--muted)' }}>
+              <p className="text-base mt-1.5" style={{ color: 'var(--accent)', opacity: 0.85 }}>
                 {currentCard.pronunciation}
+              </p>
+            )}
+            {meaningHint && (
+              <p className="text-xl font-bold mt-1" style={{ color: 'var(--muted)' }}>
+                {meaningHint}
               </p>
             )}
           </div>
