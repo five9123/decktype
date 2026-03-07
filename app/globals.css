@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* Default theme values (applied by JS from theme definitions, these are fallbacks) */
+:root {
+  --bg:        #202124;
+  --surface:   #292A2D;
+  --surface2:  #3C4043;
+  --border:    #5F6368;
+  --text:      #E8EAED;
+  --muted:     #9AA0A6;
+  --accent:    #BD93F9;
+  --correct:   #4ADE80;
+  --incorrect: #F87171;
+  --typing-font-size: 1.25rem;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Char states */
+.char-idle      { color: var(--muted); opacity: 0.5; }
+.char-correct   { color: var(--correct); }
+.char-incorrect { color: var(--incorrect); text-decoration: underline; }
+.char-extra     { color: var(--incorrect); opacity: 0.7; }
+
+/* Focus indicators for accessibility */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+.card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* Light theme card shadows (auto-detected by data-theme="light") */
+[data-theme="light"] .card-hover {
+  background: #FFFFFF !important;
+  border-color: transparent !important;
+  box-shadow: 0 1px 2px rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+}
+[data-theme="light"] .card-hover:hover {
+  box-shadow: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+}
+
+/* Caret animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.caret { animation: blink 1s step-end infinite; }
+
+/* Smooth caret */
+.smooth-caret {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: left 0.12s ease;
+  pointer-events: none;
+}
+
+/* Confetti particles */
+@keyframes confetti-fall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+.confetti-particle {
+  animation: confetti-fall linear forwards;
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Drop zone */
+.dropzone-active {
+  border-color: var(--accent) !important;
+  background: rgba(139, 92, 246, 0.08) !important;
+}
+
+/* Focus mode — hide toolbar during typing */
+.focus-mode .top-toolbar {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.focus-mode:hover .top-toolbar,
+.focus-mode:focus-within .top-toolbar {
+  opacity: 1;
+  pointer-events: auto;
+}
