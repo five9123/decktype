@@ -120,11 +120,8 @@ export default function HomePage() {
               <p className="text-xs font-medium mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
                 FRONT
               </p>
-              <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text)' }}>
+              <p className="text-3xl font-bold mb-6" style={{ color: 'var(--text)' }}>
                 脳
-              </p>
-              <p className="text-lg mb-6" style={{ color: 'var(--muted)' }}>
-                のう
               </p>
               <div className="flex justify-center flex-wrap gap-0.5 font-mono text-xl mb-6">
                 {['の','う'].map((ch, i) => (
