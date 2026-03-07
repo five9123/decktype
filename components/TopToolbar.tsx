@@ -24,8 +24,7 @@ export function TopToolbar() {
         className="flex items-center gap-2 text-lg font-bold no-underline"
         style={{ color: 'var(--text)' }}
       >
-        <span style={{ color: 'var(--accent)' }}>&#9881;</span>
-        <span>{t.appName}</span>
+        <span className="text-xl font-bold tracking-tight" style={{ color: 'var(--accent)' }}>typee</span>
       </Link>
 
       <nav className="flex items-center gap-2 sm:gap-3">

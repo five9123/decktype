@@ -1,6 +1,6 @@
 import type { Lang } from '@/lib/translations';
 
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://decktype.vercel.app';
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://typee.app';
 
 export const LANGS: { code: Lang; label: string; flag: string }[] = [
   { code: 'en', label: 'English',  flag: '🇬🇧' },

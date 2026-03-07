@@ -51,7 +51,7 @@ export default function LoginPage() {
         }}
       >
         <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--text)' }}>
-          <span style={{ color: 'var(--accent)' }}>DeckType</span>
+          <span style={{ color: 'var(--accent)' }}>typee</span>
         </h1>
         <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>
           {t.subtitle.split('\n')[0]}

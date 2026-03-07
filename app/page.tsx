@@ -112,7 +112,7 @@ export default function HomePage() {
                 className="flex-1 mx-4 px-3 py-1 rounded-md text-xs text-center"
                 style={{ background: 'var(--bg)', color: 'var(--muted)' }}
               >
-                decktype.vercel.app/practice
+                typee.app/practice
               </div>
             </div>
             {/* Typing UI preview */}

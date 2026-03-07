@@ -10,8 +10,8 @@ import { THEMES } from '@/lib/themes';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'DeckType — Anki Deck Typing Practice',
-    template: '%s | DeckType',
+    default: 'typee — Anki Deck Typing Practice',
+    template: '%s | typee',
   },
   description:
     'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: 'website',
-    siteName: 'DeckType',
-    title: 'DeckType — Anki Deck Typing Practice',
+    siteName: 'typee',
+    title: 'typee — Anki Deck Typing Practice',
     description:
       'Upload your Anki deck and turn flashcards into typing practice.',
     url: BASE_URL,

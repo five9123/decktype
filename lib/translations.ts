@@ -121,10 +121,10 @@ export type Translations = {
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
   en: {
-    appName: 'DeckType',
+    appName: 'typee',
     subtitle: 'Upload your Anki deck.\nPractice typing.\nImprove memory.',
     description: 'Turn your Anki flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
-    footer: 'DeckType — Anki meets typing practice',
+    footer: 'typee — Anki meets typing practice',
 
     signIn: 'Sign In',
     signOut: 'Sign Out',
@@ -228,10 +228,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
   },
 
   ko: {
-    appName: 'DeckType',
+    appName: 'typee',
     subtitle: 'Anki 덱을 업로드하세요.\n타이핑으로 연습하세요.\n기억력을 높이세요.',
     description: 'Anki 플래시카드를 타이핑 연습으로 변환합니다. WPM, 정확도를 추적하고 카드를 더 빠르게 마스터하세요.',
-    footer: 'DeckType — Anki와 타이핑 연습의 만남',
+    footer: 'typee — Anki와 타이핑 연습의 만남',
 
     signIn: '로그인',
     signOut: '로그아웃',
@@ -335,10 +335,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
   },
 
   ja: {
-    appName: 'DeckType',
+    appName: 'typee',
     subtitle: 'Ankiデッキをアップロード。\nタイピングで練習。\n記憶力を向上。',
     description: 'Ankiフラッシュカードをタイピング練習に変換。WPM・精度を追跡してカードをマスターしよう。',
-    footer: 'DeckType — Ankiとタイピング練習の融合',
+    footer: 'typee — Ankiとタイピング練習の融合',
 
     signIn: 'ログイン',
     signOut: 'ログアウト',
@@ -442,10 +442,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
   },
 
   es: {
-    appName: 'DeckType',
+    appName: 'typee',
     subtitle: 'Sube tu mazo Anki.\nPractica escribiendo.\nMejora tu memoria.',
     description: 'Convierte tus tarjetas Anki en práctica de escritura. Mide tu WPM, precisión y domina tus tarjetas más rápido.',
-    footer: 'DeckType — Anki se une a la práctica de escritura',
+    footer: 'typee — Anki se une a la práctica de escritura',
 
     signIn: 'Iniciar sesión',
     signOut: 'Cerrar sesión',
