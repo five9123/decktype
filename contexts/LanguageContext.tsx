@@ -14,12 +14,35 @@ const LanguageContext = createContext<LanguageContextValue>({
   t: TRANSLATIONS.en,
 });
 
+/** Detect best matching Lang from browser navigator.languages */
+function detectBrowserLang(): Lang {
+  const supported = Object.keys(TRANSLATIONS) as Lang[];
+  const browserLangs = typeof navigator !== 'undefined'
+    ? [...(navigator.languages ?? []), navigator.language].filter(Boolean)
+    : [];
+
+  for (const bl of browserLangs) {
+    const prefix = bl.toLowerCase().split('-')[0];
+    // exact prefix match (e.g. 'ko', 'ja', 'fr', 'es')
+    const match = supported.find((s) => s === prefix);
+    if (match) return match;
+    // 'zh-hans', 'zh-tw', 'zh-hk' → 'zh'
+    if (prefix === 'zh') return 'zh';
+  }
+  return 'en';
+}
+
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('en');
 
   useEffect(() => {
     const saved = localStorage.getItem('atype-lang') as Lang | null;
-    if (saved && saved in TRANSLATIONS) setLangState(saved);
+    if (saved && saved in TRANSLATIONS) {
+      setLangState(saved);
+    } else {
+      // No saved preference — auto-detect from browser
+      setLangState(detectBrowserLang());
+    }
   }, []);
 
   const setLang = useCallback((l: Lang) => {
