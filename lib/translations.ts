@@ -151,8 +151,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     back: 'Back',
 
     startPractice: 'Start Practice',
-    frontToBack: 'Front → Back',
-    backToFront: 'Back → Front',
+    frontToBack: 'Type Meaning',
+    backToFront: 'Type Word',
     sequential: 'Sequential',
     random: 'Random',
     difficultFirst: 'Difficult First',
@@ -258,8 +258,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     back: '뒷면',
 
     startPractice: '연습 시작',
-    frontToBack: '앞면 → 뒷면',
-    backToFront: '뒷면 → 앞면',
+    frontToBack: '뜻 타이핑',
+    backToFront: '단어 타이핑',
     sequential: '순차',
     random: '랜덤',
     difficultFirst: '어려운 것 먼저',
@@ -365,8 +365,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     back: '裏',
 
     startPractice: '練習開始',
-    frontToBack: '表 → 裏',
-    backToFront: '裏 → 表',
+    frontToBack: '意味を入力',
+    backToFront: '単語を入力',
     sequential: '順番通り',
     random: 'ランダム',
     difficultFirst: '難しい順',
@@ -472,8 +472,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     back: 'Reverso',
 
     startPractice: 'Comenzar Práctica',
-    frontToBack: 'Frente → Reverso',
-    backToFront: 'Reverso → Frente',
+    frontToBack: 'Escribir Significado',
+    backToFront: 'Escribir Palabra',
     sequential: 'Secuencial',
     random: 'Aleatorio',
     difficultFirst: 'Difícil primero',

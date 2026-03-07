@@ -36,7 +36,7 @@ function formatElapsed(s: number): string {
 export default function PracticePage() {
   const { deckId } = useParams<{ deckId: string }>();
   const searchParams = useSearchParams();
-  const mode = (searchParams.get('mode') ?? 'front_to_back') as PracticeMode;
+  const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
   const order = (searchParams.get('order') ?? 'sequential') as CardOrder;
 
   const { user } = useAuth();

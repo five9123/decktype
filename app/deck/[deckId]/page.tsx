@@ -21,7 +21,7 @@ export default function DeckDetailPage() {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
-  const [mode, setMode] = useState<PracticeMode>('front_to_back');
+  const [mode, setMode] = useState<PracticeMode>('back_to_front');
   const [order, setOrder] = useState<CardOrder>('sequential');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
