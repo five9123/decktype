@@ -3,19 +3,10 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
   const { t } = useLanguage();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && user) {
-      router.replace('/dashboard');
-    }
-  }, [user, loading, router]);
 
   if (loading) {
     return (
@@ -49,14 +40,14 @@ export default function HomePage() {
 
           {/* CTA */}
           <Link
-            href="/auth/login"
+            href={user ? '/dashboard' : '/auth/login'}
             className="inline-block px-8 py-3 rounded-xl text-lg font-bold no-underline transition-opacity hover:opacity-90"
             style={{
               background: 'var(--accent)',
               color: '#FFFFFF',
             }}
           >
-            Get Started
+            {user ? t.myDecks : 'Get Started'}
           </Link>
 
           {/* Feature pills */}

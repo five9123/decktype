@@ -20,7 +20,7 @@ export function TopToolbar() {
       }}
     >
       <Link
-        href={user ? '/dashboard' : '/'}
+        href="/"
         className="flex items-center gap-2 text-lg font-bold no-underline"
         style={{ color: 'var(--text)' }}
       >
