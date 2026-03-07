@@ -25,7 +25,7 @@ export default function DeckDetailPage() {
   const [order, setOrder] = useState<CardOrder>('sequential');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
-  const [editValues, setEditValues] = useState<{ front: string; back: string }>({ front: '', back: '' });
+  const [editValues, setEditValues] = useState<{ front: string; back: string; pronunciation: string }>({ front: '', back: '', pronunciation: '' });
   const [savingCard, setSavingCard] = useState(false);
 
   const { masteryMap, getDeckProgress } = useMastery(deckId);
@@ -51,7 +51,7 @@ export default function DeckDetailPage() {
 
   const startEdit = (card: Card) => {
     setEditingCardId(card.id);
-    setEditValues({ front: card.front, back: card.back });
+    setEditValues({ front: card.front, back: card.back, pronunciation: card.pronunciation ?? '' });
   };
 
   const cancelEdit = () => {
@@ -63,7 +63,7 @@ export default function DeckDetailPage() {
     const supabase = createBrowserClient();
     const { error } = await supabase
       .from('cards')
-      .update({ front: editValues.front, back: editValues.back })
+      .update({ front: editValues.front, back: editValues.back, pronunciation: editValues.pronunciation })
       .eq('id', cardId);
     if (!error) {
       setCards((prev) => prev.map((c) => c.id === cardId ? { ...c, ...editValues } : c));
@@ -257,7 +257,7 @@ export default function DeckDetailPage() {
                   <div className="space-y-2">
                     <div className="flex gap-2">
                       <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>FRONT</p>
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>단어 (FRONT)</p>
                         <textarea
                           value={editValues.front}
                           onChange={(e) => setEditValues((v) => ({ ...v, front: e.target.value }))}
@@ -272,10 +272,25 @@ export default function DeckDetailPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>BACK</p>
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>뜻 (BACK)</p>
                         <textarea
                           value={editValues.back}
                           onChange={(e) => setEditValues((v) => ({ ...v, back: e.target.value }))}
+                          rows={2}
+                          className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                          style={{
+                            background: 'var(--bg)',
+                            border: '1px solid var(--border)',
+                            color: 'var(--text)',
+                            outline: 'none',
+                          }}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>발음</p>
+                        <textarea
+                          value={editValues.pronunciation}
+                          onChange={(e) => setEditValues((v) => ({ ...v, pronunciation: e.target.value }))}
                           rows={2}
                           className="w-full px-3 py-2 rounded-lg text-sm resize-none"
                           style={{
@@ -310,6 +325,9 @@ export default function DeckDetailPage() {
                     <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
                     <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
                     <span className="flex-1" style={{ color: 'var(--muted)' }}>{card.back}</span>
+                    {card.pronunciation && (
+                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface2)', color: 'var(--muted)' }}>{card.pronunciation}</span>
+                    )}
                     {mastery && (
                       <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
                     )}

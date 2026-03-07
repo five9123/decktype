@@ -5,6 +5,7 @@ export interface Card {
   deck_id: string;
   front: string;
   back: string;
+  pronunciation: string;
   extra: string;
   note_type: NoteType;
   sort_order: number;
@@ -64,6 +65,7 @@ export interface CardResult {
 export interface ParsedCard {
   front: string;
   back: string;
+  pronunciation: string;
   extra: string;
   noteType: NoteType;
   rawFields: string[];

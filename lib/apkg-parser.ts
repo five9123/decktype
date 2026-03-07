@@ -122,6 +122,7 @@ export async function parseApkg(
           cards.push({
             front: cc.display,
             back: cc.answer,
+            pronunciation: '',
             extra: fields.slice(1).map(cleanCardText).filter(Boolean).join(' | '),
             noteType: 'Cloze',
             rawFields: fields,
@@ -131,12 +132,14 @@ export async function parseApkg(
         // Basic card (or multi-field)
         const front = cleanCardText(fields[0] ?? '');
         const back = cleanCardText(fields[1] ?? '');
-        const extra = fields.slice(2).map(cleanCardText).filter(Boolean).join(' | ');
+        const pronunciation = cleanCardText(fields[2] ?? '');
+        const extra = fields.slice(3).map(cleanCardText).filter(Boolean).join(' | ');
 
         if (front || back) {
           cards.push({
             front,
             back,
+            pronunciation,
             extra,
             noteType: fields.length > 2 ? 'Custom' : 'Basic',
             rawFields: fields,

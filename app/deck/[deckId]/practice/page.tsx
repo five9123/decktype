@@ -282,6 +282,11 @@ export default function PracticePage() {
             >
               {prompt}
             </p>
+            {currentCard?.pronunciation && (
+              <p className="text-base mt-2" style={{ color: 'var(--muted)' }}>
+                {currentCard.pronunciation}
+              </p>
+            )}
           </div>
 
           {/* Character states with smooth caret */}

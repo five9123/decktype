@@ -95,6 +95,7 @@ export default function UploadPage() {
         deck_id: deck.id,
         front: card.front,
         back: card.back,
+        pronunciation: card.pronunciation ?? '',
         extra: card.extra,
         note_type: card.noteType,
         sort_order: i + idx,
@@ -215,6 +216,7 @@ export default function UploadPage() {
                     <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)', width: '5%' }}>#</th>
                     <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>{t.front}</th>
                     <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>{t.back}</th>
+                    <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>발음</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -229,6 +231,9 @@ export default function UploadPage() {
                       </td>
                       <td className="px-4 py-3" style={{ color: 'var(--text)' }}>
                         {card.back.slice(0, 80)}{card.back.length > 80 ? '...' : ''}
+                      </td>
+                      <td className="px-4 py-3" style={{ color: 'var(--muted)' }}>
+                        {card.pronunciation?.slice(0, 40)}{(card.pronunciation?.length ?? 0) > 40 ? '...' : ''}
                       </td>
                     </tr>
                   ))}
