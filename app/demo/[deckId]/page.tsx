@@ -216,27 +216,29 @@ export default function DemoPracticePage() {
         style={{ height: viewportH || '100vh', background: 'var(--bg)' }}
       >
         {/* Top bar */}
-        <div
-          className="top-toolbar flex items-center justify-between px-4 py-3"
-          style={{ borderBottom: '1px solid var(--border)' }}
-        >
-          <button
-            onClick={() => router.push('/demo')}
-            className="text-sm"
-            style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
+        <div style={{ borderBottom: '1px solid var(--border)' }}>
+          <div
+            className="top-toolbar flex items-center justify-between px-4 py-3 w-full mx-auto"
+            style={{ maxWidth: '700px' }}
           >
-            &larr; Exit
-          </button>
-          <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--muted)' }}>
-            <span
-              className="text-xs px-2 py-0.5 rounded-full font-bold"
-              style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--accent)' }}
+            <button
+              onClick={() => router.push('/demo')}
+              className="text-sm"
+              style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
             >
-              DEMO
-            </span>
-            <span>{currentIdx + 1} / {cards.length}</span>
-            <span>{wpm !== null ? `${wpm} WPM` : '-- WPM'}</span>
-            <span>{accuracy !== null ? `${accuracy}%` : '--%'}</span>
+              &larr; Exit
+            </button>
+            <div className="flex items-center gap-3 text-sm" style={{ color: 'var(--muted)' }}>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full font-bold"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--accent)' }}
+              >
+                DEMO
+              </span>
+              <span>{currentIdx + 1} / {cards.length}</span>
+              <span>{wpm !== null ? `${wpm} WPM` : '-- WPM'}</span>
+              <span>{accuracy !== null ? `${accuracy}%` : '--%'}</span>
+            </div>
           </div>
         </div>
 

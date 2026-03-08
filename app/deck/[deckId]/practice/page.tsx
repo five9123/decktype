@@ -264,21 +264,23 @@ export default function PracticePage() {
         }}
       >
         {/* Top bar */}
-        <div
-          className="top-toolbar flex items-center justify-between px-4 py-3"
-          style={{ borderBottom: '1px solid var(--border)' }}
-        >
-          <button
-            onClick={() => router.push(`/deck/${deckId}`)}
-            className="text-sm"
-            style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
+        <div style={{ borderBottom: '1px solid var(--border)' }}>
+          <div
+            className="top-toolbar flex items-center justify-between px-4 py-3 w-full mx-auto"
+            style={{ maxWidth: '700px' }}
           >
-            &larr; Exit
-          </button>
-          <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--muted)' }}>
-            <span>{currentIdx + 1} / {cards.length}</span>
-            <span>{wpm !== null ? `${wpm} WPM` : '-- WPM'}</span>
-            <span>{accuracy !== null ? `${accuracy}%` : '--%'}</span>
+            <button
+              onClick={() => router.push(`/deck/${deckId}`)}
+              className="text-sm"
+              style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
+            >
+              &larr; Exit
+            </button>
+            <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--muted)' }}>
+              <span>{currentIdx + 1} / {cards.length}</span>
+              <span>{wpm !== null ? `${wpm} WPM` : '-- WPM'}</span>
+              <span>{accuracy !== null ? `${accuracy}%` : '--%'}</span>
+            </div>
           </div>
         </div>
 
