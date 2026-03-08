@@ -9,19 +9,45 @@ export type FieldMapping = Record<number, FieldRole>;
 function detectRole(fieldName: string, index: number): FieldRole {
   const name = fieldName.toLowerCase().trim();
 
-  // ── SKIP: media, metadata, ancillary info ──
+  // ── SKIP: media, metadata, grammar info ──
   if (/(audio|sound|mp3|wav|ogg|image|img|picture|photo|video|media)/.test(name)) return 'skip';
   if (/^(number|num|#|no\.|order|rank|frequency|freq|sort|id|uuid)$/.test(name)) return 'skip';
-  if (/(jlpt|jouyou|grade|stroke|radical|component|classif|keyword|story|koohii|nanori|traditional|simplified|frequency|example|sentence|context|extra|hint|detail|notes?)$/.test(name)) return 'skip';
+  // Japanese/Chinese metadata
+  if (/(jlpt|jouyou|grade|stroke|radical|component|classif|keyword|story|koohii|nanori|traditional|simplified)/.test(name)) return 'skip';
+  // Grammar / ancillary
+  if (/(gender|genre|g[eé]nero|genere|geschlecht)/.test(name)) return 'skip';
+  if (/(article|plural|pluriel|plurale|conjugat|infinitiv|declension)/.test(name)) return 'skip';
+  // Examples / extra context
+  if (/(example|exemple|ejemplo|esempio|exemplo|sentence|frase|satz|context|extra|hint|detail|notes?|notas?|anmerkung)/.test(name)) return 'skip';
+  // Standalone frequency / tags
+  if (/^(frequency|freq|tags?|source|chapter|lesson|unit|level)$/.test(name)) return 'skip';
 
-  // ── PRONUNCIATION: readings, romanization ──
-  if (/(reading|read|pronunci|onyomi|kunyomi|furigana|hiragana|katakana|pinyin|romaji|romanization|romanji|phonetic|kana|yomi)/.test(name)) return 'pronunciation';
+  // ── PRONUNCIATION: IPA, romanization, readings ──
+  if (/\bipa\b/.test(name)) return 'pronunciation';   // IPA (International Phonetic Alphabet)
+  if (/(pronunci|prononc|pronúncia|aussprache|pronuncia)/.test(name)) return 'pronunciation';
+  if (/(transcription|phonetic|phonétique|fon[eé]tica)/.test(name)) return 'pronunciation';
+  if (/(reading|onyomi|kunyomi|furigana|hiragana|katakana|kana|yomi)/.test(name)) return 'pronunciation';
+  if (/(pinyin|romaji|romanization|romanji)/.test(name)) return 'pronunciation';
 
-  // ── BACK: meaning / translation ──
+  // ── BACK: meaning / translation (any language) ──
   if (/(english|meaning|definition|translation|gloss|equiv|answer)/.test(name)) return 'back';
+  // Romance languages: translation
+  if (/(traduction|traducción|traduccion|tradução|traducao|traduzione)/.test(name)) return 'back';
+  // Romance/Germanic: meaning
+  if (/(significado|signification|significato|bedeutung|übersetzung|ubersetzung)/.test(name)) return 'back';
+  if (/\b(sens|native|l1)\b/.test(name)) return 'back';
 
   // ── FRONT: the target-language word ──
-  if (/(kanji|korean|japanese|chinese|hanzi|vocab|word|term|expression|character|漢字|한국어|日本語)/.test(name)) return 'front';
+  // CJK / East Asian
+  if (/(kanji|korean|japanese|chinese|hanzi|漢字|한국어|日本語)/.test(name)) return 'front';
+  // European languages by name
+  if (/(french|français|francais|spanish|español|espanol)/.test(name)) return 'front';
+  if (/(portuguese|português|portugues|italian|italiano)/.test(name)) return 'front';
+  if (/(german|deutsch|dutch|nederlands|russian|arabic)/.test(name)) return 'front';
+  // Generic "word" in major languages
+  if (/\b(word|term|expression|character|vocab|lemma|target|l2)\b/.test(name)) return 'front';
+  if (/\b(mot|palabra|palavra|parola|wort|woord)\b/.test(name)) return 'front';
+  if (/(vocabulaire|vocabulario|vocabulário|vocabolario)/.test(name)) return 'front';
 
   // Generic positional names
   if (name === 'front') return 'front';
