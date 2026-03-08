@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -7,7 +7,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 
-export default function BillingPage() {
+function BillingContent() {
   const { user } = useAuth();
   const { profile, isPro, loading, refresh } = useProfile();
   const { t } = useLanguage();
@@ -140,5 +140,13 @@ export default function BillingPage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function BillingPage() {
+  return (
+    <Suspense>
+      <BillingContent />
+    </Suspense>
   );
 }
