@@ -198,7 +198,7 @@ export default function UploadPage() {
             </div>
 
             {/* Free plan card limit warning */}
-            {parsed.cards.length > FREE_CARDS_PER_DECK && (
+            {!isPro && parsed.cards.length > FREE_CARDS_PER_DECK && (
               <div
                 className="px-4 py-3 rounded-xl text-sm mb-4"
                 style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', color: '#fbbf24' }}
