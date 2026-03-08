@@ -50,6 +50,11 @@ export default function PracticePage() {
   const { masteryMap, loading: masteryLoading, updateMastery } = useMastery(deckId);
   const { checkAndUpdate: checkPB } = usePersonalBest();
 
+  // Keep a ref to the latest updateMastery to avoid adding it to effect deps
+  // (updateMastery re-creates on every masteryMap update, causing infinite loops)
+  const updateMasteryRef = useRef(updateMastery);
+  useEffect(() => { updateMasteryRef.current = updateMastery; });
+
   const [cards, setCards] = useState<Card[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -58,6 +63,11 @@ export default function PracticePage() {
   const [sessionResults, setSessionResults] = useState<CardResult[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [levelUps, setLevelUps] = useState<{ cardId: string; level: MasteryLevel }[]>([]);
+
+  // Keep a ref to the latest levelUps to avoid adding it to session-save effect deps
+  // (levelUps can update after sessionComplete=true due to async updateMastery, causing double DB inserts)
+  const levelUpsRef = useRef(levelUps);
+  useEffect(() => { levelUpsRef.current = levelUps; });
 
   // Load, sort, and optionally shuffle cards
   useEffect(() => {
@@ -152,7 +162,7 @@ export default function PracticePage() {
 
     // Update mastery data
     if (currentCard?.id) {
-      updateMastery(currentCard.id, cardAccuracy, cardWpm).then((newLevel) => {
+      updateMasteryRef.current(currentCard.id, cardAccuracy, cardWpm).then((newLevel) => {
         if (newLevel) {
           setLevelUps((prev) => [...prev, { cardId: currentCard.id, level: newLevel }]);
         }
@@ -200,14 +210,14 @@ export default function PracticePage() {
         sessionStorage.setItem('atype__session', JSON.stringify({
           ...session,
           cardResults: sessionResults,
-          levelUps,
+          levelUps: levelUpsRef.current,
           cards: cards.map((c) => ({ id: c.id, front: c.front, back: c.back })),
           pbRecords,
         }));
         router.push(`/results?deck=${deckId}`);
       }
     });
-  }, [sessionComplete, user, sessionResults, deckId, mode, router, checkPB]);
+  }, [sessionComplete, user, sessionResults, deckId, mode, router, checkPB, cards]);
 
   // Skip current card — saves result with 0 wpm/accuracy
   const handleSkip = useCallback(() => {
