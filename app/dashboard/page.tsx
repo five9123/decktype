@@ -5,7 +5,9 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { DeckCard } from '@/components/DeckCard';
 import { StreakCounter } from '@/components/StreakCounter';
+import { UpgradeBanner } from '@/components/UpgradeBanner';
 import { useProgress } from '@/hooks/useProgress';
+import { useProfile } from '@/hooks/useProfile';
 import { useEffect, useState } from 'react';
 import { createBrowserClient } from '@/lib/supabase/client';
 import type { Deck } from '@/types';
@@ -14,6 +16,7 @@ import { FREE_DECK_LIMIT } from '@/lib/constants';
 export default function DashboardPage() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { isPro } = useProfile();
   const [decks, setDecks] = useState<Deck[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -33,7 +36,7 @@ export default function DashboardPage() {
       });
   }, [user]);
 
-  const atLimit = decks.length >= FREE_DECK_LIMIT;
+  const atLimit = !isPro && decks.length >= FREE_DECK_LIMIT;
 
   return (
     <>
@@ -51,7 +54,9 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{t.myDecks}</h1>
             <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
-              {decks.length} / {FREE_DECK_LIMIT} {t.myDecks.toLowerCase()}
+              {isPro
+                ? `${decks.length} ${t.myDecks.toLowerCase()}`
+                : `${decks.length} / ${FREE_DECK_LIMIT} ${t.myDecks.toLowerCase()}`}
             </p>
           </div>
           <div className="flex gap-2">
@@ -81,14 +86,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {atLimit && (
-          <div
-            className="px-4 py-3 rounded-xl text-sm mb-6"
-            style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', color: '#fbbf24' }}
-          >
-            {t.deckLimitReached}
-          </div>
-        )}
+        {atLimit && <UpgradeBanner type="deck" />}
 
         {/* Deck Grid */}
         {error && (

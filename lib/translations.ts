@@ -172,6 +172,28 @@ export type Translations = {
   demoSignupTitle: string;
   demoSignupDesc: string;
   demoSignupCta: string;
+
+  // Pricing & Billing
+  upgradeToPro: string;
+  proFeatures: string;
+  pricingTitle: string;
+  pricingSubtitle: string;
+  pricingMonthly: string;
+  pricingAnnual: string;
+  annualDiscount: string;
+  pricingFreeTier: string;
+  pricingProTier: string;
+  getPro: string;
+  pricingPerMonth: string;
+  pricingPerYear: string;
+  currentPlanFree: string;
+  currentPlanPro: string;
+  manageBilling: string;
+  upgradeSuccess: string;
+  deckLimitReachedCta: string;
+  cardLimitReachedCta: string;
+  statsProGate: string;
+  billingTitle: string;
 };
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
@@ -332,6 +354,27 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     demoSignupTitle: 'Save Your Progress',
     demoSignupDesc: 'Create a free account to track WPM, mastery, and unlock all features.',
     demoSignupCta: 'Create Free Account',
+
+    upgradeToPro: 'Upgrade to Pro',
+    proFeatures: 'Everything in Free, plus:',
+    pricingTitle: 'Simple, honest pricing',
+    pricingSubtitle: 'Start free. Upgrade when you\'re ready.',
+    pricingMonthly: 'Monthly',
+    pricingAnnual: 'Annual',
+    annualDiscount: '20% off',
+    pricingFreeTier: 'Free',
+    pricingProTier: 'Pro',
+    getPro: 'Get Pro',
+    pricingPerMonth: '/mo',
+    pricingPerYear: '/yr',
+    currentPlanFree: 'You are on the Free plan',
+    currentPlanPro: 'You are on the Pro plan',
+    manageBilling: 'Manage Subscription',
+    upgradeSuccess: 'Welcome to Pro! 🎉',
+    deckLimitReachedCta: 'Upgrade to Pro for unlimited decks →',
+    cardLimitReachedCta: 'Upgrade to Pro for unlimited cards →',
+    statsProGate: 'Advanced stats are available on the Pro plan.',
+    billingTitle: 'Billing & Plan',
   },
 
   ko: {
@@ -491,6 +534,27 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     demoSignupTitle: '진행 상황 저장하기',
     demoSignupDesc: '무료 계정을 만들어 WPM, 마스터리를 추적하고 모든 기능을 이용하세요.',
     demoSignupCta: '무료 계정 만들기',
+
+    upgradeToPro: 'Pro로 업그레이드',
+    proFeatures: 'Free의 모든 기능, 그리고:',
+    pricingTitle: '심플하고 투명한 요금제',
+    pricingSubtitle: '무료로 시작하고 준비되면 업그레이드하세요.',
+    pricingMonthly: '월간',
+    pricingAnnual: '연간',
+    annualDiscount: '20% 할인',
+    pricingFreeTier: 'Free',
+    pricingProTier: 'Pro',
+    getPro: 'Pro 시작하기',
+    pricingPerMonth: '/월',
+    pricingPerYear: '/년',
+    currentPlanFree: '현재 무료 플랜을 이용 중입니다',
+    currentPlanPro: '현재 Pro 플랜을 이용 중입니다',
+    manageBilling: '구독 관리',
+    upgradeSuccess: 'Pro에 오신 것을 환영합니다! 🎉',
+    deckLimitReachedCta: '무제한 덱을 위해 Pro로 업그레이드 →',
+    cardLimitReachedCta: '무제한 카드를 위해 Pro로 업그레이드 →',
+    statsProGate: '고급 통계는 Pro 플랜에서 이용 가능합니다.',
+    billingTitle: '결제 및 플랜',
   },
 
   ja: {
@@ -650,6 +714,27 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     demoSignupTitle: '進捗を保存する',
     demoSignupDesc: '無料アカウントを作成してWPM・習熟度を追跡し、全機能をご利用ください。',
     demoSignupCta: '無料アカウントを作成',
+
+    upgradeToPro: 'Proにアップグレード',
+    proFeatures: 'Freeのすべて、さらに:',
+    pricingTitle: 'シンプルで明瞭な料金',
+    pricingSubtitle: '無料で始めて、準備ができたらアップグレード。',
+    pricingMonthly: '月払い',
+    pricingAnnual: '年払い',
+    annualDiscount: '20%オフ',
+    pricingFreeTier: 'Free',
+    pricingProTier: 'Pro',
+    getPro: 'Proを始める',
+    pricingPerMonth: '/月',
+    pricingPerYear: '/年',
+    currentPlanFree: '現在Freeプランをご利用中です',
+    currentPlanPro: '現在Proプランをご利用中です',
+    manageBilling: 'サブスクリプション管理',
+    upgradeSuccess: 'Proへようこそ！🎉',
+    deckLimitReachedCta: '無制限デッキのためProにアップグレード →',
+    cardLimitReachedCta: '無制限カードのためProにアップグレード →',
+    statsProGate: '高度な統計はProプランでご利用いただけます。',
+    billingTitle: '請求とプラン',
   },
 
   es: {
@@ -809,6 +894,27 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     demoSignupTitle: 'Guarda tu progreso',
     demoSignupDesc: 'Crea una cuenta gratuita para rastrear WPM, dominio y desbloquear todas las funciones.',
     demoSignupCta: 'Crear cuenta gratuita',
+
+    upgradeToPro: 'Actualizar a Pro',
+    proFeatures: 'Todo en Free, más:',
+    pricingTitle: 'Precios simples y honestos',
+    pricingSubtitle: 'Empieza gratis. Actualiza cuando estés listo.',
+    pricingMonthly: 'Mensual',
+    pricingAnnual: 'Anual',
+    annualDiscount: '20% descuento',
+    pricingFreeTier: 'Free',
+    pricingProTier: 'Pro',
+    getPro: 'Obtener Pro',
+    pricingPerMonth: '/mes',
+    pricingPerYear: '/año',
+    currentPlanFree: 'Estás en el plan Free',
+    currentPlanPro: 'Estás en el plan Pro',
+    manageBilling: 'Gestionar suscripción',
+    upgradeSuccess: '¡Bienvenido a Pro! 🎉',
+    deckLimitReachedCta: 'Actualiza a Pro para mazos ilimitados →',
+    cardLimitReachedCta: 'Actualiza a Pro para tarjetas ilimitadas →',
+    statsProGate: 'Las estadísticas avanzadas están disponibles en el plan Pro.',
+    billingTitle: 'Facturación y plan',
   },
 
   zh: {
@@ -968,6 +1074,27 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     demoSignupTitle: '保存你的进度',
     demoSignupDesc: '创建免费账户以追踪WPM、掌握程度，并解锁所有功能。',
     demoSignupCta: '创建免费账户',
+
+    upgradeToPro: '升级至Pro',
+    proFeatures: 'Free的所有功能，加上:',
+    pricingTitle: '简单透明的定价',
+    pricingSubtitle: '免费开始，随时升级。',
+    pricingMonthly: '月付',
+    pricingAnnual: '年付',
+    annualDiscount: '8折优惠',
+    pricingFreeTier: '免费版',
+    pricingProTier: 'Pro版',
+    getPro: '获取Pro',
+    pricingPerMonth: '/月',
+    pricingPerYear: '/年',
+    currentPlanFree: '您正在使用免费计划',
+    currentPlanPro: '您正在使用Pro计划',
+    manageBilling: '管理订阅',
+    upgradeSuccess: '欢迎使用Pro！🎉',
+    deckLimitReachedCta: '升级Pro获得无限牌组 →',
+    cardLimitReachedCta: '升级Pro获得无限卡片 →',
+    statsProGate: '高级统计功能在Pro计划中可用。',
+    billingTitle: '账单与计划',
   },
 
   fr: {
@@ -1127,5 +1254,26 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     demoSignupTitle: 'Sauvegardez vos progrès',
     demoSignupDesc: 'Créez un compte gratuit pour suivre WPM, maîtrise et débloquer toutes les fonctionnalités.',
     demoSignupCta: 'Créer un compte gratuit',
+
+    upgradeToPro: 'Passer à Pro',
+    proFeatures: 'Tout ce qui est en Free, plus :',
+    pricingTitle: 'Tarification simple et honnête',
+    pricingSubtitle: 'Commencez gratuitement. Passez à Pro quand vous êtes prêt.',
+    pricingMonthly: 'Mensuel',
+    pricingAnnual: 'Annuel',
+    annualDiscount: '20% de réduction',
+    pricingFreeTier: 'Gratuit',
+    pricingProTier: 'Pro',
+    getPro: 'Obtenir Pro',
+    pricingPerMonth: '/mois',
+    pricingPerYear: '/an',
+    currentPlanFree: 'Vous êtes sur le plan Gratuit',
+    currentPlanPro: 'Vous êtes sur le plan Pro',
+    manageBilling: 'Gérer l\'abonnement',
+    upgradeSuccess: 'Bienvenue dans Pro ! 🎉',
+    deckLimitReachedCta: 'Passez à Pro pour des decks illimités →',
+    cardLimitReachedCta: 'Passez à Pro pour des cartes illimitées →',
+    statsProGate: 'Les statistiques avancées sont disponibles avec le plan Pro.',
+    billingTitle: 'Facturation et plan',
   },
 };

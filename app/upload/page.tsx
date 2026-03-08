@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { parseApkg } from '@/lib/apkg-parser';
 import { createBrowserClient } from '@/lib/supabase/client';
+import { useProfile } from '@/hooks/useProfile';
 import { MAX_UPLOAD_SIZE, FREE_CARDS_PER_DECK } from '@/lib/constants';
 import type { ParsedDeck } from '@/types';
 
@@ -14,6 +15,7 @@ type UploadState = 'idle' | 'parsing' | 'preview' | 'saving' | 'error';
 export default function UploadPage() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { isPro } = useProfile();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -67,7 +69,7 @@ export default function UploadPage() {
     const supabase = createBrowserClient();
 
     // Limit cards for free plan
-    const cardsToSave = parsed.cards.slice(0, FREE_CARDS_PER_DECK);
+    const cardsToSave = isPro ? parsed.cards : parsed.cards.slice(0, FREE_CARDS_PER_DECK);
 
     // Insert deck
     const { data: deck, error: deckError } = await supabase

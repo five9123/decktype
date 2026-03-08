@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { createBrowserClient } from '@/lib/supabase/client';
+import { useProfile } from '@/hooks/useProfile';
 import { FREE_CARDS_PER_DECK } from '@/lib/constants';
 
 interface Row {
@@ -26,6 +27,7 @@ function makeRows(n: number): Row[] {
 export default function CreateDeckPage() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { isPro } = useProfile();
   const router = useRouter();
 
   const [deckName, setDeckName] = useState('');
@@ -35,7 +37,7 @@ export default function CreateDeckPage() {
   const tableRef = useRef<HTMLDivElement>(null);
 
   const filledRows = rows.filter((r) => r.front.trim() || r.back.trim());
-  const atLimit = rows.length >= FREE_CARDS_PER_DECK;
+  const atLimit = !isPro && rows.length >= FREE_CARDS_PER_DECK;
 
   const updateRow = (id: number, field: keyof Omit<Row, 'id'>, value: string) => {
     setRows((prev) => prev.map((r) => r.id === id ? { ...r, [field]: value } : r));
@@ -47,7 +49,7 @@ export default function CreateDeckPage() {
 
   const addRows = (n: number) => {
     if (atLimit) return;
-    const toAdd = Math.min(n, FREE_CARDS_PER_DECK - rows.length);
+    const toAdd = isPro ? n : Math.min(n, FREE_CARDS_PER_DECK - rows.length);
     setRows((prev) => [...prev, ...makeRows(toAdd)]);
     setTimeout(() => {
       tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });

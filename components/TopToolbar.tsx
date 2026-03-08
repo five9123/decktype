@@ -3,12 +3,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useProfile } from '@/hooks/useProfile';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { PreferencesPanel } from './PreferencesPanel';
 
 export function TopToolbar() {
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
+  const { isPro } = useProfile();
   const [showPrefs, setShowPrefs] = useState(false);
 
   return (
@@ -44,6 +46,23 @@ export function TopToolbar() {
             >
               {t.statsTitle}
             </Link>
+            {isPro ? (
+              <Link
+                href="/billing"
+                className="px-2 py-0.5 rounded-full text-xs font-bold no-underline"
+                style={{ background: 'var(--accent)', color: '#fff' }}
+              >
+                PRO
+              </Link>
+            ) : (
+              <Link
+                href="/pricing"
+                className="px-3 py-1.5 rounded-lg text-sm font-bold no-underline transition-opacity hover:opacity-80"
+                style={{ color: 'var(--accent)' }}
+              >
+                {t.upgradeToPro}
+              </Link>
+            )}
           </>
         )}
 
