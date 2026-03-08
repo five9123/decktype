@@ -38,8 +38,8 @@ export default function DemoPage() {
           <p className="text-xs font-bold mb-3" style={{ color: 'var(--muted)' }}>MODE</p>
           <div className="flex gap-2">
             {([
-              { value: 'front_to_back' as PracticeMode, label: t.frontToBack },
               { value: 'back_to_front' as PracticeMode, label: t.backToFront },
+              { value: 'front_to_back' as PracticeMode, label: t.frontToBack },
             ] as const).map((opt) => (
               <button
                 key={opt.value}

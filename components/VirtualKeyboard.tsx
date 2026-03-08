@@ -34,13 +34,164 @@ const KO_SHIFT: Record<string, string> = {
   KeyO: 'ㅒ', KeyP: 'ㅖ',
 };
 
+// Reverse lookup: jamo → { code, shift }
+const JAMO_KEY_MAP: Record<string, { code: string; shift: boolean }> = {};
+for (const [code, jamo] of Object.entries(KO_NORMAL)) {
+  JAMO_KEY_MAP[jamo] = { code, shift: false };
+}
+for (const [code, jamo] of Object.entries(KO_SHIFT)) {
+  JAMO_KEY_MAP[jamo] = { code, shift: true };
+}
+
+// ── Hangul decomposition ─────────────────────────────────────────────────────
+
+const CHOSEONG  = 'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'.split('');
+const JUNGSEONG = 'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ'.split('');
+const JONGSEONG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+
+// Compound jamo → component jamo (for multi-keystroke combos)
+const COMPOUND_JAMO: Record<string, string[]> = {
+  // compound jongseong (받침)
+  'ㄳ': ['ㄱ','ㅅ'], 'ㄵ': ['ㄴ','ㅈ'], 'ㄶ': ['ㄴ','ㅎ'],
+  'ㄺ': ['ㄹ','ㄱ'], 'ㄻ': ['ㄹ','ㅁ'], 'ㄼ': ['ㄹ','ㅂ'],
+  'ㄽ': ['ㄹ','ㅅ'], 'ㄾ': ['ㄹ','ㅌ'], 'ㄿ': ['ㄹ','ㅍ'],
+  'ㅀ': ['ㄹ','ㅎ'], 'ㅄ': ['ㅂ','ㅅ'],
+  // compound jungseong (이중모음)
+  'ㅘ': ['ㅗ','ㅏ'], 'ㅙ': ['ㅗ','ㅐ'], 'ㅚ': ['ㅗ','ㅣ'],
+  'ㅝ': ['ㅜ','ㅓ'], 'ㅞ': ['ㅜ','ㅔ'], 'ㅟ': ['ㅜ','ㅣ'],
+  'ㅢ': ['ㅡ','ㅣ'],
+};
+
+function expandJamo(jamo: string): string[] {
+  return COMPOUND_JAMO[jamo] ?? [jamo];
+}
+
+/** Decompose a composed Hangul syllable into keystroke jamo sequence */
+function decomposeHangul(ch: string): string[] {
+  const code = ch.charCodeAt(0);
+  if (code < 0xAC00 || code > 0xD7A3) {
+    // Standalone jamo (e.g. ㄱ, ㅏ) — return as-is
+    return [ch];
+  }
+  const offset = code - 0xAC00;
+  const jongIdx = offset % 28;
+  const jungIdx = Math.floor(offset / 28) % 21;
+  const choIdx  = Math.floor(offset / (28 * 21));
+  return [
+    ...expandJamo(CHOSEONG[choIdx]),
+    ...expandJamo(JUNGSEONG[jungIdx]),
+    ...(jongIdx > 0 ? expandJamo(JONGSEONG[jongIdx]) : []),
+  ];
+}
+
+/** Return ordered { code, shift } pairs for every keystroke needed to type `ch` */
+function getHintKeys(ch: string, lang: Lang): { code: string; shift: boolean }[] {
+  if (!ch || ch === ' ') return ch === ' ' ? [{ code: 'Space', shift: false }] : [];
+
+  if (lang === 'ko') {
+    const jamo = decomposeHangul(ch);
+    return jamo.flatMap((j) => {
+      const key = JAMO_KEY_MAP[j];
+      return key ? [key] : [];
+    });
+  }
+
+  // English / Latin
+  const lower = ch.toLowerCase();
+  const isUpper = ch !== lower;
+  // Match by lowercase label in ROWS
+  for (const row of ROWS) {
+    for (const def of row) {
+      if (def.label.toLowerCase() === lower) {
+        return [{ code: def.code, shift: isUpper }];
+      }
+    }
+  }
+  return [];
+}
+
+/**
+ * Compute hint keys taking partial IME composition into account.
+ * For Korean: finds the current target grapheme being composed and returns
+ * only the remaining keystrokes (already-typed jamo are sliced off).
+ */
+function computeHintKeys(target: string, input: string, lang: Lang): { code: string; shift: boolean }[] {
+  if (lang !== 'ko') {
+    // Non-Korean: simple character index
+    const targetNoSpaces = target.replace(/ /g, '');
+    const inputNoSpaces  = input.replace(/ /g, '');
+    const nextChar = targetNoSpaces[inputNoSpaces.length] ?? '';
+    return getHintKeys(nextChar, lang);
+  }
+
+  // Korean: grapheme-aware, handles partial IME composition
+  const seg = new Intl.Segmenter();
+  const targetGraphemes = [...seg.segment(target.normalize('NFC'))]
+    .map((s) => s.segment)
+    .filter((g) => g !== ' ');
+  const inputGraphemes = [...seg.segment(input.normalize('NFC'))]
+    .map((s) => s.segment)
+    .filter((g) => g !== ' ');
+
+  // Count fully matched graphemes from the start
+  let matchedCount = 0;
+  while (
+    matchedCount < targetGraphemes.length &&
+    matchedCount < inputGraphemes.length &&
+    targetGraphemes[matchedCount] === inputGraphemes[matchedCount]
+  ) {
+    matchedCount++;
+  }
+
+  // Next target grapheme to complete
+  const currentTarget = targetGraphemes[matchedCount];
+  if (!currentTarget) return [];
+
+  // All keystrokes needed for this grapheme
+  const targetKeystrokes = decomposeHangul(currentTarget).flatMap((j) => {
+    const key = JAMO_KEY_MAP[j];
+    return key ? [key] : [];
+  });
+
+  // Partial composition at this position (e.g. '라' when typing '랑')
+  const partialInput = inputGraphemes[matchedCount];
+  if (!partialInput) {
+    // Nothing started yet — all keystrokes are hints
+    return targetKeystrokes;
+  }
+
+  // Number of keystrokes already pressed = jamo count in partial grapheme
+  const typedJamoCount = decomposeHangul(partialInput).length;
+
+  // Return only the remaining keystrokes
+  return targetKeystrokes.slice(typedJamoCount);
+}
+
+/**
+ * Build a map of keyCode → hint priority (1 = immediate next, 2 = later in sequence).
+ * Shift key gets the same priority as the key that needs it.
+ */
+function buildHintMap(hintKeys: { code: string; shift: boolean }[]): Map<string, number> {
+  const map = new Map<string, number>();
+  hintKeys.forEach(({ code, shift }, i) => {
+    const priority = i === 0 ? 1 : 2;
+    // Don't downgrade an already-set priority
+    if (!map.has(code) || map.get(code)! > priority) map.set(code, priority);
+    if (shift) {
+      if (!map.has('ShiftLeft')  || map.get('ShiftLeft')!  > priority) map.set('ShiftLeft',  priority);
+      if (!map.has('ShiftRight') || map.get('ShiftRight')! > priority) map.set('ShiftRight', priority);
+    }
+  });
+  return map;
+}
+
 // ── Key layout definition ───────────────────────────────────────────────────
 
 interface KeyDef {
   code: string;
   label: string;
-  w?: number;    // rem width (undefined = standard 1u)
-  grow?: boolean; // space bar flex grow
+  w?: number;
+  grow?: boolean;
 }
 
 const U = 2.1; // 1u key width in rem
@@ -110,7 +261,7 @@ const ROWS: KeyDef[][] = [
   [
     { code: 'ControlLeft', label: 'Ctrl', w: U * 1.5 },
     { code: 'AltLeft', label: 'Alt', w: U * 1.25 },
-    { code: 'Space', label: '', grow: true },
+    { code: 'Space', label: 'Space', grow: true },
     { code: 'AltRight', label: 'Alt', w: U * 1.25 },
     { code: 'ControlRight', label: 'Ctrl', w: U * 1.5 },
   ],
@@ -128,27 +279,42 @@ const LANG_LABEL: Record<Lang, string> = {
 interface KeyProps {
   def: KeyDef;
   isPressed: boolean;
+  /** 0 = not a hint, 1 = immediate next key (strong), 2 = upcoming key (faint) */
+  hintPriority: number;
   primary: string;
   secondary?: string;
 }
 
-function Key({ def, isPressed, primary, secondary }: KeyProps) {
+function Key({ def, isPressed, hintPriority, primary, secondary }: KeyProps) {
+  // Amber intensity by priority
+  const amberBg     = hintPriority === 1 ? 'rgba(255,171,0,0.18)' : 'rgba(255,171,0,0.07)';
+  const amberBorder = hintPriority === 1 ? '#ffab00'               : 'rgba(255,171,0,0.45)';
+  const amberColor  = hintPriority === 1 ? '#ffab00'               : 'rgba(255,171,0,0.55)';
+
+  const bg     = isPressed ? 'var(--accent)' : hintPriority ? amberBg     : 'var(--bg)';
+  const border = isPressed ? 'var(--accent)' : hintPriority ? amberBorder : 'var(--border)';
+  const color  = isPressed ? '#fff'          : hintPriority ? amberColor  : 'var(--text)';
+
   const style: React.CSSProperties = {
     width: def.grow ? undefined : (def.w != null ? def.w + 'rem' : U + 'rem'),
     flex: def.grow ? 1 : undefined,
     height: U + 'rem',
-    background: isPressed ? 'var(--accent)' : 'var(--bg)',
-    border: '1px solid ' + (isPressed ? 'var(--accent)' : 'var(--border)'),
-    color: isPressed ? '#fff' : 'var(--text)',
+    background: bg,
+    border: '1px solid ' + border,
+    color,
     transform: isPressed ? 'translateY(1px)' : 'none',
-    boxShadow: isPressed ? 'inset 0 1px 2px rgba(0,0,0,0.2)' : '0 1px 3px rgba(0,0,0,0.12)',
+    boxShadow: isPressed
+      ? 'inset 0 1px 2px rgba(0,0,0,0.2)'
+      : hintPriority === 1
+      ? '0 0 0 1px rgba(255,171,0,0.25)'
+      : '0 1px 3px rgba(0,0,0,0.12)',
     borderRadius: '4px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '1px',
-    transition: 'background 60ms, transform 60ms, box-shadow 60ms',
+    transition: 'background 60ms, transform 60ms, box-shadow 60ms, border-color 120ms',
     cursor: 'default',
     userSelect: 'none',
   };
@@ -158,24 +324,24 @@ function Key({ def, isPressed, primary, secondary }: KeyProps) {
       {secondary ? (
         <>
           <span style={{ fontSize: '0.85rem', lineHeight: 1, fontWeight: 600 }}>{primary}</span>
-          <span style={{ fontSize: '0.55rem', lineHeight: 1, color: isPressed ? 'rgba(255,255,255,0.65)' : 'var(--muted)' }}>
+          <span style={{ fontSize: '0.55rem', lineHeight: 1, color: isPressed ? 'rgba(255,255,255,0.65)' : hintPriority ? amberColor : 'var(--muted)' }}>
             {secondary}
           </span>
         </>
       ) : (
-        <span style={{ fontSize: '0.7rem', lineHeight: 1, fontWeight: 500 }}>{primary}</span>
+        <span style={{ fontSize: '0.7rem', lineHeight: 1, fontWeight: hintPriority === 1 ? 700 : 500 }}>{primary}</span>
       )}
     </div>
   );
 }
 
-export function VirtualKeyboard({ target }: { target: string }) {
+export function VirtualKeyboard({ target, input }: { target: string; input: string }) {
   const lang = detectLang(target);
   const [pressed, setPressed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const onDown = (e: KeyboardEvent) => setPressed((p) => new Set([...p, e.code]));
-    const onUp = (e: KeyboardEvent) => setPressed((p) => { const n = new Set(p); n.delete(e.code); return n; });
+    const onUp   = (e: KeyboardEvent) => setPressed((p) => { const n = new Set(p); n.delete(e.code); return n; });
     const onBlur = () => setPressed(new Set());
     window.addEventListener('keydown', onDown);
     window.addEventListener('keyup', onUp);
@@ -188,6 +354,11 @@ export function VirtualKeyboard({ target }: { target: string }) {
   }, []);
 
   const isShift = pressed.has('ShiftLeft') || pressed.has('ShiftRight');
+
+  // Compute next-key hints with priority (1 = immediate, 2 = upcoming)
+  // Uses grapheme-aware partial-composition logic for Korean
+  const hintKeys = computeHintKeys(target, input, lang);
+  const hintMap  = buildHintMap(hintKeys);
 
   return (
     <div className="hidden md:flex justify-center select-none mt-3 pb-4">
@@ -204,14 +375,15 @@ export function VirtualKeyboard({ target }: { target: string }) {
           ⌨ {LANG_LABEL[lang]}
         </p>
         {ROWS.map((row, ri) => (
-          <div key={ri} style={{ display: 'flex', gap: '3px' }}>
+          <div key={ri} style={{ display: 'flex', gap: '3px', ...(ri === ROWS.length - 1 ? { alignSelf: 'stretch' } : {}) }}>
             {row.map((def) => {
-              const isPressed = pressed.has(def.code);
+              const isPressed    = pressed.has(def.code);
+              const hintPriority = isPressed ? 0 : (hintMap.get(def.code) ?? 0);
               let primary = def.label;
               let secondary: string | undefined;
               if (lang === 'ko') {
                 const koNorm = KO_NORMAL[def.code];
-                const koSh = KO_SHIFT[def.code];
+                const koSh   = KO_SHIFT[def.code];
                 if (isShift && koSh) {
                   primary = koSh;
                   secondary = def.label;
@@ -225,6 +397,7 @@ export function VirtualKeyboard({ target }: { target: string }) {
                   key={def.code}
                   def={def}
                   isPressed={isPressed}
+                  hintPriority={hintPriority}
                   primary={primary}
                   secondary={secondary}
                 />

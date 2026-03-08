@@ -10,6 +10,7 @@ import { useSound } from '@/hooks/useSound';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { SmoothCaret } from '@/components/SmoothCaret';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
+import { PreferencesPanel } from '@/components/PreferencesPanel';
 import { DEMO_DECKS } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import type { PracticeMode } from '@/types';
@@ -45,6 +46,7 @@ export default function DemoPracticePage() {
   const [cards] = useState(() => deck ? [...deck.cards] : []);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showPrefs, setShowPrefs] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [sessionResults, setSessionResults] = useState<{ wpm: number; accuracy: number }[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
@@ -67,6 +69,9 @@ export default function DemoPracticePage() {
   }, [rawHandleInput, playSound, input.length]);
 
   const caretPosition = charStates.filter((cs) => cs.status !== 'idle').length;
+
+  // Re-focus input whenever card changes
+  useEffect(() => { inputRef.current?.focus(); }, [currentIdx]);
 
   // Auto-advance after completion
   useEffect(() => {
@@ -238,6 +243,19 @@ export default function DemoPracticePage() {
               <span>{currentIdx + 1} / {cards.length}</span>
               <span>{wpm !== null ? `${wpm} WPM` : '-- WPM'}</span>
               <span>{accuracy !== null ? `${accuracy}%` : '--%'}</span>
+              <div className="relative">
+                <button
+                  onClick={() => setShowPrefs((v) => !v)}
+                  className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                  </svg>
+                </button>
+                {showPrefs && <PreferencesPanel onClose={() => setShowPrefs(false)} />}
+              </div>
             </div>
           </div>
         </div>
@@ -295,6 +313,12 @@ export default function DemoPracticePage() {
             value={input}
             onChange={(e) => handleInput(e.target.value)}
             onCompositionStart={() => setIsComposing(true)}
+            onCompositionUpdate={(e) => {
+              const val = (e.target as HTMLInputElement).value;
+              if (val.normalize('NFC').replace(/ /g, '') === target.normalize('NFC').replace(/ /g, '')) {
+                (e.target as HTMLInputElement).blur();
+              }
+            }}
             onCompositionEnd={(e) => {
               setIsComposing(false);
               handleInput((e.target as HTMLInputElement).value);
@@ -322,7 +346,7 @@ export default function DemoPracticePage() {
               {formatElapsed(elapsedSeconds)}
             </span>
           </div>
-          <VirtualKeyboard target={target} />
+          <VirtualKeyboard target={target} input={input} />
         </div>
       </main>
     </>
