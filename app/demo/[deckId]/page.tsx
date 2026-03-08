@@ -312,6 +312,7 @@ export default function DemoPracticePage() {
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete) handleSkip(); }}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionUpdate={(e) => {
               const val = (e.target as HTMLInputElement).value;

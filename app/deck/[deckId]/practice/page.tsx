@@ -357,6 +357,7 @@ export default function PracticePage() {
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete) handleSkip(); }}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionUpdate={(e) => {
               // Auto-commit IME when composed text already matches target (Korean last-char fix)
