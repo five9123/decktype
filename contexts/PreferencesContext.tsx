@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
 import { type ThemeId, type FontSize, applyTheme, FONT_SIZE_MAP } from '@/lib/themes';
 
 const STORAGE_KEY = 'atype-prefs';
@@ -69,6 +70,7 @@ function savePrefs(prefs: Preferences): void {
 }
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [prefs, setPrefs] = useState<Preferences>(() => {
     // Read from DOM attribute set by inline script to avoid FOUC
     if (typeof document !== 'undefined') {
@@ -78,10 +80,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     return DEFAULTS;
   });
 
-  // Apply theme on mount and when theme changes
+  // Apply theme on mount and when theme/pathname changes.
+  // Home page (/) always shows light regardless of saved theme.
   useEffect(() => {
-    applyTheme(prefs.theme);
-  }, [prefs.theme]);
+    applyTheme(pathname === '/' ? 'light' : prefs.theme);
+  }, [prefs.theme, pathname]);
 
   // Apply font size
   useEffect(() => {

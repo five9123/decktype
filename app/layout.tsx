@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       var old = localStorage.getItem('atype-theme');
       if (old && THEMES[old]) { prefs = { theme: old }; }
     }
-    var id = (prefs && prefs.theme && THEMES[prefs.theme]) ? prefs.theme : 'light';
+    var id = (window.location.pathname === '/') ? 'light' : ((prefs && prefs.theme && THEMES[prefs.theme]) ? prefs.theme : 'light');
     var c = THEMES[id] || THEMES['light'];
     var r = document.documentElement;
     r.setAttribute('data-theme', id);

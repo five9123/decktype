@@ -499,7 +499,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '(최대)',
     savingLabel: '저장 중...',
 
-    landingBadge: '무료 시작 · 신용카드 불필요',
+    landingBadge: '무료 시작 · 결제 불필요',
     landingHero1: '타이핑하고. 배우고.',
     landingHero2: '어떤 덱이든 마스터하세요.',
     landingSubtext: 'Anki 플래시카드를 타이핑 연습 세션으로 변환하세요. 근육 기억을 키우고, WPM을 추적하고, 공부한 내용을 실제로 기억하세요.',
