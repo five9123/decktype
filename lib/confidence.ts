@@ -70,31 +70,42 @@ export function getMasteryLevel(confidence: number): MasteryLevel {
 }
 
 /**
- * Calculate next review time based on confidence and streak.
- * Higher confidence = longer intervals between reviews.
+ * Calculate next review time using SM-2 inspired algorithm.
+ * Uses ease_factor for per-card difficulty adaptation.
  */
-export function calculateNextReview(confidence: number, streak: number): Date {
+export function calculateNextReview(confidence: number, streak: number, easeFactor: number = 2.5): Date {
   const now = new Date();
+  const MAX_INTERVAL_DAYS = 30;
 
-  // Base intervals in minutes
   let intervalMinutes: number;
-  if (confidence < 40) {
-    intervalMinutes = 1; // Learning: review immediately
-  } else if (confidence < 60) {
-    intervalMinutes = 10; // Early familiar: 10 minutes
-  } else if (confidence < 75) {
-    intervalMinutes = 60 * 24; // Late familiar: 1 day
-  } else if (confidence < 90) {
-    intervalMinutes = 60 * 24 * 3; // Early mastered: 3 days
+  if (streak <= 0) {
+    intervalMinutes = 1; // Just failed: review immediately
+  } else if (streak === 1) {
+    intervalMinutes = 10; // First correct: 10 minutes
+  } else if (streak === 2) {
+    intervalMinutes = 60 * 24; // Second correct: 1 day
   } else {
-    intervalMinutes = 60 * 24 * 7; // Full mastered: 7 days
+    // streak 3+: grow by ease_factor, capped at MAX_INTERVAL_DAYS
+    const prevDays = Math.pow(easeFactor, streak - 3); // exponential growth from 1 day base
+    const days = Math.min(prevDays * easeFactor, MAX_INTERVAL_DAYS);
+    intervalMinutes = Math.round(days * 60 * 24);
   }
 
-  // Streak multiplier (up to 3x, capped)
-  const streakMultiplier = Math.min(1 + streak * 0.2, 3);
-  intervalMinutes = Math.round(intervalMinutes * streakMultiplier);
-
   return new Date(now.getTime() + intervalMinutes * 60 * 1000);
+}
+
+/**
+ * Adjust ease factor based on accuracy (SM-2 inspired).
+ * Higher accuracy → higher ease (longer intervals), lower accuracy → lower ease (shorter intervals).
+ */
+export function adjustEaseFactor(currentEase: number, accuracy: number): number {
+  const MIN_EASE = 1.3;
+  let delta = 0;
+  if (accuracy >= 95) delta = 0.15;
+  else if (accuracy >= 80) delta = 0;
+  else if (accuracy >= 60) delta = -0.15;
+  else delta = -0.30;
+  return Math.max(currentEase + delta, MIN_EASE);
 }
 
 /**
@@ -108,6 +119,7 @@ export function updateMasteryStats(params: {
     avg_accuracy: number;
     streak: number;
     error_count: number;
+    ease_factor?: number;
   };
   newAccuracy: number;  // 0-100
   newWpm: number;
@@ -143,7 +155,8 @@ export function updateMasteryStats(params: {
   });
 
   const masteryLevel = getMasteryLevel(confidence);
-  const nextReviewAt = calculateNextReview(confidence, streak);
+  const easeFactor = adjustEaseFactor(current.ease_factor ?? 2.5, newAccuracy);
+  const nextReviewAt = calculateNextReview(confidence, streak, easeFactor);
 
   return {
     confidence,
@@ -156,6 +169,7 @@ export function updateMasteryStats(params: {
     last_accuracy: newAccuracy,
     streak,
     error_count: errorCount,
+    ease_factor: Math.round(easeFactor * 100) / 100,
     next_review_at: nextReviewAt.toISOString(),
     last_practiced_at: new Date().toISOString(),
   };

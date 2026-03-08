@@ -175,6 +175,8 @@ export default function PracticePage() {
           wpm: cardWpm,
           accuracy: cardAccuracy,
           time_ms: elapsedSeconds * 1000,
+          typed_text: input,
+          target_text: target,
         },
       ]);
       if (currentCard?.id) {
@@ -221,6 +223,18 @@ export default function PracticePage() {
       mode,
     }).select().single().then(async ({ data: session }: { data: TypingSession | null }) => {
       if (session) {
+        // Insert card_results to DB
+        const cardResultRows = sessionResults.map((r) => ({
+          session_id: session.id,
+          card_id: r.card_id,
+          wpm: r.wpm,
+          accuracy: r.accuracy,
+          time_ms: r.time_ms,
+          typed_text: r.typed_text,
+          target_text: r.target_text,
+        }));
+        await supabase.from('card_results').insert(cardResultRows);
+
         // Check for personal bests
         const pbRecords = await checkPB(deckId, mode, avgWpm, avgAcc, compositeScore);
 
@@ -252,6 +266,8 @@ export default function PracticePage() {
           wpm: 0,
           accuracy: 0,
           time_ms: elapsedSeconds * 1000,
+          typed_text: input,
+          target_text: target,
         },
       ]);
     }

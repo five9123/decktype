@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [dueCounts, setDueCounts] = useState<Record<string, number>>({});
   const { streak, loading: progressLoading } = useProgress();
 
   useEffect(() => {
@@ -35,6 +36,28 @@ export default function DashboardPage() {
         setLoading(false);
       });
   }, [user]);
+
+  // Load due card counts per deck
+  useEffect(() => {
+    if (!user || decks.length === 0) return;
+    const supabase = createBrowserClient();
+    const deckIds = decks.map((d) => d.id);
+
+    supabase
+      .from('card_mastery')
+      .select('card_id, cards!inner(deck_id)')
+      .lte('next_review_at', new Date().toISOString())
+      .then(({ data }: { data: { card_id: string; cards: { deck_id: string } }[] | null }) => {
+        const counts: Record<string, number> = {};
+        (data ?? []).forEach((row) => {
+          const did = row.cards?.deck_id;
+          if (did && deckIds.includes(did)) {
+            counts[did] = (counts[did] ?? 0) + 1;
+          }
+        });
+        setDueCounts(counts);
+      });
+  }, [user, decks]);
 
   const atLimit = !isPro && decks.length >= FREE_DECK_LIMIT;
 
@@ -116,7 +139,7 @@ export default function DashboardPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {decks.map((deck) => (
-              <DeckCard key={deck.id} deck={deck} />
+              <DeckCard key={deck.id} deck={deck} dueCount={dueCounts[deck.id]} />
             ))}
           </div>
         )}

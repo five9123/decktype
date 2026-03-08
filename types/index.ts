@@ -58,6 +58,8 @@ export interface CardResult {
   wpm: number;
   accuracy: number;
   time_ms: number;
+  typed_text: string;
+  target_text: string;
 }
 
 // ── APKG Parser Types ──
@@ -121,6 +123,7 @@ export interface CardMastery {
   error_count: number;
   next_review_at: string;
   last_practiced_at: string;
+  ease_factor: number;
 }
 
 // ── Progress Types (Feature 3) ──

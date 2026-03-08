@@ -90,6 +90,7 @@ export function useMastery(deckId: string): UseMasteryReturn {
       avg_accuracy: 0,
       streak: 0,
       error_count: 0,
+      ease_factor: 2.5,
     };
 
     const updated = updateMasteryStats({

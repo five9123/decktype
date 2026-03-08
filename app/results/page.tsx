@@ -3,10 +3,14 @@ import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { PersonalBestBanner } from '@/components/PersonalBestBanner';
 import { WpmVariationChart } from '@/components/charts/WpmVariationChart';
 import { MasteryBadge } from '@/components/MasteryBadge';
+import { WrongCardsReview } from '@/components/WrongCardsReview';
+import { analyzeErrorPatterns } from '@/lib/error-patterns';
+import { createBrowserClient } from '@/lib/supabase/client';
 import type { MasteryLevel } from '@/types';
 
 interface CardResult {
@@ -14,6 +18,8 @@ interface CardResult {
   wpm: number;
   accuracy: number;
   time_ms: number;
+  typed_text?: string;
+  target_text?: string;
 }
 
 interface CardInfo {
@@ -49,6 +55,25 @@ function getRating(score: number, t: ReturnType<typeof useLanguage>['t']) {
   return { label: t.keepGoing, color: '#F87171' };
 }
 
+function ComparisonStat({ label, current, previous, suffix = '' }: {
+  label: string; current: number; previous: number; suffix?: string;
+}) {
+  const diff = current - previous;
+  const isPositive = diff > 0;
+  const color = diff === 0 ? 'var(--muted)' : isPositive ? 'var(--correct)' : 'var(--incorrect)';
+  const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '';
+  return (
+    <div>
+      <span style={{ color: 'var(--text)' }}>{label}: {current}{suffix} </span>
+      {diff !== 0 && (
+        <span className="font-medium" style={{ color }}>
+          {arrow}{Math.abs(diff)}{suffix}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function formatTime(ms: number): string {
   const seconds = Math.floor(ms / 1000);
   const mins = Math.floor(seconds / 60);
@@ -56,12 +81,19 @@ function formatTime(ms: number): string {
   return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
 }
 
+interface PrevSessionAvg {
+  wpm: number;
+  accuracy: number;
+}
+
 function ResultsContent() {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const deckId = searchParams.get('deck');
 
   const [session, setSession] = useState<SessionData | null>(null);
+  const [prevAvg, setPrevAvg] = useState<PrevSessionAvg | null>(null);
 
   useEffect(() => {
     try {
@@ -69,6 +101,26 @@ function ResultsContent() {
       if (raw) setSession(JSON.parse(raw));
     } catch { /* ignore */ }
   }, []);
+
+  // Load previous sessions for comparison
+  useEffect(() => {
+    if (!user || !deckId || !session) return;
+    const supabase = createBrowserClient();
+    supabase
+      .from('typing_sessions')
+      .select('wpm, accuracy')
+      .eq('deck_id', deckId)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .range(1, 5) // Skip current session (index 0), get 1-5
+      .then(({ data }: { data: { wpm: number; accuracy: number }[] | null }) => {
+        if (data && data.length > 0) {
+          const avgWpm = Math.round(data.reduce((s, r) => s + r.wpm, 0) / data.length);
+          const avgAcc = Math.round(data.reduce((s, r) => s + r.accuracy, 0) / data.length);
+          setPrevAvg({ wpm: avgWpm, accuracy: avgAcc });
+        }
+      });
+  }, [user, deckId, session]);
 
   if (!session) {
     return (
@@ -177,6 +229,66 @@ function ResultsContent() {
           </h3>
           <WpmVariationChart cards={cardVariation} />
         </div>
+      )}
+
+      {/* Session Comparison */}
+      {prevAvg && (
+        <div
+          className="px-4 py-3 rounded-xl mb-6 text-left"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>
+            {t.vsLastSession ?? 'vs Previous'}
+          </h3>
+          <div className="flex gap-6 text-sm">
+            <ComparisonStat label="WPM" current={session.wpm} previous={prevAvg.wpm} />
+            <ComparisonStat label={t.accuracyLabel} current={session.accuracy} previous={prevAvg.accuracy} suffix="%" />
+          </div>
+        </div>
+      )}
+
+      {/* Error Patterns */}
+      {(() => {
+        const resultsWithText = (session.cardResults ?? []).filter(
+          (cr) => cr.typed_text && cr.target_text && cr.accuracy < 100,
+        );
+        if (resultsWithText.length === 0) return null;
+        const patterns = analyzeErrorPatterns(
+          resultsWithText as { typed_text: string; target_text: string }[],
+        );
+        if (patterns.length === 0) return null;
+        return (
+          <div
+            className="px-4 py-3 rounded-xl mb-6 text-left"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
+            <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>
+              {t.commonMistakes ?? 'Common Mistakes'}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {patterns.map((p, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg font-mono"
+                  style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)' }}
+                >
+                  <span style={{ color: 'var(--correct)' }}>{p.expected}</span>
+                  <span style={{ color: 'var(--muted)' }}>→</span>
+                  <span style={{ color: 'var(--incorrect)' }}>{p.actual}</span>
+                  <span style={{ color: 'var(--muted)' }}>×{p.count}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Wrong Cards Review */}
+      {session.cardResults && session.cards && (
+        <WrongCardsReview
+          cardResults={session.cardResults as { card_id: string; wpm: number; accuracy: number; typed_text: string; target_text: string }[]}
+          cards={session.cards}
+        />
       )}
 
       <div className="flex flex-col gap-3">

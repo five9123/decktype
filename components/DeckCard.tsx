@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { Deck } from '@/types';
 
-export function DeckCard({ deck }: { deck: Deck }) {
+export function DeckCard({ deck, dueCount }: { deck: Deck; dueCount?: number }) {
   const { t } = useLanguage();
 
   return (
@@ -15,9 +15,19 @@ export function DeckCard({ deck }: { deck: Deck }) {
         border: '1px solid var(--border)',
       }}
     >
-      <h3 className="font-bold text-base mb-2 truncate" style={{ color: 'var(--text)' }}>
-        {deck.name}
-      </h3>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="font-bold text-base truncate" style={{ color: 'var(--text)' }}>
+          {deck.name}
+        </h3>
+        {dueCount != null && dueCount > 0 && (
+          <span
+            className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ml-2"
+            style={{ background: 'var(--accent)', color: '#fff' }}
+          >
+            {dueCount} {t.dueToday ?? 'due'}
+          </span>
+        )}
+      </div>
 
       <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>
         <span>{deck.card_count} {t.cards}</span>

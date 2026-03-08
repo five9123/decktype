@@ -105,6 +105,14 @@ export type Translations = {
   mastered: string;
   masteryProgress: string;
   dueForReview: string;
+  dueToday: string;
+
+  // Enhanced Session Report
+  cardsToReview: string;
+  commonMistakes: string;
+  vsLastSession: string;
+  showDetails: string;
+  hideDetails: string;
 
   // Progress (Feature 3)
   overview: string;
@@ -216,6 +224,80 @@ export type Translations = {
   footerTerms: string;
   footerPrivacy: string;
   comingSoon: string;
+
+  // Guide page
+  guideTitle: string;
+  guideIntro: string;
+  guideStep1Title: string;
+  guideStep1Desc: string;
+  guideStep2Title: string;
+  guideStep2Desc: string;
+  guideStep3Title: string;
+  guideStep3Desc: string;
+  guideStep4Title: string;
+  guideStep4Desc: string;
+  guideModesTitle: string;
+  guideModeFrontToBack: string;
+  guideModeBackToFront: string;
+  guideModeSequential: string;
+  guideModeRandom: string;
+  guideModeDifficult: string;
+  guideTipsTitle: string;
+  guideTip1: string;
+  guideTip2: string;
+  guideTip3: string;
+  guideTip4: string;
+  guideFormatsTitle: string;
+  guideFormatsDesc: string;
+  guideFaqTitle: string;
+  guideFaq1Q: string;
+  guideFaq1A: string;
+  guideFaq2Q: string;
+  guideFaq2A: string;
+  guideFaq3Q: string;
+  guideFaq3A: string;
+  guideFaq4Q: string;
+  guideFaq4A: string;
+
+  // Terms page
+  termsTitle: string;
+  termsLastUpdated: string;
+  termsIntro: string;
+  termsSection1Title: string;
+  termsSection1Desc: string;
+  termsSection2Title: string;
+  termsSection2Desc: string;
+  termsSection3Title: string;
+  termsSection3Desc: string;
+  termsSection4Title: string;
+  termsSection4Desc: string;
+  termsSection5Title: string;
+  termsSection5Desc: string;
+  termsSection6Title: string;
+  termsSection6Desc: string;
+  termsSection7Title: string;
+  termsSection7Desc: string;
+  termsSection8Title: string;
+  termsSection8Desc: string;
+
+  // Privacy page
+  privacyTitle: string;
+  privacyLastUpdated: string;
+  privacyIntro: string;
+  privacySection1Title: string;
+  privacySection1Desc: string;
+  privacySection2Title: string;
+  privacySection2Desc: string;
+  privacySection3Title: string;
+  privacySection3Desc: string;
+  privacySection4Title: string;
+  privacySection4Desc: string;
+  privacySection5Title: string;
+  privacySection5Desc: string;
+  privacySection6Title: string;
+  privacySection6Desc: string;
+  privacySection7Title: string;
+  privacySection7Desc: string;
 };
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
@@ -313,6 +395,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mastered: 'Mastered',
     masteryProgress: 'Mastery Progress',
     dueForReview: 'Due for review',
+    dueToday: 'due',
+    cardsToReview: 'Cards to Review',
+    commonMistakes: 'Common Mistakes',
+    vsLastSession: 'vs Previous',
+    showDetails: 'Your input',
+    hideDetails: 'Hide',
 
     overview: 'Overview',
     decksTab: 'Decks',
@@ -417,6 +505,80 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerTerms: 'Terms of Service',
     footerPrivacy: 'Privacy Policy',
     comingSoon: 'Coming soon.',
+
+    // Guide page
+    guideTitle: 'Usage Guide',
+    guideIntro: 'typee turns your Anki flashcards into typing practice sessions. Type answers instead of flipping cards — build muscle memory and retain vocabulary faster.',
+    guideStep1Title: '1. Upload Your Deck',
+    guideStep1Desc: 'Go to the Upload page and drag & drop your .apkg file. typee will automatically parse your cards and extract front/back fields.',
+    guideStep2Title: '2. Choose a Practice Mode',
+    guideStep2Desc: 'Select your deck and choose how you want to practice. You can type meanings, type words, or use smart review to focus on cards you struggle with.',
+    guideStep3Title: '3. Type Your Answers',
+    guideStep3Desc: 'See the prompt and type the answer. You get instant character-by-character feedback. Press Enter to submit, or skip cards you don\'t know yet.',
+    guideStep4Title: '4. Track Your Progress',
+    guideStep4Desc: 'After each session, see your accuracy, speed (WPM), and correct count. Over time, track mastery levels for each card and view your overall stats.',
+    guideModesTitle: 'Practice Modes',
+    guideModeFrontToBack: 'Type Meaning — See the word, type the definition/translation.',
+    guideModeBackToFront: 'Type Word — See the meaning/hint, type the original word.',
+    guideModeSequential: 'Sequential — Practice cards in order.',
+    guideModeRandom: 'Random — Shuffle cards each session.',
+    guideModeDifficult: 'Difficult First — Cards you get wrong most often appear first.',
+    guideTipsTitle: 'Tips for Better Practice',
+    guideTip1: 'Practice daily — even 5 minutes a day builds strong recall over time.',
+    guideTip2: 'Use "Difficult First" mode to focus on your weakest cards.',
+    guideTip3: 'Try both "Type Meaning" and "Type Word" modes for deeper learning.',
+    guideTip4: 'Check your stats page regularly to see which cards need more attention.',
+    guideFormatsTitle: 'Supported Formats',
+    guideFormatsDesc: 'typee supports .apkg files exported from Anki. You can also create decks manually using the Create Deck feature. CSV/TSV uploads with auto-detected field mapping are also supported.',
+    guideFaqTitle: 'FAQ',
+    guideFaq1Q: 'Is typee free?',
+    guideFaq1A: 'Yes! The free plan includes 1 deck with up to 100 cards, all practice modes, and basic stats. Upgrade to Pro for unlimited decks and advanced features.',
+    guideFaq2Q: 'What languages are supported?',
+    guideFaq2A: 'Any language that works in Anki works in typee — Japanese, Korean, Chinese, Spanish, French, German, and more.',
+    guideFaq3Q: 'Can I use typee without an account?',
+    guideFaq3A: 'Yes. You can try the demo or upload a deck as a guest. Create a free account to save your decks and track progress.',
+    guideFaq4Q: 'How does Smart Review work?',
+    guideFaq4A: 'Smart Review uses a confidence score that updates based on your accuracy. Cards you frequently get wrong are shown more often, while mastered cards appear less frequently.',
+
+    // Terms page
+    termsTitle: 'Terms of Service',
+    termsLastUpdated: 'Last updated: March 2026',
+    termsIntro: 'Welcome to typee. By accessing or using our service, you agree to these terms. Please read them carefully.',
+    termsSection1Title: '1. Acceptance of Terms',
+    termsSection1Desc: 'By using typee ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.',
+    termsSection2Title: '2. Description of Service',
+    termsSection2Desc: 'typee is a web-based application that converts Anki flashcards into typing practice sessions. We provide tools for uploading decks, practicing vocabulary through typing, and tracking learning progress.',
+    termsSection3Title: '3. User Accounts',
+    termsSection3Desc: 'You may use some features without an account. To save decks and track progress, you need to create an account via Google OAuth or email. You are responsible for maintaining the security of your account.',
+    termsSection4Title: '4. User Content',
+    termsSection4Desc: 'You retain ownership of any content you upload (flashcard decks, data). By uploading content, you grant us a limited license to store and process it for the purpose of providing the Service. We do not claim ownership of your content.',
+    termsSection5Title: '5. Acceptable Use',
+    termsSection5Desc: 'You agree not to misuse the Service. This includes: uploading harmful or illegal content, attempting to disrupt the Service, reverse engineering, or using automated tools to scrape data.',
+    termsSection6Title: '6. Payments & Subscriptions',
+    termsSection6Desc: 'The Pro plan is billed through Stripe. You can cancel at any time. Refunds are handled on a case-by-case basis. We reserve the right to change pricing with reasonable notice.',
+    termsSection7Title: '7. Limitation of Liability',
+    termsSection7Desc: 'typee is provided "as is" without warranties. We are not liable for any data loss, interruption, or damages arising from the use of the Service. Use the Service at your own risk.',
+    termsSection8Title: '8. Changes to Terms',
+    termsSection8Desc: 'We may update these terms from time to time. Continued use of the Service after changes constitutes acceptance. We will notify users of significant changes via the website.',
+
+    // Privacy page
+    privacyTitle: 'Privacy Policy',
+    privacyLastUpdated: 'Last updated: March 2026',
+    privacyIntro: 'Your privacy matters to us. This policy explains what data we collect, how we use it, and your rights regarding your information.',
+    privacySection1Title: '1. Information We Collect',
+    privacySection1Desc: 'Account info (email, name) via Google OAuth or email sign-up. Uploaded flashcard decks and practice data (accuracy, WPM, session history). Basic usage analytics (page views, feature usage). Payment info is processed by Stripe — we do not store your card details.',
+    privacySection2Title: '2. How We Use Your Data',
+    privacySection2Desc: 'To provide and improve the Service. To save your decks, track progress, and sync across devices. To process payments for Pro subscriptions. We do not sell your personal data to third parties.',
+    privacySection3Title: '3. Data Storage',
+    privacySection3Desc: 'Your data is stored securely using Supabase (hosted on AWS). Flashcard data and practice records are associated with your account. Guest data is stored locally in your browser only.',
+    privacySection4Title: '4. Cookies & Local Storage',
+    privacySection4Desc: 'We use local storage to save your preferences (theme, language, font size). Authentication tokens are stored securely. We do not use third-party tracking cookies.',
+    privacySection5Title: '5. Third-Party Services',
+    privacySection5Desc: 'Google OAuth for authentication. Stripe for payment processing. Supabase for database and auth. These services have their own privacy policies.',
+    privacySection6Title: '6. Your Rights',
+    privacySection6Desc: 'You can delete your account and all associated data at any time. You can export your data by downloading your decks. You can opt out of optional analytics. Contact us for any data-related requests.',
+    privacySection7Title: '7. Contact',
+    privacySection7Desc: 'If you have questions about this Privacy Policy, please reach out through our Contact page.',
   },
 
   ko: {
@@ -513,6 +675,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mastered: '마스터',
     masteryProgress: '학습 진행률',
     dueForReview: '복습 예정',
+    dueToday: '복습',
+    cardsToReview: '복습할 카드',
+    commonMistakes: '자주 틀린 패턴',
+    vsLastSession: '이전 대비',
+    showDetails: '입력 내용',
+    hideDetails: '숨기기',
 
     overview: '개요',
     decksTab: '덱',
@@ -617,6 +785,77 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerTerms: '이용약관',
     footerPrivacy: '개인정보처리방침',
     comingSoon: '준비 중입니다.',
+
+    guideTitle: '사용 가이드',
+    guideIntro: 'typee는 Anki 플래시카드를 타이핑 연습 세션으로 변환합니다. 카드를 넘기는 대신 답을 직접 타이핑하여 근육 기억을 만들고 어휘를 더 빠르게 기억하세요.',
+    guideStep1Title: '1. 덱 업로드',
+    guideStep1Desc: '업로드 페이지에서 .apkg 파일을 드래그 앤 드롭하세요. typee가 자동으로 카드를 파싱하고 앞면/뒷면 필드를 추출합니다.',
+    guideStep2Title: '2. 연습 모드 선택',
+    guideStep2Desc: '덱을 선택하고 원하는 연습 방식을 고르세요. 뜻 타이핑, 단어 타이핑, 또는 스마트 복습으로 취약한 카드에 집중할 수 있습니다.',
+    guideStep3Title: '3. 답변 타이핑',
+    guideStep3Desc: '문제를 보고 답을 입력하세요. 글자별 실시간 피드백을 받습니다. Enter로 제출하거나, 모르는 카드는 건너뛸 수 있습니다.',
+    guideStep4Title: '4. 진행 상황 추적',
+    guideStep4Desc: '각 세션 후 정확도, 속도(WPM), 맞은 수를 확인하세요. 시간이 지남에 따라 각 카드의 마스터리 레벨과 전체 통계를 추적하세요.',
+    guideModesTitle: '연습 모드',
+    guideModeFrontToBack: '뜻 타이핑 — 단어를 보고 정의/번역을 입력합니다.',
+    guideModeBackToFront: '단어 타이핑 — 뜻/힌트를 보고 원래 단어를 입력합니다.',
+    guideModeSequential: '순차 — 카드를 순서대로 연습합니다.',
+    guideModeRandom: '랜덤 — 매 세션마다 카드를 섞습니다.',
+    guideModeDifficult: '어려운 것 먼저 — 가장 많이 틀린 카드가 먼저 나타납니다.',
+    guideTipsTitle: '효과적인 연습 팁',
+    guideTip1: '매일 연습하세요 — 하루 5분이라도 꾸준히 하면 기억력이 크게 향상됩니다.',
+    guideTip2: '"어려운 것 먼저" 모드로 취약한 카드에 집중하세요.',
+    guideTip3: '"뜻 타이핑"과 "단어 타이핑" 모드를 번갈아 사용하면 더 깊이 학습할 수 있습니다.',
+    guideTip4: '통계 페이지를 정기적으로 확인하여 어떤 카드에 더 주의가 필요한지 파악하세요.',
+    guideFormatsTitle: '지원 형식',
+    guideFormatsDesc: 'typee는 Anki에서 내보낸 .apkg 파일을 지원합니다. 덱 만들기 기능으로 직접 덱을 만들 수도 있습니다. 필드 자동 감지 기능이 있는 CSV/TSV 업로드도 지원합니다.',
+    guideFaqTitle: '자주 묻는 질문',
+    guideFaq1Q: 'typee는 무료인가요?',
+    guideFaq1A: '네! 무료 플랜에는 1개의 덱(최대 100장), 모든 연습 모드, 기본 통계가 포함됩니다. Pro로 업그레이드하면 무제한 덱과 고급 기능을 이용할 수 있습니다.',
+    guideFaq2Q: '어떤 언어를 지원하나요?',
+    guideFaq2A: 'Anki에서 작동하는 모든 언어가 typee에서도 작동합니다 — 일본어, 한국어, 중국어, 스페인어, 프랑스어, 독일어 등.',
+    guideFaq3Q: '계정 없이 사용할 수 있나요?',
+    guideFaq3A: '네. 데모를 체험하거나 게스트로 덱을 업로드할 수 있습니다. 덱을 저장하고 진행 상황을 추적하려면 무료 계정을 만드세요.',
+    guideFaq4Q: '스마트 복습은 어떻게 작동하나요?',
+    guideFaq4A: '스마트 복습은 정확도를 기반으로 업데이트되는 신뢰도 점수를 사용합니다. 자주 틀리는 카드는 더 자주 나타나고, 마스터한 카드는 덜 자주 나타납니다.',
+
+    termsTitle: '이용약관',
+    termsLastUpdated: '최종 수정: 2026년 3월',
+    termsIntro: 'typee에 오신 것을 환영합니다. 서비스를 이용함으로써 본 약관에 동의하게 됩니다. 주의 깊게 읽어주세요.',
+    termsSection1Title: '1. 약관 동의',
+    termsSection1Desc: 'typee("서비스")를 사용함으로써 본 이용약관에 동의하게 됩니다. 동의하지 않으시면 서비스를 이용하지 마세요.',
+    termsSection2Title: '2. 서비스 설명',
+    termsSection2Desc: 'typee는 Anki 플래시카드를 타이핑 연습 세션으로 변환하는 웹 애플리케이션입니다. 덱 업로드, 타이핑을 통한 어휘 연습, 학습 진행 추적 도구를 제공합니다.',
+    termsSection3Title: '3. 사용자 계정',
+    termsSection3Desc: '일부 기능은 계정 없이 사용할 수 있습니다. 덱을 저장하고 진행 상황을 추적하려면 Google OAuth 또는 이메일로 계정을 만들어야 합니다. 계정 보안은 사용자의 책임입니다.',
+    termsSection4Title: '4. 사용자 콘텐츠',
+    termsSection4Desc: '업로드한 콘텐츠(플래시카드 덱, 데이터)의 소유권은 사용자에게 있습니다. 콘텐츠를 업로드함으로써 서비스 제공 목적으로 저장 및 처리하는 제한적 라이선스를 부여합니다. 사용자 콘텐츠의 소유권을 주장하지 않습니다.',
+    termsSection5Title: '5. 허용되는 사용',
+    termsSection5Desc: '서비스를 오용하지 않기로 동의합니다. 여기에는 유해하거나 불법적인 콘텐츠 업로드, 서비스 방해 시도, 리버스 엔지니어링, 자동화 도구를 이용한 데이터 스크래핑이 포함됩니다.',
+    termsSection6Title: '6. 결제 및 구독',
+    termsSection6Desc: 'Pro 플랜은 Stripe를 통해 결제됩니다. 언제든지 취소할 수 있습니다. 환불은 개별적으로 처리됩니다. 합리적인 사전 통지를 통해 가격을 변경할 수 있습니다.',
+    termsSection7Title: '7. 책임 제한',
+    termsSection7Desc: 'typee는 보증 없이 "있는 그대로" 제공됩니다. 서비스 사용으로 인한 데이터 손실, 중단 또는 손해에 대해 책임지지 않습니다. 사용자 본인의 책임 하에 서비스를 이용하세요.',
+    termsSection8Title: '8. 약관 변경',
+    termsSection8Desc: '본 약관은 수시로 업데이트될 수 있습니다. 변경 후 서비스를 계속 이용하면 변경 사항에 동의하는 것입니다. 중요한 변경 사항은 웹사이트를 통해 공지합니다.',
+
+    privacyTitle: '개인정보처리방침',
+    privacyLastUpdated: '최종 수정: 2026년 3월',
+    privacyIntro: '개인정보 보호는 저희에게 중요합니다. 이 방침은 어떤 데이터를 수집하고, 어떻게 사용하며, 사용자의 권리에 대해 설명합니다.',
+    privacySection1Title: '1. 수집하는 정보',
+    privacySection1Desc: 'Google OAuth 또는 이메일 가입을 통한 계정 정보(이메일, 이름). 업로드한 플래시카드 덱과 연습 데이터(정확도, WPM, 세션 기록). 기본적인 사용 분석(페이지 조회, 기능 사용). 결제 정보는 Stripe에서 처리되며 카드 정보를 저장하지 않습니다.',
+    privacySection2Title: '2. 데이터 사용 방법',
+    privacySection2Desc: '서비스 제공 및 개선을 위해 사용합니다. 덱 저장, 진행 추적, 기기 간 동기화를 위해 사용합니다. Pro 구독 결제 처리를 위해 사용합니다. 개인 데이터를 제3자에게 판매하지 않습니다.',
+    privacySection3Title: '3. 데이터 저장',
+    privacySection3Desc: '데이터는 Supabase(AWS 호스팅)를 사용하여 안전하게 저장됩니다. 플래시카드 데이터와 연습 기록은 계정에 연결됩니다. 게스트 데이터는 브라우저 로컬에만 저장됩니다.',
+    privacySection4Title: '4. 쿠키 및 로컬 저장소',
+    privacySection4Desc: '환경설정(테마, 언어, 글꼴 크기)을 저장하기 위해 로컬 저장소를 사용합니다. 인증 토큰은 안전하게 저장됩니다. 서드파티 추적 쿠키를 사용하지 않습니다.',
+    privacySection5Title: '5. 제3자 서비스',
+    privacySection5Desc: '인증을 위한 Google OAuth. 결제 처리를 위한 Stripe. 데이터베이스 및 인증을 위한 Supabase. 이러한 서비스에는 자체 개인정보처리방침이 있습니다.',
+    privacySection6Title: '6. 사용자 권리',
+    privacySection6Desc: '언제든지 계정과 모든 관련 데이터를 삭제할 수 있습니다. 덱을 다운로드하여 데이터를 내보낼 수 있습니다. 선택적 분석을 거부할 수 있습니다. 데이터 관련 요청은 문의 페이지를 통해 연락해 주세요.',
+    privacySection7Title: '7. 문의',
+    privacySection7Desc: '개인정보처리방침에 대한 질문이 있으시면 문의 페이지를 통해 연락해 주세요.',
   },
 
   ja: {
@@ -713,6 +952,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mastered: 'マスター',
     masteryProgress: '習得進捗',
     dueForReview: '復習予定',
+    dueToday: '復習',
+    cardsToReview: '復習カード',
+    commonMistakes: 'よくある間違い',
+    vsLastSession: '前回との比較',
+    showDetails: '入力内容',
+    hideDetails: '非表示',
 
     overview: '概要',
     decksTab: 'デッキ',
@@ -817,6 +1062,77 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerTerms: '利用規約',
     footerPrivacy: 'プライバシーポリシー',
     comingSoon: '準備中です。',
+
+    guideTitle: '使い方ガイド',
+    guideIntro: 'typeeはAnkiフラッシュカードをタイピング練習セッションに変換します。カードをめくる代わりに答えをタイピングして、筋肉記憶を構築し、語彙をより早く定着させましょう。',
+    guideStep1Title: '1. デッキをアップロード',
+    guideStep1Desc: 'アップロードページで.apkgファイルをドラッグ＆ドロップしてください。typeeが自動的にカードを解析し、表面/裏面のフィールドを抽出します。',
+    guideStep2Title: '2. 練習モードを選択',
+    guideStep2Desc: 'デッキを選択し、練習方法を選びましょう。意味を入力、単語を入力、またはスマートレビューで苦手なカードに集中できます。',
+    guideStep3Title: '3. 答えを入力',
+    guideStep3Desc: 'プロンプトを見て答えを入力します。文字ごとにリアルタイムフィードバックが得られます。Enterで送信、わからないカードはスキップできます。',
+    guideStep4Title: '4. 進捗を追跡',
+    guideStep4Desc: '各セッション後に精度、速度（WPM）、正解数を確認できます。時間とともに各カードのマスタリーレベルと全体の統計を追跡しましょう。',
+    guideModesTitle: '練習モード',
+    guideModeFrontToBack: '意味を入力 — 単語を見て、定義/翻訳を入力します。',
+    guideModeBackToFront: '単語を入力 — 意味/ヒントを見て、元の単語を入力します。',
+    guideModeSequential: '順番通り — カードを順番に練習します。',
+    guideModeRandom: 'ランダム — 毎回カードをシャッフルします。',
+    guideModeDifficult: '難しい順 — 最もよく間違えるカードが最初に表示されます。',
+    guideTipsTitle: '効果的な練習のコツ',
+    guideTip1: '毎日練習しましょう — 1日5分でも続ければ記憶力が大きく向上します。',
+    guideTip2: '「難しい順」モードで苦手なカードに集中しましょう。',
+    guideTip3: '「意味を入力」と「単語を入力」の両方のモードを使うと、より深い学習ができます。',
+    guideTip4: '統計ページを定期的に確認して、どのカードに注意が必要か把握しましょう。',
+    guideFormatsTitle: '対応フォーマット',
+    guideFormatsDesc: 'typeeはAnkiからエクスポートした.apkgファイルに対応しています。デッキ作成機能で手動でデッキを作ることもできます。フィールド自動検出付きのCSV/TSVアップロードにも対応しています。',
+    guideFaqTitle: 'よくある質問',
+    guideFaq1Q: 'typeeは無料ですか？',
+    guideFaq1A: 'はい！無料プランには1デッキ（最大100枚）、全練習モード、基本統計が含まれます。Proにアップグレードすると無制限のデッキと高度な機能が利用できます。',
+    guideFaq2Q: 'どの言語に対応していますか？',
+    guideFaq2A: 'Ankiで使えるすべての言語がtypeeでも使えます — 日本語、韓国語、中国語、スペイン語、フランス語、ドイツ語など。',
+    guideFaq3Q: 'アカウントなしで使えますか？',
+    guideFaq3A: 'はい。デモを試したり、ゲストとしてデッキをアップロードできます。デッキを保存して進捗を追跡するには無料アカウントを作成してください。',
+    guideFaq4Q: 'スマートレビューはどう機能しますか？',
+    guideFaq4A: 'スマートレビューは精度に基づいて更新される信頼度スコアを使用します。よく間違えるカードはより頻繁に表示され、マスターしたカードはあまり表示されません。',
+
+    termsTitle: '利用規約',
+    termsLastUpdated: '最終更新: 2026年3月',
+    termsIntro: 'typeeへようこそ。サービスを利用することにより、本規約に同意したものとみなされます。注意してお読みください。',
+    termsSection1Title: '1. 規約の承認',
+    termsSection1Desc: 'typee（「サービス」）を使用することにより、本利用規約に拘束されることに同意します。同意しない場合は、サービスを利用しないでください。',
+    termsSection2Title: '2. サービスの説明',
+    termsSection2Desc: 'typeeはAnkiフラッシュカードをタイピング練習セッションに変換するWebアプリケーションです。デッキのアップロード、タイピングによる語彙練習、学習進捗の追跡ツールを提供します。',
+    termsSection3Title: '3. ユーザーアカウント',
+    termsSection3Desc: '一部の機能はアカウントなしで利用できます。デッキを保存し進捗を追跡するには、Google OAuthまたはメールでアカウントを作成する必要があります。アカウントのセキュリティはユーザーの責任です。',
+    termsSection4Title: '4. ユーザーコンテンツ',
+    termsSection4Desc: 'アップロードしたコンテンツ（フラッシュカードデッキ、データ）の所有権はユーザーにあります。コンテンツをアップロードすることにより、サービス提供の目的で保存・処理するための限定的なライセンスを付与します。',
+    termsSection5Title: '5. 許可される使用',
+    termsSection5Desc: 'サービスを悪用しないことに同意します。これには、有害または違法なコンテンツのアップロード、サービスの妨害、リバースエンジニアリング、自動化ツールによるデータスクレイピングが含まれます。',
+    termsSection6Title: '6. 支払いとサブスクリプション',
+    termsSection6Desc: 'ProプランはStripeを通じて請求されます。いつでもキャンセルできます。払い戻しはケースバイケースで対応します。合理的な事前通知により価格を変更する権利を留保します。',
+    termsSection7Title: '7. 責任の制限',
+    termsSection7Desc: 'typeeは保証なしに「現状のまま」提供されます。サービスの使用から生じるデータ損失、中断、または損害について責任を負いません。',
+    termsSection8Title: '8. 規約の変更',
+    termsSection8Desc: '本規約は随時更新される場合があります。変更後もサービスを継続して利用することは、変更への同意を意味します。重要な変更はウェブサイトを通じてお知らせします。',
+
+    privacyTitle: 'プライバシーポリシー',
+    privacyLastUpdated: '最終更新: 2026年3月',
+    privacyIntro: 'プライバシーは私たちにとって重要です。このポリシーでは、収集するデータ、使用方法、およびお客様の権利について説明します。',
+    privacySection1Title: '1. 収集する情報',
+    privacySection1Desc: 'Google OAuthまたはメール登録によるアカウント情報（メール、名前）。アップロードしたフラッシュカードデッキと練習データ（精度、WPM、セッション履歴）。基本的な使用分析（ページビュー、機能使用）。支払い情報はStripeで処理され、カード情報は保存しません。',
+    privacySection2Title: '2. データの使用方法',
+    privacySection2Desc: 'サービスの提供と改善のために使用します。デッキの保存、進捗追跡、デバイス間の同期のために使用します。Proサブスクリプションの決済処理のために使用します。個人データを第三者に販売しません。',
+    privacySection3Title: '3. データの保管',
+    privacySection3Desc: 'データはSupabase（AWSホスティング）を使用して安全に保管されます。フラッシュカードデータと練習記録はアカウントに関連付けられます。ゲストデータはブラウザのローカルにのみ保存されます。',
+    privacySection4Title: '4. クッキーとローカルストレージ',
+    privacySection4Desc: '設定（テーマ、言語、フォントサイズ）を保存するためにローカルストレージを使用します。認証トークンは安全に保存されます。サードパーティのトラッキングクッキーは使用しません。',
+    privacySection5Title: '5. サードパーティサービス',
+    privacySection5Desc: '認証のためのGoogle OAuth。決済処理のためのStripe。データベースと認証のためのSupabase。これらのサービスには独自のプライバシーポリシーがあります。',
+    privacySection6Title: '6. ユーザーの権利',
+    privacySection6Desc: 'いつでもアカウントと関連するすべてのデータを削除できます。デッキをダウンロードしてデータをエクスポートできます。オプションの分析をオプトアウトできます。データに関するリクエストはお問い合わせページからご連絡ください。',
+    privacySection7Title: '7. お問い合わせ',
+    privacySection7Desc: 'プライバシーポリシーに関するご質問は、お問い合わせページからご連絡ください。',
   },
 
   es: {
@@ -913,6 +1229,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mastered: 'Dominado',
     masteryProgress: 'Progreso de dominio',
     dueForReview: 'Pendiente de revisión',
+    dueToday: 'pendiente',
+    cardsToReview: 'Tarjetas para repasar',
+    commonMistakes: 'Errores frecuentes',
+    vsLastSession: 'vs Anterior',
+    showDetails: 'Tu entrada',
+    hideDetails: 'Ocultar',
 
     overview: 'Resumen',
     decksTab: 'Mazos',
@@ -1017,6 +1339,77 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerTerms: 'Términos de servicio',
     footerPrivacy: 'Política de privacidad',
     comingSoon: 'Próximamente.',
+
+    guideTitle: 'Guía de uso',
+    guideIntro: 'typee convierte tus tarjetas de Anki en sesiones de práctica de escritura. Escribe las respuestas en lugar de voltear tarjetas — construye memoria muscular y retén vocabulario más rápido.',
+    guideStep1Title: '1. Sube tu mazo',
+    guideStep1Desc: 'Ve a la página de carga y arrastra tu archivo .apkg. typee analizará automáticamente tus tarjetas y extraerá los campos de frente/reverso.',
+    guideStep2Title: '2. Elige un modo de práctica',
+    guideStep2Desc: 'Selecciona tu mazo y elige cómo quieres practicar. Puedes escribir significados, escribir palabras o usar la revisión inteligente para enfocarte en las tarjetas difíciles.',
+    guideStep3Title: '3. Escribe tus respuestas',
+    guideStep3Desc: 'Ve la pregunta y escribe la respuesta. Obtienes retroalimentación instantánea carácter por carácter. Presiona Enter para enviar o salta las tarjetas que aún no conoces.',
+    guideStep4Title: '4. Sigue tu progreso',
+    guideStep4Desc: 'Después de cada sesión, ve tu precisión, velocidad (WPM) y cantidad de aciertos. Con el tiempo, rastrea los niveles de dominio de cada tarjeta.',
+    guideModesTitle: 'Modos de práctica',
+    guideModeFrontToBack: 'Escribir significado — Ve la palabra, escribe la definición/traducción.',
+    guideModeBackToFront: 'Escribir palabra — Ve el significado/pista, escribe la palabra original.',
+    guideModeSequential: 'Secuencial — Practica las tarjetas en orden.',
+    guideModeRandom: 'Aleatorio — Mezcla las tarjetas en cada sesión.',
+    guideModeDifficult: 'Difíciles primero — Las tarjetas que más fallas aparecen primero.',
+    guideTipsTitle: 'Consejos para practicar mejor',
+    guideTip1: 'Practica diariamente — incluso 5 minutos al día construyen un recuerdo sólido.',
+    guideTip2: 'Usa el modo "Difíciles primero" para enfocarte en tus tarjetas más débiles.',
+    guideTip3: 'Prueba ambos modos "Escribir significado" y "Escribir palabra" para un aprendizaje más profundo.',
+    guideTip4: 'Revisa tu página de estadísticas regularmente para ver qué tarjetas necesitan más atención.',
+    guideFormatsTitle: 'Formatos compatibles',
+    guideFormatsDesc: 'typee soporta archivos .apkg exportados desde Anki. También puedes crear mazos manualmente. Se admiten cargas de CSV/TSV con detección automática de campos.',
+    guideFaqTitle: 'Preguntas frecuentes',
+    guideFaq1Q: '¿Es typee gratis?',
+    guideFaq1A: '¡Sí! El plan gratuito incluye 1 mazo con hasta 100 tarjetas, todos los modos de práctica y estadísticas básicas. Actualiza a Pro para mazos ilimitados.',
+    guideFaq2Q: '¿Qué idiomas son compatibles?',
+    guideFaq2A: 'Cualquier idioma que funcione en Anki funciona en typee — japonés, coreano, chino, español, francés, alemán y más.',
+    guideFaq3Q: '¿Puedo usar typee sin cuenta?',
+    guideFaq3A: 'Sí. Puedes probar la demo o subir un mazo como invitado. Crea una cuenta gratuita para guardar tus mazos y seguir tu progreso.',
+    guideFaq4Q: '¿Cómo funciona la revisión inteligente?',
+    guideFaq4A: 'La revisión inteligente usa una puntuación de confianza que se actualiza según tu precisión. Las tarjetas que fallas frecuentemente aparecen más a menudo.',
+
+    termsTitle: 'Términos de servicio',
+    termsLastUpdated: 'Última actualización: marzo 2026',
+    termsIntro: 'Bienvenido a typee. Al acceder o usar nuestro servicio, aceptas estos términos. Por favor, léelos con atención.',
+    termsSection1Title: '1. Aceptación de los términos',
+    termsSection1Desc: 'Al usar typee ("el Servicio"), aceptas quedar vinculado por estos Términos de servicio. Si no estás de acuerdo, no uses el Servicio.',
+    termsSection2Title: '2. Descripción del servicio',
+    termsSection2Desc: 'typee es una aplicación web que convierte tarjetas de Anki en sesiones de práctica de escritura. Proporcionamos herramientas para subir mazos, practicar vocabulario y seguir el progreso.',
+    termsSection3Title: '3. Cuentas de usuario',
+    termsSection3Desc: 'Algunas funciones se pueden usar sin cuenta. Para guardar mazos y seguir el progreso, necesitas crear una cuenta mediante Google OAuth o correo electrónico.',
+    termsSection4Title: '4. Contenido del usuario',
+    termsSection4Desc: 'Conservas la propiedad del contenido que subes. Al subir contenido, nos otorgas una licencia limitada para almacenarlo y procesarlo con el fin de proporcionar el Servicio.',
+    termsSection5Title: '5. Uso aceptable',
+    termsSection5Desc: 'Aceptas no hacer un uso indebido del Servicio. Esto incluye: subir contenido dañino o ilegal, intentar interrumpir el Servicio, ingeniería inversa o scraping automatizado.',
+    termsSection6Title: '6. Pagos y suscripciones',
+    termsSection6Desc: 'El plan Pro se factura a través de Stripe. Puedes cancelar en cualquier momento. Los reembolsos se manejan caso por caso.',
+    termsSection7Title: '7. Limitación de responsabilidad',
+    termsSection7Desc: 'typee se proporciona "tal cual" sin garantías. No somos responsables de la pérdida de datos, interrupciones o daños derivados del uso del Servicio.',
+    termsSection8Title: '8. Cambios en los términos',
+    termsSection8Desc: 'Podemos actualizar estos términos periódicamente. El uso continuado del Servicio después de los cambios constituye aceptación.',
+
+    privacyTitle: 'Política de privacidad',
+    privacyLastUpdated: 'Última actualización: marzo 2026',
+    privacyIntro: 'Tu privacidad nos importa. Esta política explica qué datos recopilamos, cómo los usamos y tus derechos sobre tu información.',
+    privacySection1Title: '1. Información que recopilamos',
+    privacySection1Desc: 'Información de cuenta (email, nombre) mediante Google OAuth o registro por correo. Mazos de tarjetas subidos y datos de práctica. Análisis básico de uso. La información de pago es procesada por Stripe.',
+    privacySection2Title: '2. Cómo usamos tus datos',
+    privacySection2Desc: 'Para proporcionar y mejorar el Servicio. Para guardar tus mazos, seguir el progreso y sincronizar entre dispositivos. No vendemos tus datos personales a terceros.',
+    privacySection3Title: '3. Almacenamiento de datos',
+    privacySection3Desc: 'Tus datos se almacenan de forma segura usando Supabase (alojado en AWS). Los datos de invitados se almacenan solo localmente en tu navegador.',
+    privacySection4Title: '4. Cookies y almacenamiento local',
+    privacySection4Desc: 'Usamos almacenamiento local para guardar tus preferencias. Los tokens de autenticación se almacenan de forma segura. No usamos cookies de rastreo de terceros.',
+    privacySection5Title: '5. Servicios de terceros',
+    privacySection5Desc: 'Google OAuth para autenticación. Stripe para procesamiento de pagos. Supabase para base de datos y autenticación.',
+    privacySection6Title: '6. Tus derechos',
+    privacySection6Desc: 'Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento. Puedes exportar tus datos descargando tus mazos. Contáctanos para cualquier solicitud relacionada con datos.',
+    privacySection7Title: '7. Contacto',
+    privacySection7Desc: 'Si tienes preguntas sobre esta Política de privacidad, contáctanos a través de nuestra página de Contacto.',
   },
 
   zh: {
@@ -1113,6 +1506,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mastered: '已掌握',
     masteryProgress: '掌握进度',
     dueForReview: '待复习',
+    dueToday: '待复习',
+    cardsToReview: '需要复习的卡片',
+    commonMistakes: '常见错误',
+    vsLastSession: '与上次对比',
+    showDetails: '你的输入',
+    hideDetails: '隐藏',
 
     overview: '概览',
     decksTab: '牌组',
@@ -1217,6 +1616,77 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerTerms: '服务条款',
     footerPrivacy: '隐私政策',
     comingSoon: '即将推出。',
+
+    guideTitle: '使用指南',
+    guideIntro: 'typee将你的Anki闪卡转化为打字练习。用打字代替翻卡——建立肌肉记忆，更快地记住词汇。',
+    guideStep1Title: '1. 上传你的牌组',
+    guideStep1Desc: '前往上传页面，拖放你的.apkg文件。typee会自动解析卡片并提取正面/背面字段。',
+    guideStep2Title: '2. 选择练习模式',
+    guideStep2Desc: '选择牌组并选择练习方式。你可以输入含义、输入单词，或使用智能复习来专注于薄弱卡片。',
+    guideStep3Title: '3. 输入你的答案',
+    guideStep3Desc: '看到提示后输入答案。你会获得逐字符的即时反馈。按Enter提交，或跳过还不会的卡片。',
+    guideStep4Title: '4. 追踪你的进度',
+    guideStep4Desc: '每次练习后查看准确率、速度（WPM）和正确数量。随时间推移追踪每张卡片的掌握程度和整体统计。',
+    guideModesTitle: '练习模式',
+    guideModeFrontToBack: '输入含义 — 看到单词，输入定义/翻译。',
+    guideModeBackToFront: '输入单词 — 看到含义/提示，输入原始单词。',
+    guideModeSequential: '顺序 — 按顺序练习卡片。',
+    guideModeRandom: '随机 — 每次打乱卡片顺序。',
+    guideModeDifficult: '困难优先 — 最常出错的卡片优先显示。',
+    guideTipsTitle: '高效练习技巧',
+    guideTip1: '每天练习——即使每天5分钟也能建立牢固的记忆。',
+    guideTip2: '使用"困难优先"模式专注于薄弱卡片。',
+    guideTip3: '交替使用"输入含义"和"输入单词"模式以加深学习。',
+    guideTip4: '定期查看统计页面，了解哪些卡片需要更多关注。',
+    guideFormatsTitle: '支持的格式',
+    guideFormatsDesc: 'typee支持从Anki导出的.apkg文件。你也可以使用创建牌组功能手动创建。还支持带有自动字段检测的CSV/TSV上传。',
+    guideFaqTitle: '常见问题',
+    guideFaq1Q: 'typee免费吗？',
+    guideFaq1A: '是的！免费计划包括1个牌组（最多100张卡片）、所有练习模式和基本统计。升级到Pro可获得无限牌组和高级功能。',
+    guideFaq2Q: '支持哪些语言？',
+    guideFaq2A: '在Anki中可用的所有语言都可以在typee中使用——日语、韩语、中文、西班牙语、法语、德语等。',
+    guideFaq3Q: '可以不注册使用吗？',
+    guideFaq3A: '可以。你可以试用演示或作为访客上传牌组。创建免费账户以保存牌组和追踪进度。',
+    guideFaq4Q: '智能复习如何工作？',
+    guideFaq4A: '智能复习使用基于准确率更新的信心分数。经常出错的卡片会更频繁地出现，已掌握的卡片则较少出现。',
+
+    termsTitle: '服务条款',
+    termsLastUpdated: '最后更新：2026年3月',
+    termsIntro: '欢迎使用typee。使用我们的服务即表示您同意这些条款。请仔细阅读。',
+    termsSection1Title: '1. 接受条款',
+    termsSection1Desc: '使用typee（"服务"）即表示您同意受本服务条款的约束。如果您不同意，请不要使用本服务。',
+    termsSection2Title: '2. 服务描述',
+    termsSection2Desc: 'typee是一个将Anki闪卡转化为打字练习的Web应用程序。我们提供上传牌组、通过打字练习词汇和追踪学习进度的工具。',
+    termsSection3Title: '3. 用户账户',
+    termsSection3Desc: '部分功能无需账户即可使用。要保存牌组和追踪进度，需要通过Google OAuth或电子邮件创建账户。您有责任维护账户安全。',
+    termsSection4Title: '4. 用户内容',
+    termsSection4Desc: '您上传的内容（闪卡牌组、数据）的所有权归您所有。上传内容即表示您授予我们有限许可，用于存储和处理以提供服务。',
+    termsSection5Title: '5. 可接受的使用',
+    termsSection5Desc: '您同意不滥用本服务。包括：上传有害或非法内容、试图破坏服务、逆向工程或使用自动化工具抓取数据。',
+    termsSection6Title: '6. 付款与订阅',
+    termsSection6Desc: 'Pro计划通过Stripe计费。您可以随时取消。退款按个案处理。我们保留在合理通知后更改价格的权利。',
+    termsSection7Title: '7. 责任限制',
+    termsSection7Desc: 'typee按"原样"提供，不附带任何保证。我们不对因使用服务而导致的数据丢失、中断或损害负责。',
+    termsSection8Title: '8. 条款变更',
+    termsSection8Desc: '我们可能会不时更新这些条款。变更后继续使用服务即表示接受变更。重大变更将通过网站通知用户。',
+
+    privacyTitle: '隐私政策',
+    privacyLastUpdated: '最后更新：2026年3月',
+    privacyIntro: '您的隐私对我们很重要。本政策说明我们收集哪些数据、如何使用以及您对信息的权利。',
+    privacySection1Title: '1. 我们收集的信息',
+    privacySection1Desc: '通过Google OAuth或邮箱注册的账户信息（邮箱、姓名）。上传的闪卡牌组和练习数据（准确率、WPM、会话记录）。基本使用分析（页面浏览、功能使用）。支付信息由Stripe处理，我们不存储您的卡片信息。',
+    privacySection2Title: '2. 我们如何使用您的数据',
+    privacySection2Desc: '用于提供和改进服务。用于保存牌组、追踪进度和跨设备同步。用于处理Pro订阅付款。我们不会将您的个人数据出售给第三方。',
+    privacySection3Title: '3. 数据存储',
+    privacySection3Desc: '您的数据使用Supabase（托管在AWS上）安全存储。闪卡数据和练习记录与您的账户关联。访客数据仅存储在浏览器本地。',
+    privacySection4Title: '4. Cookie和本地存储',
+    privacySection4Desc: '我们使用本地存储来保存您的偏好设置（主题、语言、字体大小）。认证令牌安全存储。我们不使用第三方跟踪Cookie。',
+    privacySection5Title: '5. 第三方服务',
+    privacySection5Desc: 'Google OAuth用于身份验证。Stripe用于支付处理。Supabase用于数据库和认证。这些服务有各自的隐私政策。',
+    privacySection6Title: '6. 您的权利',
+    privacySection6Desc: '您可以随时删除账户及所有相关数据。您可以通过下载牌组来导出数据。您可以选择退出可选分析。如有数据相关请求，请通过联系页面联系我们。',
+    privacySection7Title: '7. 联系方式',
+    privacySection7Desc: '如果您对本隐私政策有疑问，请通过我们的联系页面联系我们。',
   },
 
   fr: {
@@ -1313,6 +1783,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mastered: 'Maîtrisé',
     masteryProgress: 'Progression de maîtrise',
     dueForReview: 'À réviser',
+    dueToday: 'à réviser',
+    cardsToReview: 'Cartes à revoir',
+    commonMistakes: 'Erreurs fréquentes',
+    vsLastSession: 'vs Précédent',
+    showDetails: 'Votre saisie',
+    hideDetails: 'Masquer',
 
     overview: 'Vue d\'ensemble',
     decksTab: 'Decks',
@@ -1417,5 +1893,76 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerTerms: "Conditions d'utilisation",
     footerPrivacy: 'Politique de confidentialité',
     comingSoon: 'Bientôt disponible.',
+
+    guideTitle: "Guide d'utilisation",
+    guideIntro: "typee transforme vos cartes Anki en sessions de pratique de frappe. Tapez les réponses au lieu de retourner les cartes — développez la mémoire musculaire et retenez le vocabulaire plus rapidement.",
+    guideStep1Title: '1. Téléchargez votre paquet',
+    guideStep1Desc: "Allez sur la page d'import et glissez-déposez votre fichier .apkg. typee analysera automatiquement vos cartes et extraira les champs recto/verso.",
+    guideStep2Title: '2. Choisissez un mode de pratique',
+    guideStep2Desc: "Sélectionnez votre paquet et choisissez comment vous voulez pratiquer. Vous pouvez taper les significations, taper les mots ou utiliser la révision intelligente.",
+    guideStep3Title: '3. Tapez vos réponses',
+    guideStep3Desc: "Voyez l'invite et tapez la réponse. Vous obtenez un retour instantané caractère par caractère. Appuyez sur Entrée pour soumettre ou passez les cartes que vous ne connaissez pas encore.",
+    guideStep4Title: '4. Suivez vos progrès',
+    guideStep4Desc: "Après chaque session, consultez votre précision, vitesse (WPM) et nombre de bonnes réponses. Au fil du temps, suivez les niveaux de maîtrise de chaque carte.",
+    guideModesTitle: 'Modes de pratique',
+    guideModeFrontToBack: 'Taper la signification — Voyez le mot, tapez la définition/traduction.',
+    guideModeBackToFront: "Taper le mot — Voyez la signification/indice, tapez le mot d'origine.",
+    guideModeSequential: "Séquentiel — Pratiquez les cartes dans l'ordre.",
+    guideModeRandom: 'Aléatoire — Mélangez les cartes à chaque session.',
+    guideModeDifficult: "Difficiles d'abord — Les cartes que vous ratez le plus apparaissent en premier.",
+    guideTipsTitle: 'Conseils pour mieux pratiquer',
+    guideTip1: 'Pratiquez quotidiennement — même 5 minutes par jour construisent une mémoire solide.',
+    guideTip2: 'Utilisez le mode "Difficiles d\'abord" pour vous concentrer sur vos cartes les plus faibles.',
+    guideTip3: 'Essayez les deux modes "Taper la signification" et "Taper le mot" pour un apprentissage plus profond.',
+    guideTip4: 'Consultez régulièrement votre page de statistiques pour voir quelles cartes nécessitent plus d\'attention.',
+    guideFormatsTitle: 'Formats pris en charge',
+    guideFormatsDesc: "typee prend en charge les fichiers .apkg exportés depuis Anki. Vous pouvez aussi créer des paquets manuellement. Les imports CSV/TSV avec détection automatique des champs sont également pris en charge.",
+    guideFaqTitle: 'FAQ',
+    guideFaq1Q: 'typee est-il gratuit ?',
+    guideFaq1A: "Oui ! Le plan gratuit inclut 1 paquet avec jusqu'à 100 cartes, tous les modes de pratique et les statistiques de base. Passez à Pro pour des paquets illimités.",
+    guideFaq2Q: 'Quelles langues sont prises en charge ?',
+    guideFaq2A: "Toute langue qui fonctionne dans Anki fonctionne dans typee — japonais, coréen, chinois, espagnol, français, allemand et plus.",
+    guideFaq3Q: 'Puis-je utiliser typee sans compte ?',
+    guideFaq3A: "Oui. Vous pouvez essayer la démo ou télécharger un paquet en tant qu'invité. Créez un compte gratuit pour sauvegarder vos paquets.",
+    guideFaq4Q: 'Comment fonctionne la révision intelligente ?',
+    guideFaq4A: "La révision intelligente utilise un score de confiance qui se met à jour en fonction de votre précision. Les cartes que vous ratez fréquemment apparaissent plus souvent.",
+
+    termsTitle: "Conditions d'utilisation",
+    termsLastUpdated: 'Dernière mise à jour : mars 2026',
+    termsIntro: "Bienvenue sur typee. En accédant ou en utilisant notre service, vous acceptez ces conditions. Veuillez les lire attentivement.",
+    termsSection1Title: '1. Acceptation des conditions',
+    termsSection1Desc: "En utilisant typee (« le Service »), vous acceptez d'être lié par ces Conditions d'utilisation. Si vous n'êtes pas d'accord, veuillez ne pas utiliser le Service.",
+    termsSection2Title: '2. Description du service',
+    termsSection2Desc: "typee est une application web qui convertit les cartes Anki en sessions de pratique de frappe. Nous fournissons des outils pour importer des paquets, pratiquer le vocabulaire et suivre les progrès.",
+    termsSection3Title: '3. Comptes utilisateurs',
+    termsSection3Desc: "Certaines fonctionnalités sont utilisables sans compte. Pour sauvegarder des paquets et suivre les progrès, vous devez créer un compte via Google OAuth ou email.",
+    termsSection4Title: '4. Contenu utilisateur',
+    termsSection4Desc: "Vous conservez la propriété du contenu que vous importez. En important du contenu, vous nous accordez une licence limitée pour le stocker et le traiter afin de fournir le Service.",
+    termsSection5Title: '5. Utilisation acceptable',
+    termsSection5Desc: "Vous acceptez de ne pas faire un usage abusif du Service. Cela inclut : importer du contenu nuisible ou illégal, tenter de perturber le Service, la rétro-ingénierie ou le scraping automatisé.",
+    termsSection6Title: '6. Paiements et abonnements',
+    termsSection6Desc: "Le plan Pro est facturé via Stripe. Vous pouvez annuler à tout moment. Les remboursements sont traités au cas par cas.",
+    termsSection7Title: '7. Limitation de responsabilité',
+    termsSection7Desc: "typee est fourni « tel quel » sans garanties. Nous ne sommes pas responsables des pertes de données, interruptions ou dommages résultant de l'utilisation du Service.",
+    termsSection8Title: '8. Modification des conditions',
+    termsSection8Desc: "Nous pouvons mettre à jour ces conditions périodiquement. L'utilisation continue du Service après les modifications constitue une acceptation.",
+
+    privacyTitle: 'Politique de confidentialité',
+    privacyLastUpdated: 'Dernière mise à jour : mars 2026',
+    privacyIntro: "Votre vie privée nous tient à cœur. Cette politique explique quelles données nous collectons, comment nous les utilisons et vos droits concernant vos informations.",
+    privacySection1Title: '1. Informations que nous collectons',
+    privacySection1Desc: "Informations de compte (email, nom) via Google OAuth ou inscription par email. Paquets de cartes importés et données de pratique. Analyses d'utilisation de base. Les informations de paiement sont traitées par Stripe.",
+    privacySection2Title: '2. Comment nous utilisons vos données',
+    privacySection2Desc: "Pour fournir et améliorer le Service. Pour sauvegarder vos paquets, suivre les progrès et synchroniser entre appareils. Nous ne vendons pas vos données personnelles à des tiers.",
+    privacySection3Title: '3. Stockage des données',
+    privacySection3Desc: "Vos données sont stockées de manière sécurisée via Supabase (hébergé sur AWS). Les données d'invités sont stockées uniquement localement dans votre navigateur.",
+    privacySection4Title: '4. Cookies et stockage local',
+    privacySection4Desc: "Nous utilisons le stockage local pour sauvegarder vos préférences. Les jetons d'authentification sont stockés de manière sécurisée. Nous n'utilisons pas de cookies de suivi tiers.",
+    privacySection5Title: '5. Services tiers',
+    privacySection5Desc: "Google OAuth pour l'authentification. Stripe pour le traitement des paiements. Supabase pour la base de données et l'authentification.",
+    privacySection6Title: '6. Vos droits',
+    privacySection6Desc: "Vous pouvez supprimer votre compte et toutes les données associées à tout moment. Vous pouvez exporter vos données en téléchargeant vos paquets. Contactez-nous pour toute demande relative aux données.",
+    privacySection7Title: '7. Contact',
+    privacySection7Desc: "Si vous avez des questions sur cette Politique de confidentialité, contactez-nous via notre page de Contact.",
   },
 };
