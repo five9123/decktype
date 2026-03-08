@@ -8,9 +8,18 @@ import { parseApkg } from '@/lib/apkg-parser';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { MAX_UPLOAD_SIZE, FREE_CARDS_PER_DECK } from '@/lib/constants';
+import { detectFieldMapping, applyMapping, type FieldMapping, type FieldRole } from '@/lib/field-mapping';
+import { cleanCardText } from '@/lib/card-cleaner';
 import type { ParsedDeck } from '@/types';
 
 type UploadState = 'idle' | 'parsing' | 'preview' | 'saving' | 'error';
+
+const ROLE_OPTIONS: { value: FieldRole; label: string }[] = [
+  { value: 'front',         label: 'Front (prompt)' },
+  { value: 'back',          label: 'Back (type this)' },
+  { value: 'pronunciation', label: 'Pronunciation' },
+  { value: 'skip',          label: 'Skip' },
+];
 
 export default function UploadPage() {
   const { user } = useAuth();
@@ -24,9 +33,9 @@ export default function UploadPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [parsed, setParsed] = useState<ParsedDeck | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [fieldMapping, setFieldMapping] = useState<FieldMapping>({});
 
   const handleFile = useCallback(async (file: File) => {
-    // Validate
     if (!file.name.endsWith('.apkg')) {
       setErrorMsg('Please upload an .apkg file');
       setState('error');
@@ -48,6 +57,7 @@ export default function UploadPage() {
         return;
       }
       setParsed(result);
+      setFieldMapping(detectFieldMapping(result.fieldNames));
       setState('preview');
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Failed to parse deck');
@@ -68,10 +78,19 @@ export default function UploadPage() {
 
     const supabase = createBrowserClient();
 
-    // Limit cards for free plan
-    const cardsToSave = isPro ? parsed.cards : parsed.cards.slice(0, FREE_CARDS_PER_DECK);
+    // Apply field mapping to all cards
+    const mappedCards = parsed.cards.map((card) => {
+      const mapped = applyMapping(card.rawFields, fieldMapping);
+      return {
+        ...card,
+        front: mapped.front || card.front,
+        back: mapped.back || card.back,
+        pronunciation: mapped.pronunciation,
+      };
+    });
 
-    // Insert deck
+    const cardsToSave = isPro ? mappedCards : mappedCards.slice(0, FREE_CARDS_PER_DECK);
+
     const { data: deck, error: deckError } = await supabase
       .from('decks')
       .insert({
@@ -90,7 +109,6 @@ export default function UploadPage() {
       return;
     }
 
-    // Insert cards in batches
     const BATCH_SIZE = 100;
     for (let i = 0; i < cardsToSave.length; i += BATCH_SIZE) {
       const batch = cardsToSave.slice(i, i + BATCH_SIZE).map((card, idx) => ({
@@ -113,6 +131,19 @@ export default function UploadPage() {
 
     router.push(`/deck/${deck.id}`);
   };
+
+  // Cards with mapping applied (for preview table)
+  const previewCards = parsed?.cards.slice(0, 20).map((card) => {
+    const mapped = applyMapping(card.rawFields, fieldMapping);
+    return {
+      front: mapped.front || card.front,
+      back: mapped.back || card.back,
+      pronunciation: mapped.pronunciation,
+    };
+  }) ?? [];
+
+  // First card's raw cleaned fields (for sample values in mapping UI)
+  const sampleFields = parsed?.cards[0]?.rawFields.map(cleanCardText) ?? [];
 
   return (
     <>
@@ -181,6 +212,7 @@ export default function UploadPage() {
         {/* Card Preview */}
         {state === 'preview' && parsed && (
           <div>
+            {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>{parsed.name}</h2>
@@ -207,7 +239,81 @@ export default function UploadPage() {
               </div>
             )}
 
-          {/* Card table */}
+            {/* Field Mapping */}
+            <div
+              className="rounded-xl mb-4 overflow-hidden"
+              style={{ border: '1px solid var(--border)' }}
+            >
+              <div className="px-4 py-3" style={{ background: 'var(--surface2)', borderBottom: '1px solid var(--border)' }}>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Field Mapping</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
+                  Assign each field to a role. <strong>Front</strong> = the prompt shown, <strong>Back</strong> = what you type, <strong>Pronunciation</strong> = shown as hint.
+                </p>
+              </div>
+
+              <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
+                {parsed.fieldNames.map((name, i) => {
+                  const sample = sampleFields[i] ?? '';
+                  const role = fieldMapping[i] ?? 'skip';
+                  return (
+                    <div key={i} className="flex items-center gap-3 px-4 py-2.5">
+                      {/* Role indicator dot */}
+                      <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{
+                          background: role === 'front' ? 'var(--accent)'
+                            : role === 'back' ? 'var(--correct)'
+                            : role === 'pronunciation' ? '#f59e0b'
+                            : 'var(--border)',
+                        }}
+                      />
+                      {/* Field name */}
+                      <span className="text-xs font-mono w-32 flex-shrink-0 truncate" style={{ color: 'var(--text)' }}>
+                        {name}
+                      </span>
+                      {/* Sample value */}
+                      <span className="text-xs flex-1 truncate" style={{ color: 'var(--muted)' }}>
+                        {sample.slice(0, 60)}{sample.length > 60 ? '…' : ''}
+                      </span>
+                      {/* Role dropdown */}
+                      <select
+                        value={role}
+                        onChange={(e) => setFieldMapping((prev) => ({ ...prev, [i]: e.target.value as FieldRole }))}
+                        className="text-xs px-2 py-1 rounded-lg flex-shrink-0"
+                        style={{
+                          background: 'var(--surface)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text)',
+                          cursor: 'pointer',
+                          outline: 'none',
+                        }}
+                      >
+                        {ROLE_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Live preview of first card */}
+              {previewCards[0] && (
+                <div
+                  className="px-4 py-3 flex flex-wrap gap-x-4 gap-y-1 text-xs"
+                  style={{ background: 'var(--surface2)', borderTop: '1px solid var(--border)' }}
+                >
+                  <span style={{ color: 'var(--muted)' }}>Preview card 1:</span>
+                  <span><span style={{ color: 'var(--muted)' }}>Front </span><strong style={{ color: 'var(--text)' }}>{previewCards[0].front.slice(0, 40) || '—'}</strong></span>
+                  <span><span style={{ color: 'var(--muted)' }}>Back </span><strong style={{ color: 'var(--text)' }}>{previewCards[0].back.slice(0, 40) || '—'}</strong></span>
+                  {previewCards[0].pronunciation && (
+                    <span><span style={{ color: 'var(--muted)' }}>Pronunciation </span><strong style={{ color: 'var(--text)' }}>{previewCards[0].pronunciation.slice(0, 40)}</strong></span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Card table */}
             <div
               className="rounded-xl overflow-hidden"
               style={{ border: '1px solid var(--border)' }}
@@ -218,24 +324,21 @@ export default function UploadPage() {
                     <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)', width: '5%' }}>#</th>
                     <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>{t.front}</th>
                     <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>{t.back}</th>
-                    <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>발음</th>
+                    <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>Pronunciation</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {parsed.cards.slice(0, 20).map((card, i) => (
-                    <tr
-                      key={i}
-                      style={{ borderTop: '1px solid var(--border)' }}
-                    >
+                  {previewCards.map((card, i) => (
+                    <tr key={i} style={{ borderTop: '1px solid var(--border)' }}>
                       <td className="px-4 py-3" style={{ color: 'var(--muted)' }}>{i + 1}</td>
                       <td className="px-4 py-3" style={{ color: 'var(--text)' }}>
-                        {card.front.slice(0, 80)}{card.front.length > 80 ? '...' : ''}
+                        {card.front.slice(0, 80)}{card.front.length > 80 ? '…' : ''}
                       </td>
                       <td className="px-4 py-3" style={{ color: 'var(--text)' }}>
-                        {card.back.slice(0, 80)}{card.back.length > 80 ? '...' : ''}
+                        {card.back.slice(0, 80)}{card.back.length > 80 ? '…' : ''}
                       </td>
                       <td className="px-4 py-3" style={{ color: 'var(--muted)' }}>
-                        {card.pronunciation?.slice(0, 40)}{(card.pronunciation?.length ?? 0) > 40 ? '...' : ''}
+                        {card.pronunciation?.slice(0, 40)}{(card.pronunciation?.length ?? 0) > 40 ? '…' : ''}
                       </td>
                     </tr>
                   ))}
