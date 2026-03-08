@@ -104,23 +104,29 @@ export default function HomePage() {
           {/* CTAs */}
           <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
             <Link
-              href={ctaHref}
+              href="/demo"
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-bold no-underline transition-opacity hover:opacity-90"
               style={{ background: 'var(--accent)', color: '#fff' }}
             >
-              {ctaLabel} →
-            </Link>
-            <Link
-              href="/demo"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-medium no-underline transition-opacity hover:opacity-80"
-              style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--text)',
-              }}
-            >
               {t.tryDemo} →
             </Link>
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-medium no-underline transition-opacity hover:opacity-80"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
+              >
+                {t.myDecks} →
+              </Link>
+            ) : (
+              <Link
+                href="/upload"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-medium no-underline transition-opacity hover:opacity-80"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
+              >
+                {t.startForFree} →
+              </Link>
+            )}
           </div>
 
           {/* Product mockup */}
@@ -315,11 +321,6 @@ export default function HomePage() {
             </Link>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="pb-10 text-center text-xs" style={{ color: 'var(--muted)' }}>
-          {t.footer}
-        </footer>
 
       </main>
     </>

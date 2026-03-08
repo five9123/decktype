@@ -34,7 +34,7 @@ export function LanguageSwitcher() {
 
       {open && (
         <div
-          className="absolute right-0 mt-1 rounded-xl overflow-hidden"
+          className="absolute right-0 bottom-full mb-1 rounded-xl overflow-hidden"
           style={{
             background: 'var(--surface)',
             border: '1px solid var(--border)',

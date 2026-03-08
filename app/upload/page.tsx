@@ -72,6 +72,22 @@ export default function UploadPage() {
     if (file) handleFile(file);
   }, [handleFile]);
 
+  const handleGuestPractice = useCallback(() => {
+    if (!parsed) return;
+    const mappedCards = parsed.cards.map((card) => {
+      const mapped = applyMapping(card.rawFields, fieldMapping);
+      return {
+        front: mapped.front || card.front,
+        back: mapped.back || card.back,
+        pronunciation: mapped.pronunciation,
+      };
+    });
+    try {
+      sessionStorage.setItem('atype-guest-deck', JSON.stringify({ name: parsed.name, cards: mappedCards }));
+    } catch {}
+    router.push('/practice/guest');
+  }, [parsed, fieldMapping, router]);
+
   const handleSave = async () => {
     if (!parsed || !user) return;
     setState('saving');
@@ -220,13 +236,23 @@ export default function UploadPage() {
                   {parsed.cards.length} {t.cards} &middot; {parsed.noteType}
                 </p>
               </div>
-              <button
-                onClick={handleSave}
-                className="px-6 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
-                style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer' }}
-              >
-                {t.saveDeck}
-              </button>
+              {user ? (
+                <button
+                  onClick={handleSave}
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
+                  style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer' }}
+                >
+                  {t.saveDeck}
+                </button>
+              ) : (
+                <button
+                  onClick={handleGuestPractice}
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
+                  style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer' }}
+                >
+                  {t.tryPractice} →
+                </button>
+              )}
             </div>
 
             {/* Free plan card limit warning */}

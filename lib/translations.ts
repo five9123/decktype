@@ -195,6 +195,27 @@ export type Translations = {
   cardLimitReachedCta: string;
   statsProGate: string;
   billingTitle: string;
+
+  // Guest flow
+  uploadYourDeck: string;
+  guestUploadTitle: string;
+  guestUploadDesc: string;
+  tryPractice: string;
+  guestSignupTitle: string;
+  guestSignupDesc: string;
+
+  // Footer navigation
+  footerProduct: string;
+  footerSupport: string;
+  footerLegal: string;
+  footerDemo: string;
+  footerUpload: string;
+  footerPricing: string;
+  footerGuide: string;
+  footerContact: string;
+  footerTerms: string;
+  footerPrivacy: string;
+  comingSoon: string;
 };
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
@@ -377,6 +398,25 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardLimitReachedCta: 'Upgrade to Pro for unlimited cards →',
     statsProGate: 'Advanced stats are available on the Pro plan.',
     billingTitle: 'Billing & Plan',
+
+    uploadYourDeck: 'Upload Your Deck',
+    guestUploadTitle: 'Try before you sign up',
+    guestUploadDesc: 'Upload your Anki deck and practice for free. No account required.',
+    tryPractice: 'Try Practice',
+    guestSignupTitle: 'Save your progress',
+    guestSignupDesc: 'Create a free account to save this deck and track your progress.',
+
+    footerProduct: 'Product',
+    footerSupport: 'Support',
+    footerLegal: 'Legal',
+    footerDemo: 'Try without a deck',
+    footerUpload: 'Upload deck',
+    footerPricing: 'Pricing',
+    footerGuide: 'Usage guide',
+    footerContact: 'Contact us',
+    footerTerms: 'Terms of Service',
+    footerPrivacy: 'Privacy Policy',
+    comingSoon: 'Coming soon.',
   },
 
   ko: {
@@ -558,6 +598,25 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardLimitReachedCta: '무제한 카드를 위해 Pro로 업그레이드 →',
     statsProGate: '고급 통계는 Pro 플랜에서 이용 가능합니다.',
     billingTitle: '결제 및 플랜',
+
+    uploadYourDeck: '덱 업로드',
+    guestUploadTitle: '가입 없이 먼저 체험',
+    guestUploadDesc: 'Anki 덱을 업로드하고 무료로 연습해보세요. 계정이 필요하지 않습니다.',
+    tryPractice: '연습 시작',
+    guestSignupTitle: '진행 상황 저장하기',
+    guestSignupDesc: '무료 계정을 만들어 이 덱을 저장하고 학습 기록을 추적하세요.',
+
+    footerProduct: '제품',
+    footerSupport: '지원',
+    footerLegal: '법적 고지',
+    footerDemo: '덱 없이 체험',
+    footerUpload: '덱 업로드',
+    footerPricing: '요금제',
+    footerGuide: '사용 가이드',
+    footerContact: '문의하기',
+    footerTerms: '이용약관',
+    footerPrivacy: '개인정보처리방침',
+    comingSoon: '준비 중입니다.',
   },
 
   ja: {
@@ -739,6 +798,25 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardLimitReachedCta: '無制限カードのためProにアップグレード →',
     statsProGate: '高度な統計はProプランでご利用いただけます。',
     billingTitle: '請求とプラン',
+
+    uploadYourDeck: 'デッキをアップロード',
+    guestUploadTitle: '登録前に体験',
+    guestUploadDesc: 'Ankiデッキをアップロードして無料で練習。アカウント不要。',
+    tryPractice: '練習を始める',
+    guestSignupTitle: '進捗を保存する',
+    guestSignupDesc: '無料アカウントを作成してこのデッキを保存し、進捗を記録しましょう。',
+
+    footerProduct: 'プロダクト',
+    footerSupport: 'サポート',
+    footerLegal: '法的情報',
+    footerDemo: 'デッキなしで体験',
+    footerUpload: 'デッキをアップロード',
+    footerPricing: '料金プラン',
+    footerGuide: '使い方ガイド',
+    footerContact: 'お問い合わせ',
+    footerTerms: '利用規約',
+    footerPrivacy: 'プライバシーポリシー',
+    comingSoon: '準備中です。',
   },
 
   es: {
@@ -920,6 +998,25 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardLimitReachedCta: 'Actualiza a Pro para tarjetas ilimitadas →',
     statsProGate: 'Las estadísticas avanzadas están disponibles en el plan Pro.',
     billingTitle: 'Facturación y plan',
+
+    uploadYourDeck: 'Sube tu mazo',
+    guestUploadTitle: 'Prueba antes de registrarte',
+    guestUploadDesc: 'Sube tu mazo de Anki y practica gratis. No necesitas cuenta.',
+    tryPractice: 'Practicar ahora',
+    guestSignupTitle: 'Guarda tu progreso',
+    guestSignupDesc: 'Crea una cuenta gratuita para guardar este mazo y seguir tu progreso.',
+
+    footerProduct: 'Producto',
+    footerSupport: 'Soporte',
+    footerLegal: 'Legal',
+    footerDemo: 'Probar sin mazo',
+    footerUpload: 'Subir mazo',
+    footerPricing: 'Precios',
+    footerGuide: 'Guía de uso',
+    footerContact: 'Contacto',
+    footerTerms: 'Términos de servicio',
+    footerPrivacy: 'Política de privacidad',
+    comingSoon: 'Próximamente.',
   },
 
   zh: {
@@ -1101,6 +1198,25 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardLimitReachedCta: '升级Pro获得无限卡片 →',
     statsProGate: '高级统计功能在Pro计划中可用。',
     billingTitle: '账单与计划',
+
+    uploadYourDeck: '上传牌组',
+    guestUploadTitle: '注册前先体验',
+    guestUploadDesc: '上传你的Anki牌组，免费练习。无需账户。',
+    tryPractice: '开始练习',
+    guestSignupTitle: '保存学习进度',
+    guestSignupDesc: '创建免费账户，保存此牌组并追踪你的学习进度。',
+
+    footerProduct: '产品',
+    footerSupport: '支持',
+    footerLegal: '法律',
+    footerDemo: '无牌组体验',
+    footerUpload: '上传牌组',
+    footerPricing: '定价',
+    footerGuide: '使用指南',
+    footerContact: '联系我们',
+    footerTerms: '服务条款',
+    footerPrivacy: '隐私政策',
+    comingSoon: '即将推出。',
   },
 
   fr: {
@@ -1282,5 +1398,24 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardLimitReachedCta: 'Passez à Pro pour des cartes illimitées →',
     statsProGate: 'Les statistiques avancées sont disponibles avec le plan Pro.',
     billingTitle: 'Facturation et plan',
+
+    uploadYourDeck: 'Téléchargez votre deck',
+    guestUploadTitle: 'Essayez avant de vous inscrire',
+    guestUploadDesc: 'Téléchargez votre deck Anki et pratiquez gratuitement. Aucun compte requis.',
+    tryPractice: 'Pratiquer maintenant',
+    guestSignupTitle: 'Sauvegardez votre progression',
+    guestSignupDesc: 'Créez un compte gratuit pour sauvegarder ce deck et suivre votre progression.',
+
+    footerProduct: 'Produit',
+    footerSupport: 'Support',
+    footerLegal: 'Juridique',
+    footerDemo: 'Essayer sans paquet',
+    footerUpload: 'Importer un paquet',
+    footerPricing: 'Tarifs',
+    footerGuide: "Guide d'utilisation",
+    footerContact: 'Nous contacter',
+    footerTerms: "Conditions d'utilisation",
+    footerPrivacy: 'Politique de confidentialité',
+    comingSoon: 'Bientôt disponible.',
   },
 };

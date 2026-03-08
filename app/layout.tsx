@@ -4,6 +4,7 @@ import { LanguageProvider } from '@/contexts/LanguageContext';
 import { PreferencesProvider } from '@/contexts/PreferencesContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { HtmlLangSetter } from '@/components/HtmlLangSetter';
+import { GlobalFooter } from '@/components/GlobalFooter';
 import { BASE_URL } from '@/lib/constants';
 import { THEMES } from '@/lib/themes';
 import { Analytics } from '@vercel/analytics/next';
@@ -84,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AuthProvider>
               <HtmlLangSetter />
               {children}
+              <GlobalFooter />
             </AuthProvider>
           </LanguageProvider>
         </PreferencesProvider>

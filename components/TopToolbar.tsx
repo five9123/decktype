@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useProfile } from '@/hooks/useProfile';
-import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function TopToolbar() {
   const { user, signOut } = useAuth();
@@ -62,7 +61,6 @@ export function TopToolbar() {
           </>
         )}
 
-        <LanguageSwitcher />
         {user ? (
           <button
             onClick={signOut}
