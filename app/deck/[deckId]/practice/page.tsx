@@ -9,6 +9,7 @@ import { useViewport } from '@/hooks/useViewport';
 import { useSound } from '@/hooks/useSound';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { SmoothCaret } from '@/components/SmoothCaret';
+import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { computeCompositeScore } from '@/lib/highscore';
 import { smartOrder } from '@/lib/smart-order';
@@ -364,6 +365,7 @@ export default function PracticePage() {
               {formatElapsed(elapsedSeconds)}
             </span>
           </div>
+          <VirtualKeyboard target={target} />
         </div>
       </main>
     </>

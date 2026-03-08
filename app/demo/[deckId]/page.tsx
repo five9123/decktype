@@ -9,6 +9,7 @@ import { useViewport } from '@/hooks/useViewport';
 import { useSound } from '@/hooks/useSound';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { SmoothCaret } from '@/components/SmoothCaret';
+import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { DEMO_DECKS } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import type { PracticeMode } from '@/types';
@@ -319,6 +320,7 @@ export default function DemoPracticePage() {
               {formatElapsed(elapsedSeconds)}
             </span>
           </div>
+          <VirtualKeyboard target={target} />
         </div>
       </main>
     </>
