@@ -35,7 +35,7 @@ export default function DemoPracticePage() {
   const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
 
   const { t } = useLanguage();
-  const { focusMode } = usePreferences();
+  const { focusMode, feedbackEffects } = usePreferences();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,6 +46,8 @@ export default function DemoPracticePage() {
   const [cards] = useState(() => deck ? [...deck.cards] : []);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showCardConfetti, setShowCardConfetti] = useState(false);
+  const [wrongFlash, setWrongFlash] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [sessionResults, setSessionResults] = useState<{ wpm: number; accuracy: number }[]>([]);
@@ -73,11 +75,22 @@ export default function DemoPracticePage() {
   // Re-focus input whenever card changes
   useEffect(() => { inputRef.current?.focus(); }, [currentIdx]);
 
+  // Guard: prevent duplicate result-saving when effect re-runs while isComplete=true
+  const resultSavedRef = useRef(false);
+  useEffect(() => { resultSavedRef.current = false; }, [currentIdx]);
+
   // Auto-advance after completion
   useEffect(() => {
     if (!isComplete || sessionComplete) return;
 
-    setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
+    if (!resultSavedRef.current) {
+      resultSavedRef.current = true;
+      if (feedbackEffects) {
+        setShowCardConfetti(true);
+        setTimeout(() => setShowCardConfetti(false), 2500);
+      }
+      setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
+    }
 
     const timer = setTimeout(() => {
       if (currentIdx + 1 >= cards.length) {
@@ -94,6 +107,10 @@ export default function DemoPracticePage() {
   }, [isComplete, currentIdx, cards.length, sessionComplete, wpm, accuracy, reset]);
 
   const handleSkip = useCallback(() => {
+    if (feedbackEffects) {
+      setWrongFlash(true);
+      setTimeout(() => setWrongFlash(false), 600);
+    }
     setSessionResults((prev) => [...prev, { wpm: 0, accuracy: 0 }]);
     if (currentIdx + 1 >= cards.length) {
       setSessionComplete(true);
@@ -102,7 +119,7 @@ export default function DemoPracticePage() {
       reset();
       inputRef.current?.focus();
     }
-  }, [currentIdx, cards.length, reset]);
+  }, [currentIdx, cards.length, reset, feedbackEffects]);
 
   const handleRestart = useCallback(() => {
     setCurrentIdx(0);
@@ -215,6 +232,7 @@ export default function DemoPracticePage() {
   return (
     <>
       <ConfettiEffect active={showConfetti} />
+      <ConfettiEffect active={showCardConfetti} />
       <main
         ref={mainRef as React.RefObject<HTMLDivElement>}
         className={`fixed inset-x-0 flex flex-col ${focusMode ? 'focus-mode' : ''}`}
@@ -312,7 +330,7 @@ export default function DemoPracticePage() {
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete) handleSkip(); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete && !isComposing) handleSkip(); }}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionUpdate={(e) => {
               const val = (e.target as HTMLInputElement).value;
@@ -330,9 +348,10 @@ export default function DemoPracticePage() {
             className="w-full px-4 py-3 rounded-xl text-base"
             style={{
               background: 'var(--surface)',
-              border: '1px solid var(--border)',
+              border: `1px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
               color: 'var(--text)',
               outline: 'none',
+              transition: 'border-color 200ms',
             }}
           />
           <div className="flex justify-between mt-2">

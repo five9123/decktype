@@ -43,7 +43,7 @@ export default function PracticePage() {
 
   const { user } = useAuth();
   const { t } = useLanguage();
-  const { focusMode } = usePreferences();
+  const { focusMode, feedbackEffects } = usePreferences();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -61,6 +61,8 @@ export default function PracticePage() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showCardConfetti, setShowCardConfetti] = useState(false);
+  const [wrongFlash, setWrongFlash] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [sessionResults, setSessionResults] = useState<CardResult[]>([]);
@@ -71,6 +73,10 @@ export default function PracticePage() {
   // (levelUps can update after sessionComplete=true due to async updateMastery, causing double DB inserts)
   const levelUpsRef = useRef(levelUps);
   useEffect(() => { levelUpsRef.current = levelUps; });
+
+  // Guard: prevent duplicate result-saving when effect re-runs while isComplete=true
+  const resultSavedRef = useRef(false);
+  useEffect(() => { resultSavedRef.current = false; }, [currentIdx]);
 
   // Load, sort, and optionally shuffle cards
   useEffect(() => {
@@ -151,28 +157,33 @@ export default function PracticePage() {
   useEffect(() => {
     if (!isComplete || sessionComplete) return;
 
-    // Save completed card result
-    const cardWpm = wpm ?? 0;
-    const cardAccuracy = accuracy ?? 100;
-    setSessionResults((prev) => [
-      ...prev,
-      {
-        id: '',
-        session_id: '',
-        card_id: currentCard?.id ?? '',
-        wpm: cardWpm,
-        accuracy: cardAccuracy,
-        time_ms: elapsedSeconds * 1000,
-      },
-    ]);
-
-    // Update mastery data
-    if (currentCard?.id) {
-      updateMasteryRef.current(currentCard.id, cardAccuracy, cardWpm).then((newLevel) => {
-        if (newLevel) {
-          setLevelUps((prev) => [...prev, { cardId: currentCard.id, level: newLevel }]);
-        }
-      });
+    // Save result only once per card (wpm/accuracy are inline-computed and can cause re-runs)
+    if (!resultSavedRef.current) {
+      resultSavedRef.current = true;
+      if (feedbackEffects) {
+        setShowCardConfetti(true);
+        setTimeout(() => setShowCardConfetti(false), 2500);
+      }
+      const cardWpm = wpm ?? 0;
+      const cardAccuracy = accuracy ?? 100;
+      setSessionResults((prev) => [
+        ...prev,
+        {
+          id: '',
+          session_id: '',
+          card_id: currentCard?.id ?? '',
+          wpm: cardWpm,
+          accuracy: cardAccuracy,
+          time_ms: elapsedSeconds * 1000,
+        },
+      ]);
+      if (currentCard?.id) {
+        updateMasteryRef.current(currentCard.id, cardAccuracy, cardWpm).then((newLevel) => {
+          if (newLevel) {
+            setLevelUps((prev) => [...prev, { cardId: currentCard.id, level: newLevel }]);
+          }
+        });
+      }
     }
 
     const timer = setTimeout(() => {
@@ -227,6 +238,10 @@ export default function PracticePage() {
 
   // Skip current card — saves result with 0 wpm/accuracy
   const handleSkip = useCallback(() => {
+    if (feedbackEffects) {
+      setWrongFlash(true);
+      setTimeout(() => setWrongFlash(false), 600);
+    }
     if (currentCard) {
       setSessionResults((prev) => [
         ...prev,
@@ -247,7 +262,7 @@ export default function PracticePage() {
       reset();
       inputRef.current?.focus();
     }
-  }, [currentIdx, cards.length, reset, currentCard, elapsedSeconds]);
+  }, [currentIdx, cards.length, reset, currentCard, elapsedSeconds, feedbackEffects]);
 
   if (loading) {
     return (
@@ -260,6 +275,7 @@ export default function PracticePage() {
   return (
     <>
       <ConfettiEffect active={showConfetti} />
+      <ConfettiEffect active={showCardConfetti} />
       <main
         ref={mainRef as React.RefObject<HTMLDivElement>}
         className={`fixed inset-x-0 flex flex-col ${focusMode ? 'focus-mode' : ''}`}
@@ -357,7 +373,7 @@ export default function PracticePage() {
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete) handleSkip(); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete && !isComposing) handleSkip(); }}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionUpdate={(e) => {
               // Auto-commit IME when composed text already matches target (Korean last-char fix)
@@ -376,9 +392,10 @@ export default function PracticePage() {
             className="w-full px-4 py-3 rounded-xl text-base"
             style={{
               background: 'var(--surface)',
-              border: '1px solid var(--border)',
+              border: `1px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
               color: 'var(--text)',
               outline: 'none',
+              transition: 'border-color 200ms',
             }}
           />
           <div className="flex justify-between mt-2">

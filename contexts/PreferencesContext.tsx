@@ -12,6 +12,7 @@ interface Preferences {
   soundEnabled: boolean;
   soundType: 'mechanical' | 'soft' | 'typewriter';
   focusMode: boolean;
+  feedbackEffects: boolean;
 }
 
 const DEFAULTS: Preferences = {
@@ -20,6 +21,7 @@ const DEFAULTS: Preferences = {
   soundEnabled: false,
   soundType: 'mechanical',
   focusMode: false,
+  feedbackEffects: true,
 };
 
 interface PreferencesContextValue extends Preferences {
@@ -28,6 +30,7 @@ interface PreferencesContextValue extends Preferences {
   setSoundEnabled: (b: boolean) => void;
   setSoundType: (s: 'mechanical' | 'soft' | 'typewriter') => void;
   setFocusMode: (b: boolean) => void;
+  setFeedbackEffects: (b: boolean) => void;
 }
 
 const PreferencesContext = createContext<PreferencesContextValue>({
@@ -37,6 +40,7 @@ const PreferencesContext = createContext<PreferencesContextValue>({
   setSoundEnabled: () => {},
   setSoundType: () => {},
   setFocusMode: () => {},
+  setFeedbackEffects: () => {},
 });
 
 function loadPrefs(): Preferences {
@@ -123,6 +127,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     setSoundEnabled: useCallback((b: boolean) => update('soundEnabled', b), [update]),
     setSoundType: useCallback((s: 'mechanical' | 'soft' | 'typewriter') => update('soundType', s), [update]),
     setFocusMode: useCallback((b: boolean) => update('focusMode', b), [update]),
+    setFeedbackEffects: useCallback((b: boolean) => update('feedbackEffects', b), [update]),
   };
 
   return (

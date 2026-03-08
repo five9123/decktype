@@ -84,6 +84,7 @@ export type Translations = {
   sound_soft: string;
   sound_typewriter: string;
   focusModeLabel: string;
+  feedbackEffectsLabel: string;
 
   // Theme names
   themeDark: string;
@@ -272,6 +273,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'Soft',
     sound_typewriter: 'Typewriter',
     focusModeLabel: 'Focus Mode',
+    feedbackEffectsLabel: 'Feedback Effects',
 
     themeDark: 'Dark',
     themeLight: 'Light',
@@ -452,6 +454,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: '소프트',
     sound_typewriter: '타자기',
     focusModeLabel: '집중 모드',
+    feedbackEffectsLabel: '피드백 효과',
 
     themeDark: '다크',
     themeLight: '라이트',
@@ -632,6 +635,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'ソフト',
     sound_typewriter: 'タイプライター',
     focusModeLabel: '集中モード',
+    feedbackEffectsLabel: 'フィードバック効果',
 
     themeDark: 'ダーク',
     themeLight: 'ライト',
@@ -812,6 +816,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'Suave',
     sound_typewriter: 'Máquina',
     focusModeLabel: 'Modo enfoque',
+    feedbackEffectsLabel: 'Efectos de retroalimentación',
 
     themeDark: 'Oscuro',
     themeLight: 'Claro',
@@ -992,6 +997,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: '柔和',
     sound_typewriter: '打字机',
     focusModeLabel: '专注模式',
+    feedbackEffectsLabel: '反馈效果',
 
     themeDark: '深色',
     themeLight: '浅色',
@@ -1172,6 +1178,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'Doux',
     sound_typewriter: 'Machine à écrire',
     focusModeLabel: 'Mode concentration',
+    feedbackEffectsLabel: 'Effets de retour',
 
     themeDark: 'Sombre',
     themeLight: 'Clair',
