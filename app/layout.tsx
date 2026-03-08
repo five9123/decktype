@@ -24,6 +24,11 @@ export const metadata: Metadata = {
     'spaced repetition',
     'language learning',
     'WPM',
+    'Anki typing',
+    'deck practice',
+    'typing speed',
+    'memory training',
+    'study tool',
   ],
   openGraph: {
     type: 'website',
@@ -32,6 +37,12 @@ export const metadata: Metadata = {
     description:
       'Upload your Anki deck and turn flashcards into typing practice.',
     url: BASE_URL,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'typee — Anki Deck Typing Practice',
+    description:
+      'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
   },
   icons: {
     icon: '/favicon.ico',

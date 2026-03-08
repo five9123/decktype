@@ -22,6 +22,39 @@ export default function HomePage() {
   return (
     <>
       <TopToolbar />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'typee',
+            applicationCategory: 'EducationApplication',
+            operatingSystem: 'Web Browser',
+            url: 'https://typee.app',
+            description:
+              'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
+            offers: [
+              {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                name: 'Free',
+              },
+              {
+                '@type': 'Offer',
+                price: '5',
+                priceCurrency: 'USD',
+                name: 'Pro Monthly',
+                priceSpecification: {
+                  '@type': 'UnitPriceSpecification',
+                  billingDuration: 'P1M',
+                },
+              },
+            ],
+          }),
+        }}
+      />
       <main style={{ background: 'var(--bg)', color: 'var(--text)' }}>
 
         {/* ── Hero ── */}
