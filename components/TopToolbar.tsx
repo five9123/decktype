@@ -66,16 +66,6 @@ export function TopToolbar() {
           </>
         )}
 
-        {!user && (
-          <Link
-            href="/pricing"
-            className="px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
-            style={{ color: 'var(--text)' }}
-          >
-            Pricing
-          </Link>
-        )}
-
         {/* Preferences button */}
         <div className="relative">
           <button
