@@ -376,10 +376,10 @@ export default function PracticePage() {
             onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete && !isComposing) handleSkip(); }}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionUpdate={(e) => {
-              // Auto-commit IME when composed text already matches target (Korean last-char fix)
               const val = (e.target as HTMLInputElement).value;
               if (val.normalize('NFC').replace(/ /g, '') === target.normalize('NFC').replace(/ /g, '')) {
-                (e.target as HTMLInputElement).blur();
+                setIsComposing(false);
+                handleInput(val);
               }
             }}
             onCompositionEnd={(e) => {

@@ -335,7 +335,8 @@ export default function DemoPracticePage() {
             onCompositionUpdate={(e) => {
               const val = (e.target as HTMLInputElement).value;
               if (val.normalize('NFC').replace(/ /g, '') === target.normalize('NFC').replace(/ /g, '')) {
-                (e.target as HTMLInputElement).blur();
+                setIsComposing(false);
+                handleInput(val);
               }
             }}
             onCompositionEnd={(e) => {
