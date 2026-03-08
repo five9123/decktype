@@ -283,7 +283,7 @@ export default function PracticePage() {
         </div>
 
         {/* Card area */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6 w-full mx-auto" style={{ maxWidth: '700px' }}>
           {/* Prompt */}
           <div className="text-center">
             <p
@@ -331,7 +331,7 @@ export default function PracticePage() {
         </div>
 
         {/* Input area */}
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
           <input
             ref={inputRef}
             type="text"

@@ -241,7 +241,7 @@ export default function DemoPracticePage() {
         </div>
 
         {/* Card area */}
-        <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6 w-full mx-auto" style={{ maxWidth: '700px' }}>
           <div className="text-center">
             <p
               className={`text-2xl ${compact ? 'sm:text-3xl' : 'sm:text-4xl'} font-bold`}
@@ -286,7 +286,7 @@ export default function DemoPracticePage() {
         </div>
 
         {/* Input area */}
-        <div className="px-4 pb-4">
+        <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
           <input
             ref={inputRef}
             type="text"
