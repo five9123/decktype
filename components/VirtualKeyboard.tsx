@@ -143,6 +143,30 @@ function computeHintKeys(target: string, input: string, lang: Lang): { code: str
     matchedCount++;
   }
 
+  // Check if last input grapheme has a batchim that belongs to the next syllable
+  // e.g. "갖" when typing "가족" — strip batchim "ㅈ" → "가" matches, "ㅈ" is start of "족"
+  let batchimCarry = 0;
+  if (
+    matchedCount < targetGraphemes.length &&
+    matchedCount < inputGraphemes.length &&
+    matchedCount === inputGraphemes.length - 1
+  ) {
+    const inputChar = inputGraphemes[matchedCount];
+    const targetChar = targetGraphemes[matchedCount];
+    const code = inputChar.charCodeAt(0);
+    if (code >= 0xAC00 && code <= 0xD7A3) {
+      const jongIdx = (code - 0xAC00) % 28;
+      if (jongIdx !== 0) {
+        const stripped = String.fromCharCode(code - jongIdx);
+        if (stripped === targetChar) {
+          // Batchim jamo count carries over to the next target grapheme
+          batchimCarry = expandJamo(JONGSEONG[jongIdx]).length;
+          matchedCount++;
+        }
+      }
+    }
+  }
+
   // Next target grapheme to complete
   const currentTarget = targetGraphemes[matchedCount];
   if (!currentTarget) return [];
@@ -152,6 +176,11 @@ function computeHintKeys(target: string, input: string, lang: Lang): { code: str
     const key = JAMO_KEY_MAP[j];
     return key ? [key] : [];
   });
+
+  if (batchimCarry > 0) {
+    // Batchim from previous syllable already typed as start of this one
+    return targetKeystrokes.slice(batchimCarry);
+  }
 
   // Partial composition at this position (e.g. '라' when typing '랑')
   const partialInput = inputGraphemes[matchedCount];

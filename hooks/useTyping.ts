@@ -15,6 +15,17 @@ interface UseTypingReturn {
   reset: () => void;
 }
 
+// Korean syllable: strip batchim (final consonant) to get base syllable
+// e.g. "셋" (ㅅ+ㅔ+ㅅ) → "세" (ㅅ+ㅔ), used during IME composition
+function stripBatchim(char: string): string | null {
+  const code = char.charCodeAt(0);
+  if (code >= 0xAC00 && code <= 0xD7A3) {
+    const final = (code - 0xAC00) % 28;
+    if (final !== 0) return String.fromCharCode(code - final);
+  }
+  return null;
+}
+
 export function useTyping(target: string): UseTypingReturn {
   const [input, setInput] = useState('');
   const startTimeRef = useRef<number | null>(null);
@@ -59,16 +70,20 @@ export function useTyping(target: string): UseTypingReturn {
 
   // Per-grapheme status — spaces in target are always auto-correct
   let nonSpaceIdx = 0;
+  const lastInputIdx = inputGraphemes.length - 1;
   const charStates: CharState[] = targetGraphemes.map((char) => {
     if (char === ' ') return { char, status: 'correct' as CharStatus };
-    const status: CharStatus =
-      nonSpaceIdx >= inputGraphemes.length
-        ? 'idle'
-        : inputGraphemes[nonSpaceIdx] === char
-        ? 'correct'
-        : 'incorrect';
+    const idx = nonSpaceIdx;
     nonSpaceIdx++;
-    return { char, status };
+    if (idx >= inputGraphemes.length) return { char, status: 'idle' as CharStatus };
+    if (inputGraphemes[idx] === char) return { char, status: 'correct' as CharStatus };
+    // During Korean IME composition, the last grapheme may have an extra batchim
+    // e.g. typing "세상": intermediate "셋" = 세 + ㅅ batchim → strip to match "세"
+    if (idx === lastInputIdx) {
+      const base = stripBatchim(inputGraphemes[idx]);
+      if (base === char) return { char, status: 'correct' as CharStatus };
+    }
+    return { char, status: 'incorrect' as CharStatus };
   });
 
   // Extra graphemes typed beyond target length
@@ -78,9 +93,17 @@ export function useTyping(target: string): UseTypingReturn {
     );
   }
 
-  // Accuracy using grapheme counts
+  // Accuracy using grapheme counts (with Korean IME batchim tolerance for last char)
   const correctCount = targetGraphemesNoSpaces.filter(
-    (g, i) => i < inputGraphemes.length && inputGraphemes[i] === g
+    (g, i) => {
+      if (i >= inputGraphemes.length) return false;
+      if (inputGraphemes[i] === g) return true;
+      if (i === lastInputIdx) {
+        const base = stripBatchim(inputGraphemes[i]);
+        if (base === g) return true;
+      }
+      return false;
+    }
   ).length;
   const totalCompared = Math.max(inputGraphemes.length, targetGraphemesNoSpaces.length);
   // Return null before typing starts so UI can show "--"
