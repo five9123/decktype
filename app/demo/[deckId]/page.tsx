@@ -157,7 +157,7 @@ export default function DemoPracticePage() {
   // Enter key to advance immediately when complete or wrong-submitted
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.isComposing || e.repeat) return;
+      if (e.repeat) return;
       if (e.key === 'Enter' && isComplete) {
         e.preventDefault();
         advanceToNext();
@@ -418,44 +418,15 @@ export default function DemoPracticePage() {
 
         {/* Input area */}
         <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
-          {isComplete && (
-            <button
-              onClick={() => advanceToNext()}
-              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mb-2"
-              style={{ background: 'var(--correct)', color: '#fff', cursor: 'pointer', border: 'none' }}
-              role="status"
-              aria-live="assertive"
-            >
-              ✓ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
-              <div
-                className="absolute bottom-0 left-0 h-1"
-                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
-              />
-            </button>
-          )}
-          {wrongSubmit && (
-            <button
-              onClick={() => handleSkip()}
-              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mb-2"
-              style={{ background: 'var(--incorrect)', color: '#fff', cursor: 'pointer', border: 'none' }}
-              role="status"
-              aria-live="assertive"
-            >
-              ✗ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
-              <div
-                className="absolute bottom-0 left-0 h-1"
-                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
-              />
-            </button>
-          )}
           <input
             ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={(e) => {
+              if (isComplete || wrongSubmit) return;
               if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                if (input.length > 0 && !isComplete) {
+                if (input.length > 0) {
                   setWrongSubmit(true);
                   if (!resultSavedRef.current) {
                     resultSavedRef.current = true;
@@ -509,6 +480,36 @@ export default function DemoPracticePage() {
                 Enter &crarr;
               </button>
             </div>
+          )}
+          {isComplete && (
+            <button
+              onClick={() => advanceToNext()}
+              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mt-2"
+              style={{ background: 'var(--correct)', color: '#fff', cursor: 'pointer', border: 'none' }}
+              role="status"
+              aria-live="assertive"
+            >
+              ✓ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              <div
+                className="absolute bottom-0 left-0 h-1"
+                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
+              />
+            </button>
+          )}
+          {wrongSubmit && (
+            <button
+              onClick={() => handleSkip()}
+              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mt-2"
+              style={{ background: 'var(--incorrect)', color: '#fff', cursor: 'pointer', border: 'none' }}
+              role="status"
+              aria-live="assertive"
+            >
+              ✗ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              <div
+                className="absolute bottom-0 left-0 h-1"
+                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
+              />
+            </button>
           )}
           <VirtualKeyboard target={target} input={input} />
         </div>
