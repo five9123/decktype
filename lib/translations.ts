@@ -43,6 +43,7 @@ export type Translations = {
   difficultFirst: string;
   typeHere: string;
   correctMsg: string;
+  nextCard: string;
   skip: string;
   seeResults: string;
 
@@ -339,6 +340,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     difficultFirst: 'Difficult First',
     typeHere: 'Type here...',
     correctMsg: 'Correct!',
+    nextCard: 'Next',
     skip: 'Skip',
     seeResults: 'See Results',
 
@@ -430,7 +432,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '(max)',
     savingLabel: 'Saving...',
 
-    landingBadge: 'Free to start · No credit card required',
+    landingBadge: 'Free to start · No subscription required',
     landingHero1: 'Type it. Learn it.',
     landingHero2: 'Master any deck.',
     landingSubtext: 'Turn your Anki flashcards into a typing practice session. Build muscle memory, track WPM, and actually remember what you study.',
@@ -619,6 +621,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     difficultFirst: '어려운 것 먼저',
     typeHere: '여기에 입력하세요...',
     correctMsg: '정답!',
+    nextCard: '다음',
     skip: '건너뛰기',
     seeResults: '결과 보기',
 
@@ -710,7 +713,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '(최대)',
     savingLabel: '저장 중...',
 
-    landingBadge: '무료 시작 · 결제 불필요',
+    landingBadge: '무료 시작 · 구독 불필요',
     landingHero1: '타이핑하고. 배우고.',
     landingHero2: '어떤 덱이든 마스터하세요.',
     landingSubtext: 'Anki 플래시카드를 타이핑 연습 세션으로 변환하세요. 근육 기억을 키우고, WPM을 추적하고, 공부한 내용을 실제로 기억하세요.',
@@ -896,6 +899,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     difficultFirst: '難しい順',
     typeHere: 'ここに入力...',
     correctMsg: '正解！',
+    nextCard: '次へ',
     skip: 'スキップ',
     seeResults: '結果を見る',
 
@@ -987,7 +991,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '（上限）',
     savingLabel: '保存中...',
 
-    landingBadge: '無料で始める · クレジットカード不要',
+    landingBadge: '無料で始める · サブスク不要',
     landingHero1: '打って。学んで。',
     landingHero2: 'どんなデッキもマスターしよう。',
     landingSubtext: 'AnkiフラッシュカードをタイピングPracticeセッションに変換。筋肉記憶を鍛え、WPMを追跡し、学んだことを本当に覚えましょう。',
@@ -1173,6 +1177,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     difficultFirst: 'Difícil primero',
     typeHere: 'Escribe aquí...',
     correctMsg: '¡Correcto!',
+    nextCard: 'Siguiente',
     skip: 'Saltar',
     seeResults: 'Ver Resultados',
 
@@ -1264,7 +1269,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '(máx)',
     savingLabel: 'Guardando...',
 
-    landingBadge: 'Gratis · Sin tarjeta de crédito',
+    landingBadge: 'Gratis · Sin suscripción',
     landingHero1: 'Escríbelo. Apréndelo.',
     landingHero2: 'Domina cualquier mazo.',
     landingSubtext: 'Convierte tus tarjetas Anki en sesiones de práctica de mecanografía. Desarrolla memoria muscular, rastrea WPM y recuerda de verdad lo que estudias.',
@@ -1450,6 +1455,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     difficultFirst: '难题优先',
     typeHere: '在此输入...',
     correctMsg: '正确！',
+    nextCard: '下一个',
     skip: '跳过',
     seeResults: '查看结果',
 
@@ -1541,7 +1547,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '（上限）',
     savingLabel: '保存中...',
 
-    landingBadge: '免费开始 · 无需信用卡',
+    landingBadge: '免费开始 · 无需订阅',
     landingHero1: '打字。学习。',
     landingHero2: '掌握任何牌组。',
     landingSubtext: '将你的Anki闪卡转换为打字练习课程。建立肌肉记忆，追踪WPM，真正记住你学的内容。',
@@ -1727,6 +1733,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     difficultFirst: 'Difficile d\'abord',
     typeHere: 'Tapez ici...',
     correctMsg: 'Correct !',
+    nextCard: 'Suivant',
     skip: 'Passer',
     seeResults: 'Voir les Résultats',
 
@@ -1818,7 +1825,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     maxLabel: '(max)',
     savingLabel: 'Sauvegarde...',
 
-    landingBadge: 'Gratuit · Sans carte de crédit',
+    landingBadge: 'Gratuit · Sans abonnement',
     landingHero1: 'Tapez. Apprenez.',
     landingHero2: 'Maîtrisez n\'importe quel deck.',
     landingSubtext: 'Transformez vos cartes Anki en sessions de pratique de frappe. Développez la mémoire musculaire, suivez votre WPM et retenez vraiment ce que vous étudiez.',

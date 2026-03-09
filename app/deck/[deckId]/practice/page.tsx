@@ -68,6 +68,10 @@ export default function PracticePage() {
   const [sessionResults, setSessionResults] = useState<CardResult[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [levelUps, setLevelUps] = useState<{ cardId: string; level: MasteryLevel }[]>([]);
+  const [autoAdvanceProgress, setAutoAdvanceProgress] = useState(0);
+  const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoAdvanceRaf = useRef<number | null>(null);
+  const autoAdvanceStart = useRef<number>(0);
 
   // Keep a ref to the latest levelUps to avoid adding it to session-save effect deps
   // (levelUps can update after sessionComplete=true due to async updateMastery, causing double DB inserts)
@@ -153,7 +157,23 @@ export default function PracticePage() {
   // Re-focus input whenever card changes (auto-advance, skip)
   useEffect(() => { inputRef.current?.focus(); }, [currentIdx]);
 
-  // Auto-advance after completion
+  // Advance to next card (or finish session)
+  const advanceToNext = useCallback(() => {
+    if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+    setAutoAdvanceProgress(0);
+
+    if (currentIdx + 1 >= cards.length) {
+      setShowConfetti(true);
+      setSessionComplete(true);
+    } else {
+      setCurrentIdx((i) => i + 1);
+      reset();
+      inputRef.current?.focus();
+    }
+  }, [currentIdx, cards.length, reset]);
+
+  // Auto-advance after completion with RAF progress bar
   useEffect(() => {
     if (!isComplete || sessionComplete) return;
 
@@ -188,19 +208,36 @@ export default function PracticePage() {
       }
     }
 
-    const timer = setTimeout(() => {
-      if (currentIdx + 1 >= cards.length) {
-        setShowConfetti(true);
-        setSessionComplete(true);
-      } else {
-        setCurrentIdx((i) => i + 1);
-        reset();
-        inputRef.current?.focus();
+    // RAF-based smooth countdown
+    autoAdvanceStart.current = performance.now();
+    const animate = () => {
+      const elapsed = performance.now() - autoAdvanceStart.current;
+      const progress = Math.min(elapsed / AUTO_ADVANCE_DELAY, 1);
+      setAutoAdvanceProgress(progress);
+      if (progress < 1) {
+        autoAdvanceRaf.current = requestAnimationFrame(animate);
       }
-    }, AUTO_ADVANCE_DELAY);
+    };
+    autoAdvanceRaf.current = requestAnimationFrame(animate);
+    autoAdvanceTimer.current = setTimeout(() => advanceToNext(), AUTO_ADVANCE_DELAY);
 
-    return () => clearTimeout(timer);
+    return () => {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+      if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+    };
   }, [isComplete, currentIdx, cards.length, sessionComplete, wpm, accuracy, elapsedSeconds, currentCard?.id, reset]);
+
+  // Enter key to advance immediately when complete
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && isComplete) {
+        e.preventDefault();
+        advanceToNext();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isComplete, advanceToNext]);
 
   // Save session when complete
   useEffect(() => {
@@ -374,58 +411,87 @@ export default function PracticePage() {
             />
           </div>
 
-          {/* Correct message */}
-          {isComplete && (
-            <p className="text-lg font-bold" style={{ color: 'var(--correct)' }}>
-              {t.correctMsg}
-            </p>
-          )}
         </div>
 
         {/* Input area */}
         <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => handleInput(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !isComplete && !isComposing) handleSkip(); }}
-            onCompositionStart={() => setIsComposing(true)}
-            onCompositionUpdate={(e) => {
-              const val = (e.target as HTMLInputElement).value;
-              if (val.normalize('NFC').replace(/ /g, '') === target.normalize('NFC').replace(/ /g, '')) {
-                setIsComposing(false);
-                handleInput(val);
-              }
-            }}
-            onCompositionEnd={(e) => {
-              setIsComposing(false);
-              handleInput((e.target as HTMLInputElement).value);
-            }}
-            placeholder={t.typeHere}
-            autoFocus
-            disabled={isComplete}
-            className="w-full px-4 py-3 rounded-xl text-base"
-            style={{
-              background: 'var(--surface)',
-              border: `1px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
-              color: 'var(--text)',
-              outline: 'none',
-              transition: 'border-color 200ms',
-            }}
-          />
-          <div className="flex justify-between mt-2">
-            <button
-              onClick={handleSkip}
-              className="text-sm"
-              style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              {t.skip} &rarr;
-            </button>
-            <span className="text-sm" style={{ color: 'var(--muted)' }}>
-              {formatElapsed(elapsedSeconds)}
-            </span>
-          </div>
+          {/* Success state: Correct message + progress bar + Next button */}
+          {isComplete ? (
+            <>
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{
+                  border: '1.5px solid var(--correct)',
+                  background: 'var(--surface)',
+                }}
+              >
+                <div className="relative" role="status" aria-live="assertive">
+                  <div className="py-3 text-center font-bold text-base" style={{ color: 'var(--correct)' }}>
+                    ✓ {t.correctMsg}
+                  </div>
+                  <div
+                    className="absolute bottom-0 left-0 h-0.5"
+                    style={{
+                      width: `${(1 - autoAdvanceProgress) * 100}%`,
+                      background: 'var(--correct)',
+                      opacity: 0.6,
+                    }}
+                  />
+                </div>
+              </div>
+              <button
+                onClick={() => advanceToNext()}
+                className="w-full mt-2 py-2.5 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
+                style={{ background: 'var(--accent)', color: '#fff', cursor: 'pointer', border: 'none' }}
+              >
+                {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              </button>
+            </>
+          ) : (
+            <>
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => handleInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !isComposing) handleSkip(); }}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionUpdate={(e) => {
+                  const val = (e.target as HTMLInputElement).value;
+                  if (val.normalize('NFC').replace(/ /g, '') === target.normalize('NFC').replace(/ /g, '')) {
+                    setIsComposing(false);
+                    handleInput(val);
+                  }
+                }}
+                onCompositionEnd={(e) => {
+                  setIsComposing(false);
+                  handleInput((e.target as HTMLInputElement).value);
+                }}
+                placeholder={t.typeHere}
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl text-base"
+                style={{
+                  background: 'var(--surface)',
+                  border: `1px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
+                  color: 'var(--text)',
+                  outline: 'none',
+                  transition: 'border-color 200ms',
+                }}
+              />
+              <div className="flex justify-between mt-2">
+                <button
+                  onClick={handleSkip}
+                  className="text-sm"
+                  style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  {t.skip} &rarr;
+                </button>
+                <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                  {formatElapsed(elapsedSeconds)}
+                </span>
+              </div>
+            </>
+          )}
           <VirtualKeyboard target={target} input={input} />
         </div>
       </main>
