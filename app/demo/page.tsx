@@ -66,30 +66,30 @@ export default function DemoPage() {
           {DEMO_DECKS.map((deck) => (
             <div
               key={deck.id}
-              className="p-6 rounded-2xl flex items-center justify-between gap-4"
+              className="p-5 rounded-2xl"
               style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4 mb-4">
                 <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
                   style={{ background: deck.accentColor + '22', border: `1px solid ${deck.accentColor}44` }}
                 >
                   {deck.emoji}
                 </div>
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h2 className="font-bold" style={{ color: 'var(--text)' }}>{deck.name}</h2>
+                <div className="min-w-0">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <h2 className="font-bold text-base" style={{ color: 'var(--text)' }}>{deck.name}</h2>
                     <span className="text-xs" style={{ color: 'var(--muted)' }}>{deck.nameko}</span>
                   </div>
                   <p className="text-sm mt-0.5" style={{ color: 'var(--muted)' }}>{deck.description}</p>
-                  <p className="text-xs mt-1" style={{ color: deck.accentColor }}>
+                  <p className="text-xs mt-1 font-medium" style={{ color: deck.accentColor }}>
                     {deck.cards.length} {t.cards}
                   </p>
                 </div>
               </div>
               <Link
                 href={`/demo/${deck.id}?mode=${mode}`}
-                className="px-5 py-2.5 rounded-xl text-sm font-bold no-underline flex-shrink-0 transition-opacity hover:opacity-90"
+                className="block w-full py-2.5 rounded-xl text-sm font-bold no-underline text-center transition-opacity hover:opacity-90"
                 style={{ background: 'var(--accent)', color: '#fff' }}
               >
                 {t.startPractice} →

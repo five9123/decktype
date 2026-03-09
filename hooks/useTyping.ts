@@ -15,7 +15,7 @@ interface UseTypingReturn {
   reset: () => void;
 }
 
-export function useTyping(target: string, composing = false): UseTypingReturn {
+export function useTyping(target: string): UseTypingReturn {
   const [input, setInput] = useState('');
   const startTimeRef = useRef<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -37,7 +37,7 @@ export function useTyping(target: string, composing = false): UseTypingReturn {
   }, [input]);
 
   const inputNoSpaces = input.normalize('NFC').replace(/ /g, '');
-  const isComplete = !composing && inputNoSpaces.length > 0 && inputNoSpaces === targetNoSpaces;
+  const isComplete = inputNoSpaces.length > 0 && inputNoSpaces === targetNoSpaces;
 
   // Stop timer on completion
   useEffect(() => {

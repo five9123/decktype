@@ -44,8 +44,8 @@ export default function GuestPracticePage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCardConfetti, setShowCardConfetti] = useState(false);
   const [wrongFlash, setWrongFlash] = useState(false);
+  const [wrongSubmit, setWrongSubmit] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
-  const [isComposing, setIsComposing] = useState(false);
   const [sessionResults, setSessionResults] = useState<{ wpm: number; accuracy: number }[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [autoAdvanceProgress, setAutoAdvanceProgress] = useState(0);
@@ -81,7 +81,7 @@ export default function GuestPracticePage() {
   const {
     input, charStates, isComplete, wpm, accuracy, elapsedSeconds,
     handleInput: rawHandleInput, reset,
-  } = useTyping(target, isComposing);
+  } = useTyping(target);
 
   const handleInput = useCallback((val: string) => {
     if (val.length > input.length) playSound();
@@ -92,8 +92,9 @@ export default function GuestPracticePage() {
 
   useEffect(() => { inputRef.current?.focus(); }, [currentIdx]);
 
+  const handleSkipRef = useRef<() => void>(() => {});
   const resultSavedRef = useRef(false);
-  useEffect(() => { resultSavedRef.current = false; }, [currentIdx]);
+  useEffect(() => { resultSavedRef.current = false; setWrongSubmit(false); }, [currentIdx]);
 
   // Advance to next card (or finish session)
   const advanceToNext = useCallback(() => {
@@ -111,19 +112,22 @@ export default function GuestPracticePage() {
     }
   }, [currentIdx, cards.length, reset]);
 
+  // Save result once when card completes
+  useEffect(() => {
+    if (!isComplete || sessionComplete || resultSavedRef.current) return;
+    resultSavedRef.current = true;
+    if (feedbackEffects) {
+      setShowCardConfetti(true);
+      setTimeout(() => setShowCardConfetti(false), 2500);
+    }
+    setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isComplete, sessionComplete]);
+
+  // RAF countdown animation — separate effect so wpm/accuracy re-renders don't restart it
   useEffect(() => {
     if (!isComplete || sessionComplete) return;
 
-    if (!resultSavedRef.current) {
-      resultSavedRef.current = true;
-      if (feedbackEffects) {
-        setShowCardConfetti(true);
-        setTimeout(() => setShowCardConfetti(false), 2500);
-      }
-      setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
-    }
-
-    // RAF-based smooth countdown
     autoAdvanceStart.current = performance.now();
     const animate = () => {
       const elapsed = performance.now() - autoAdvanceStart.current;
@@ -140,21 +144,51 @@ export default function GuestPracticePage() {
       if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
       if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
     };
-  }, [isComplete, currentIdx, cards.length, sessionComplete, wpm, accuracy, reset]);
+  }, [isComplete, sessionComplete, advanceToNext]);
 
-  // Enter key to advance immediately when complete
+  // RAF countdown animation for wrong-submit state
+  useEffect(() => {
+    if (!wrongSubmit) return;
+
+    autoAdvanceStart.current = performance.now();
+    const animate = () => {
+      const elapsed = performance.now() - autoAdvanceStart.current;
+      const progress = Math.min(elapsed / AUTO_ADVANCE_DELAY, 1);
+      setAutoAdvanceProgress(progress);
+      if (progress < 1) {
+        autoAdvanceRaf.current = requestAnimationFrame(animate);
+      }
+    };
+    autoAdvanceRaf.current = requestAnimationFrame(animate);
+    autoAdvanceTimer.current = setTimeout(() => handleSkipRef.current(), AUTO_ADVANCE_DELAY);
+
+    return () => {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+      if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+      setAutoAdvanceProgress(0);
+    };
+  }, [wrongSubmit]);
+
+  // Enter key to advance immediately when complete or wrong-submitted
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.isComposing) return;
       if (e.key === 'Enter' && isComplete) {
         e.preventDefault();
         advanceToNext();
+      } else if (e.key === 'Enter' && wrongSubmit) {
+        e.preventDefault();
+        handleSkipRef.current();
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isComplete, advanceToNext]);
+  }, [isComplete, advanceToNext, wrongSubmit]);
 
   const handleSkip = useCallback(() => {
+    if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+    setAutoAdvanceProgress(0);
     if (feedbackEffects) {
       setWrongFlash(true);
       setTimeout(() => setWrongFlash(false), 600);
@@ -168,6 +202,7 @@ export default function GuestPracticePage() {
       inputRef.current?.focus();
     }
   }, [currentIdx, cards.length, reset, feedbackEffects]);
+  useEffect(() => { handleSkipRef.current = handleSkip; });
 
   const handleRestart = useCallback(() => {
     setCurrentIdx(0);
@@ -283,7 +318,7 @@ export default function GuestPracticePage() {
       <main
         ref={mainRef as React.RefObject<HTMLDivElement>}
         className={`fixed inset-x-0 flex flex-col ${focusMode ? 'focus-mode' : ''}`}
-        style={{ height: viewportH || '100vh', background: 'var(--bg)' }}
+        style={{ height: viewportH || '100vh', background: 'var(--bg)', zIndex: 10 }}
       >
         {/* Top bar */}
         <div style={{ borderBottom: '1px solid var(--border)' }}>
@@ -305,9 +340,6 @@ export default function GuestPracticePage() {
               >
                 PREVIEW
               </span>
-              <span>{currentIdx + 1} / {cards.length}</span>
-              <span>{wpm !== null ? `${wpm} WPM` : '-- WPM'}</span>
-              <span>{accuracy !== null ? `${accuracy}%` : '--%'}</span>
               <div className="relative">
                 <button
                   onClick={() => setShowPrefs((v) => !v)}
@@ -323,6 +355,29 @@ export default function GuestPracticePage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Session progress bar */}
+        <div
+          className="flex items-center gap-3 px-4 py-2 w-full mx-auto"
+          style={{ maxWidth: '700px' }}
+          role="progressbar"
+          aria-valuenow={currentIdx + 1}
+          aria-valuemin={1}
+          aria-valuemax={cards.length}
+        >
+          <span className="text-xs font-medium tabular-nums" style={{ color: 'var(--muted)', minWidth: 48 }}>
+            {currentIdx + 1} / {cards.length}
+          </span>
+          <div className="flex-1 rounded-full overflow-hidden" style={{ height: 5, background: 'var(--surface)' }}>
+            <div
+              className="h-full rounded-full transition-all duration-300"
+              style={{ width: `${((currentIdx + 1) / cards.length) * 100}%`, background: 'var(--accent)' }}
+            />
+          </div>
+          <span className="text-xs font-mono tabular-nums" style={{ color: 'var(--muted)', minWidth: 36, textAlign: 'right' }}>
+            {formatElapsed(elapsedSeconds)}
+          </span>
         </div>
 
         {/* Card area */}
@@ -358,42 +413,54 @@ export default function GuestPracticePage() {
             />
           </div>
 
+          {/* Live stats — visible while typing */}
+          {input.length > 0 && !isComplete && (
+            <div className="flex items-center justify-center gap-3 flex-wrap" style={{ fontSize: 13 }}>
+              <span className="font-bold" style={{ color: 'var(--accent)' }}>
+                ⚡ {wpm ?? 0} <span className="font-medium" style={{ color: 'var(--muted)' }}>WPM</span>
+              </span>
+              <span style={{ color: 'var(--border)' }}>·</span>
+              <span className="font-bold" style={{ color: (accuracy ?? 100) < 80 ? 'var(--incorrect)' : 'var(--correct)' }}>
+                🎯 {accuracy ?? 100}%
+              </span>
+              <span style={{ color: 'var(--border)' }}>·</span>
+              <span className="font-bold" style={{ color: 'var(--accent)' }}>
+                ⏱ {elapsedSeconds}s
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Input area */}
         <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
-          {/* Success state: Correct message + progress bar + Next button */}
           {isComplete ? (
-            <>
+            <button
+              onClick={() => advanceToNext()}
+              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden"
+              style={{ background: 'var(--correct)', color: '#fff', cursor: 'pointer', border: 'none' }}
+              role="status"
+              aria-live="assertive"
+            >
+              ✓ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
               <div
-                className="rounded-xl overflow-hidden"
-                style={{
-                  border: '1.5px solid var(--correct)',
-                  background: 'var(--surface)',
-                }}
-              >
-                <div className="relative" role="status" aria-live="assertive">
-                  <div className="py-3 text-center font-bold text-base" style={{ color: 'var(--correct)' }}>
-                    ✓ {t.correctMsg}
-                  </div>
-                  <div
-                    className="absolute bottom-0 left-0 h-0.5"
-                    style={{
-                      width: `${(1 - autoAdvanceProgress) * 100}%`,
-                      background: 'var(--correct)',
-                      opacity: 0.6,
-                    }}
-                  />
-                </div>
-              </div>
-              <button
-                onClick={() => advanceToNext()}
-                className="w-full mt-2 py-2.5 rounded-xl text-base font-bold transition-opacity hover:opacity-90"
-                style={{ background: 'var(--accent)', color: '#fff', cursor: 'pointer', border: 'none' }}
-              >
-                {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
-              </button>
-            </>
+                className="absolute bottom-0 left-0 h-1"
+                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
+              />
+            </button>
+          ) : wrongSubmit ? (
+            <button
+              onClick={() => handleSkip()}
+              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden"
+              style={{ background: 'var(--incorrect)', color: '#fff', cursor: 'pointer', border: 'none' }}
+              role="status"
+              aria-live="assertive"
+            >
+              ✗ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              <div
+                className="absolute bottom-0 left-0 h-1"
+                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
+              />
+            </button>
           ) : (
             <>
               <input
@@ -401,25 +468,28 @@ export default function GuestPracticePage() {
                 type="text"
                 value={input}
                 onChange={(e) => handleInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !isComposing) handleSkip(); }}
-                onCompositionStart={() => setIsComposing(true)}
-                onCompositionUpdate={(e) => {
-                  const val = (e.target as HTMLInputElement).value;
-                  if (val.normalize('NFC').replace(/ /g, '') === target.normalize('NFC').replace(/ /g, '')) {
-                    setIsComposing(false);
-                    handleInput(val);
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+                    if (input.length > 0 && !isComplete) {
+                      if (feedbackEffects) {
+                        setWrongFlash(true);
+                        setTimeout(() => setWrongFlash(false), 600);
+                      }
+                      setWrongSubmit(true);
+                    } else {
+                      handleSkip();
+                    }
                   }
                 }}
                 onCompositionEnd={(e) => {
-                  setIsComposing(false);
                   handleInput((e.target as HTMLInputElement).value);
                 }}
                 placeholder={t.typeHere}
                 autoFocus
-                className="w-full px-4 py-3 rounded-xl text-base"
+                className={`w-full px-4 py-3 rounded-xl text-base ${wrongFlash ? 'wrong-shake' : ''}`}
                 style={{
                   background: 'var(--surface)',
-                  border: `1px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
+                  border: `1.5px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
                   color: 'var(--text)',
                   outline: 'none',
                   transition: 'border-color 200ms',

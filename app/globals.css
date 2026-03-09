@@ -101,6 +101,16 @@ button:focus-visible, a:focus-visible, input:focus-visible {
   background: rgba(139, 92, 246, 0.08) !important;
 }
 
+/* Wrong-answer shake */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.wrong-shake { animation: shake 0.4s ease; }
+
 /* Focus mode — hide toolbar during typing */
 .focus-mode .top-toolbar {
   opacity: 0;
