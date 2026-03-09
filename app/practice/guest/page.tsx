@@ -8,7 +8,6 @@ import { useTyping } from '@/hooks/useTyping';
 import { useViewport } from '@/hooks/useViewport';
 import { useSound } from '@/hooks/useSound';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
-import { SmoothCaret } from '@/components/SmoothCaret';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { PreferencesPanel } from '@/components/PreferencesPanel';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
@@ -24,10 +23,6 @@ interface GuestDeck {
   cards: GuestCard[];
 }
 
-function formatElapsed(s: number): string {
-  if (s < 60) return `${s}s`;
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-}
 
 export default function GuestPracticePage() {
   const { t } = useLanguage();
@@ -35,7 +30,6 @@ export default function GuestPracticePage() {
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
-  const charContainerRef = useRef<HTMLDivElement>(null);
   const { play: playSound } = useSound();
 
   const [deck, setDeck] = useState<GuestDeck | null>(null);
@@ -43,7 +37,6 @@ export default function GuestPracticePage() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCardConfetti, setShowCardConfetti] = useState(false);
-  const [wrongFlash, setWrongFlash] = useState(false);
   const [wrongSubmit, setWrongSubmit] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [sessionResults, setSessionResults] = useState<{ wpm: number; accuracy: number }[]>([]);
@@ -52,6 +45,9 @@ export default function GuestPracticePage() {
   const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoAdvanceRaf = useRef<number | null>(null);
   const autoAdvanceStart = useRef<number>(0);
+  const wrongSubmitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wrongSubmitRaf = useRef<number | null>(null);
+  const wrongSubmitStart = useRef<number>(0);
 
   // Load from sessionStorage on mount
   useEffect(() => {
@@ -88,9 +84,7 @@ export default function GuestPracticePage() {
     rawHandleInput(val);
   }, [rawHandleInput, playSound, input.length]);
 
-  const caretPosition = charStates.filter((cs) => cs.status !== 'idle').length;
-
-  useEffect(() => { inputRef.current?.focus(); }, [currentIdx]);
+  useEffect(() => { setTimeout(() => inputRef.current?.focus(), 50); }, [currentIdx]);
 
   const handleSkipRef = useRef<() => void>(() => {});
   const resultSavedRef = useRef(false);
@@ -100,6 +94,8 @@ export default function GuestPracticePage() {
   const advanceToNext = useCallback(() => {
     if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
     if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+    if (wrongSubmitTimer.current) clearTimeout(wrongSubmitTimer.current);
+    if (wrongSubmitRaf.current) cancelAnimationFrame(wrongSubmitRaf.current);
     setAutoAdvanceProgress(0);
 
     if (currentIdx + 1 >= cards.length) {
@@ -108,7 +104,7 @@ export default function GuestPracticePage() {
     } else {
       setCurrentIdx((i) => i + 1);
       reset();
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [currentIdx, cards.length, reset]);
 
@@ -146,25 +142,25 @@ export default function GuestPracticePage() {
     };
   }, [isComplete, sessionComplete, advanceToNext]);
 
-  // RAF countdown animation for wrong-submit state
+  // RAF countdown animation for wrong-submit state (uses separate refs to avoid race with isComplete)
   useEffect(() => {
     if (!wrongSubmit) return;
 
-    autoAdvanceStart.current = performance.now();
+    wrongSubmitStart.current = performance.now();
     const animate = () => {
-      const elapsed = performance.now() - autoAdvanceStart.current;
+      const elapsed = performance.now() - wrongSubmitStart.current;
       const progress = Math.min(elapsed / AUTO_ADVANCE_DELAY, 1);
       setAutoAdvanceProgress(progress);
       if (progress < 1) {
-        autoAdvanceRaf.current = requestAnimationFrame(animate);
+        wrongSubmitRaf.current = requestAnimationFrame(animate);
       }
     };
-    autoAdvanceRaf.current = requestAnimationFrame(animate);
-    autoAdvanceTimer.current = setTimeout(() => handleSkipRef.current(), AUTO_ADVANCE_DELAY);
+    wrongSubmitRaf.current = requestAnimationFrame(animate);
+    wrongSubmitTimer.current = setTimeout(() => handleSkipRef.current(), AUTO_ADVANCE_DELAY);
 
     return () => {
-      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
-      if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+      if (wrongSubmitTimer.current) clearTimeout(wrongSubmitTimer.current);
+      if (wrongSubmitRaf.current) cancelAnimationFrame(wrongSubmitRaf.current);
       setAutoAdvanceProgress(0);
     };
   }, [wrongSubmit]);
@@ -172,11 +168,12 @@ export default function GuestPracticePage() {
   // Enter key to advance immediately when complete or wrong-submitted
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.isComposing) return;
+      if (e.isComposing || e.repeat) return;
       if (e.key === 'Enter' && isComplete) {
         e.preventDefault();
         advanceToNext();
       } else if (e.key === 'Enter' && wrongSubmit) {
+        if (performance.now() - wrongSubmitStart.current < 300) return;
         e.preventDefault();
         handleSkipRef.current();
       }
@@ -188,20 +185,21 @@ export default function GuestPracticePage() {
   const handleSkip = useCallback(() => {
     if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
     if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
+    if (wrongSubmitTimer.current) clearTimeout(wrongSubmitTimer.current);
+    if (wrongSubmitRaf.current) cancelAnimationFrame(wrongSubmitRaf.current);
     setAutoAdvanceProgress(0);
-    if (feedbackEffects) {
-      setWrongFlash(true);
-      setTimeout(() => setWrongFlash(false), 600);
+    if (!resultSavedRef.current) {
+      resultSavedRef.current = true;
+      setSessionResults((prev) => [...prev, { wpm: 0, accuracy: 0 }]);
     }
-    setSessionResults((prev) => [...prev, { wpm: 0, accuracy: 0 }]);
     if (currentIdx + 1 >= cards.length) {
       setSessionComplete(true);
     } else {
       setCurrentIdx((i) => i + 1);
       reset();
-      inputRef.current?.focus();
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [currentIdx, cards.length, reset, feedbackEffects]);
+  }, [currentIdx, cards.length, reset]);
   useEffect(() => { handleSkipRef.current = handleSkip; });
 
   const handleRestart = useCallback(() => {
@@ -375,9 +373,6 @@ export default function GuestPracticePage() {
               style={{ width: `${((currentIdx + 1) / cards.length) * 100}%`, background: 'var(--accent)' }}
             />
           </div>
-          <span className="text-xs font-mono tabular-nums" style={{ color: 'var(--muted)', minWidth: 36, textAlign: 'right' }}>
-            {formatElapsed(elapsedSeconds)}
-          </span>
         </div>
 
         {/* Card area */}
@@ -397,8 +392,7 @@ export default function GuestPracticePage() {
           </div>
 
           <div
-            ref={charContainerRef}
-            className="relative flex flex-wrap justify-center gap-0.5 font-mono"
+            className="flex flex-wrap justify-center gap-0.5 font-mono"
             style={{ fontSize: 'var(--typing-font-size, 1.25rem)' }}
           >
             {charStates.map((cs, i) => (
@@ -406,15 +400,10 @@ export default function GuestPracticePage() {
                 {cs.char === ' ' ? '\u00A0' : cs.char}
               </span>
             ))}
-            <SmoothCaret
-              containerRef={charContainerRef}
-              position={caretPosition}
-              hidden={isComplete}
-            />
           </div>
 
           {/* Live stats — visible while typing */}
-          {input.length > 0 && !isComplete && (
+          {input.length > 0 && !isComplete && !wrongSubmit && (
             <div className="flex items-center justify-center gap-3 flex-wrap" style={{ fontSize: 13 }}>
               <span className="font-bold" style={{ color: 'var(--accent)' }}>
                 ⚡ {wpm ?? 0} <span className="font-medium" style={{ color: 'var(--muted)' }}>WPM</span>
@@ -471,11 +460,11 @@ export default function GuestPracticePage() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
                     if (input.length > 0 && !isComplete) {
-                      if (feedbackEffects) {
-                        setWrongFlash(true);
-                        setTimeout(() => setWrongFlash(false), 600);
-                      }
                       setWrongSubmit(true);
+                      if (!resultSavedRef.current) {
+                        resultSavedRef.current = true;
+                        setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 0 }]);
+                      }
                     } else {
                       handleSkip();
                     }
@@ -486,10 +475,10 @@ export default function GuestPracticePage() {
                 }}
                 placeholder={t.typeHere}
                 autoFocus
-                className={`w-full px-4 py-3 rounded-xl text-base ${wrongFlash ? 'wrong-shake' : ''}`}
+                className="w-full px-4 py-3 rounded-xl text-base"
                 style={{
                   background: 'var(--surface)',
-                  border: `1.5px solid ${wrongFlash ? 'var(--incorrect)' : 'var(--border)'}`,
+                  border: '1.5px solid var(--border)',
                   color: 'var(--text)',
                   outline: 'none',
                   transition: 'border-color 200ms',
@@ -503,9 +492,23 @@ export default function GuestPracticePage() {
                 >
                   {t.skip} &rarr;
                 </button>
-                <span className="text-sm" style={{ color: 'var(--muted)' }}>
-                  {formatElapsed(elapsedSeconds)}
-                </span>
+                <button
+                  onClick={() => {
+                    if (input.length > 0 && !isComplete) {
+                      setWrongSubmit(true);
+                      if (!resultSavedRef.current) {
+                        resultSavedRef.current = true;
+                        setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 0 }]);
+                      }
+                    } else {
+                      handleSkip();
+                    }
+                  }}
+                  className="text-sm"
+                  style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+                >
+                  Enter &crarr;
+                </button>
               </div>
             </>
           )}

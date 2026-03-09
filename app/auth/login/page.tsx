@@ -2,36 +2,16 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function LoginPage() {
-  const { user, loading, signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
+  const { user, loading, signInWithGoogle } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!loading && user) router.replace('/dashboard');
   }, [user, loading, router]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSubmitting(true);
-
-    const fn = isSignUp ? signUpWithEmail : signInWithEmail;
-    const { error: err } = await fn(email, password);
-    if (err) {
-      setError(err);
-      setSubmitting(false);
-    }
-    // On success: keep submitting=true (shows "...") until onAuthStateChange fires + redirects
-  };
 
   if (loading) {
     return (
@@ -53,76 +33,10 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--text)' }}>
           <span style={{ color: 'var(--accent)' }}>typee</span>
         </h1>
-        <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>
+        <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
           {t.subtitle.split('\n')[0]}
         </p>
 
-        {/* Email form */}
-        <form onSubmit={handleSubmit} className="mb-4">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-            className="w-full px-4 py-3 rounded-xl text-sm mb-2"
-            style={{
-              background: 'var(--bg)',
-              border: '1px solid var(--border)',
-              color: 'var(--text)',
-              outline: 'none',
-            }}
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-            minLength={6}
-            className="w-full px-4 py-3 rounded-xl text-sm mb-3"
-            style={{
-              background: 'var(--bg)',
-              border: '1px solid var(--border)',
-              color: 'var(--text)',
-              outline: 'none',
-            }}
-          />
-          {error && (
-            <p className="text-xs mb-2" style={{ color: 'var(--incorrect)' }}>{error}</p>
-          )}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full px-4 py-3 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
-            style={{
-              background: 'var(--accent)',
-              color: '#fff',
-              border: 'none',
-              cursor: 'pointer',
-              opacity: submitting ? 0.6 : 1,
-            }}
-          >
-            {submitting ? '...' : isSignUp ? 'Sign Up' : 'Sign In'}
-          </button>
-        </form>
-
-        <button
-          onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
-          className="text-xs mb-6 inline-block"
-          style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
-        </button>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-          <span className="text-xs" style={{ color: 'var(--muted)' }}>or</span>
-          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-        </div>
-
-        {/* Google */}
         <button
           onClick={signInWithGoogle}
           className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-90"
