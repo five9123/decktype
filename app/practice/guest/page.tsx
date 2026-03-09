@@ -422,10 +422,10 @@ export default function GuestPracticePage() {
 
         {/* Input area */}
         <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
-          {isComplete ? (
+          {isComplete && (
             <button
               onClick={() => advanceToNext()}
-              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden"
+              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mb-2"
               style={{ background: 'var(--correct)', color: '#fff', cursor: 'pointer', border: 'none' }}
               role="status"
               aria-live="assertive"
@@ -436,10 +436,11 @@ export default function GuestPracticePage() {
                 style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
               />
             </button>
-          ) : wrongSubmit ? (
+          )}
+          {wrongSubmit && (
             <button
               onClick={() => handleSkip()}
-              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden"
+              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mb-2"
               style={{ background: 'var(--incorrect)', color: '#fff', cursor: 'pointer', border: 'none' }}
               role="status"
               aria-live="assertive"
@@ -450,67 +451,68 @@ export default function GuestPracticePage() {
                 style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
               />
             </button>
-          ) : (
-            <>
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => handleInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                    if (input.length > 0 && !isComplete) {
-                      setWrongSubmit(true);
-                      if (!resultSavedRef.current) {
-                        resultSavedRef.current = true;
-                        setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 0 }]);
-                      }
-                    } else {
-                      handleSkip();
+          )}
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => handleInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+                if (input.length > 0 && !isComplete) {
+                  setWrongSubmit(true);
+                  if (!resultSavedRef.current) {
+                    resultSavedRef.current = true;
+                    setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 0 }]);
+                  }
+                } else {
+                  handleSkip();
+                }
+              }
+            }}
+            onCompositionEnd={(e) => {
+              handleInput((e.target as HTMLInputElement).value);
+            }}
+            placeholder={t.typeHere}
+            autoFocus
+            readOnly={isComplete || wrongSubmit}
+            className="w-full px-4 py-3 rounded-xl text-base"
+            style={{
+              background: 'var(--surface)',
+              border: '1.5px solid var(--border)',
+              color: 'var(--text)',
+              outline: 'none',
+              transition: 'border-color 200ms',
+              opacity: isComplete || wrongSubmit ? 0.5 : 1,
+            }}
+          />
+          {!isComplete && !wrongSubmit && (
+            <div className="flex justify-between mt-2">
+              <button
+                onClick={handleSkip}
+                className="text-sm"
+                style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                {t.skip} &rarr;
+              </button>
+              <button
+                onClick={() => {
+                  if (input.length > 0 && !isComplete) {
+                    setWrongSubmit(true);
+                    if (!resultSavedRef.current) {
+                      resultSavedRef.current = true;
+                      setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 0 }]);
                     }
+                  } else {
+                    handleSkip();
                   }
                 }}
-                onCompositionEnd={(e) => {
-                  handleInput((e.target as HTMLInputElement).value);
-                }}
-                placeholder={t.typeHere}
-                autoFocus
-                className="w-full px-4 py-3 rounded-xl text-base"
-                style={{
-                  background: 'var(--surface)',
-                  border: '1.5px solid var(--border)',
-                  color: 'var(--text)',
-                  outline: 'none',
-                  transition: 'border-color 200ms',
-                }}
-              />
-              <div className="flex justify-between mt-2">
-                <button
-                  onClick={handleSkip}
-                  className="text-sm"
-                  style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
-                >
-                  {t.skip} &rarr;
-                </button>
-                <button
-                  onClick={() => {
-                    if (input.length > 0 && !isComplete) {
-                      setWrongSubmit(true);
-                      if (!resultSavedRef.current) {
-                        resultSavedRef.current = true;
-                        setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 0 }]);
-                      }
-                    } else {
-                      handleSkip();
-                    }
-                  }}
-                  className="text-sm"
-                  style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
-                >
-                  Enter &crarr;
-                </button>
-              </div>
-            </>
+                className="text-sm"
+                style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Enter &crarr;
+              </button>
+            </div>
           )}
           <VirtualKeyboard target={target} input={input} />
         </div>
