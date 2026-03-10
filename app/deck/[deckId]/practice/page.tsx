@@ -69,6 +69,7 @@ export default function PracticePage() {
   const wrongSubmitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrongSubmitRaf = useRef<number | null>(null);
   const wrongSubmitStart = useRef<number>(0);
+  const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Keep a ref to the latest levelUps to avoid adding it to session-save effect deps
   // (levelUps can update after sessionComplete=true due to async updateMastery, causing double DB inserts)
@@ -129,8 +130,6 @@ export default function PracticePage() {
   }, [user, deckId, order, masteryLoading, masteryMap]);
 
   const currentCard = cards[currentIdx];
-  // Both modes show the word (front) as the main prompt
-  const prompt = currentCard ? currentCard.front : '';
   // back_to_front (단어 타이핑): show meaning as a hint reference below the word
   const meaningHint = currentCard && mode === 'back_to_front' ? currentCard.back : null;
   // front_to_back: type the meaning; back_to_front: type the word
@@ -161,7 +160,9 @@ export default function PracticePage() {
     if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
     if (wrongSubmitTimer.current) clearTimeout(wrongSubmitTimer.current);
     if (wrongSubmitRaf.current) cancelAnimationFrame(wrongSubmitRaf.current);
+    if (confettiTimer.current) clearTimeout(confettiTimer.current);
     setAutoAdvanceProgress(0);
+    setShowCardConfetti(false);
 
     if (currentIdx + 1 >= cards.length) {
       setShowConfetti(true);
@@ -179,8 +180,9 @@ export default function PracticePage() {
     if (!isComplete || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
     if (confettiEnabled) {
+      if (confettiTimer.current) clearTimeout(confettiTimer.current);
       setShowCardConfetti(true);
-      setTimeout(() => setShowCardConfetti(false), 2500);
+      confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
     speak(target);
     const cardWpm = wpm ?? 0;
@@ -425,14 +427,16 @@ export default function PracticePage() {
 
         {/* Card area */}
         <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6 w-full mx-auto" style={{ maxWidth: '700px' }}>
-          {/* Prompt */}
+          {/* Target word with per-character coloring */}
           <div className="text-center">
-            <p
-              className={`text-2xl ${compact ? 'sm:text-3xl' : 'sm:text-4xl'} font-bold`}
-              style={{ color: 'var(--text)' }}
-            >
-              {prompt}
-            </p>
+            <div className={`flex flex-wrap justify-center gap-0.5 text-2xl ${compact ? 'sm:text-3xl' : 'sm:text-4xl'} font-bold`}>
+              {charStates.map((cs, i) => (
+                <span key={i} data-char className={`char-${cs.status}`}
+                  style={cs.char === ' ' ? { width: '0.3em' } : undefined}>
+                  {cs.char === ' ' ? '\u00A0' : cs.char}
+                </span>
+              ))}
+            </div>
             {currentCard?.pronunciation && (
               <p className="text-base mt-1.5" style={{ color: 'var(--accent)', opacity: 0.85 }}>
                 {currentCard.pronunciation}
@@ -443,17 +447,6 @@ export default function PracticePage() {
                 {meaningHint}
               </p>
             )}
-          </div>
-
-          <div
-            className="flex flex-wrap justify-center gap-0.5 font-mono"
-            style={{ fontSize: 'var(--typing-font-size, 1.25rem)' }}
-          >
-            {charStates.map((cs, i) => (
-              <span key={i} data-char className={`char-${cs.status}`}>
-                {cs.char === ' ' ? '\u00A0' : cs.char}
-              </span>
-            ))}
           </div>
 
           {/* Live stats — visible while typing */}
@@ -513,7 +506,7 @@ export default function PracticePage() {
             placeholder={t.typeHere}
             autoFocus
             readOnly={isComplete || wrongSubmit}
-            className={`w-full px-4 py-3 rounded-xl text-base${wrongSubmit ? ' wrong-shake' : ''}`}
+            className={`w-full px-4 py-3 rounded-xl text-base text-center${wrongSubmit ? ' wrong-shake' : ''}`}
             style={{
               background: 'var(--surface)',
               border: wrongSubmit ? '1.5px solid var(--incorrect)' : '1.5px solid var(--border)',
