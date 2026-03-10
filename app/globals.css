@@ -110,15 +110,3 @@ button:focus-visible, a:focus-visible, input:focus-visible {
   80% { transform: translateX(4px); }
 }
 .wrong-shake { animation: shake 0.4s ease; }
-
-/* Focus mode — hide toolbar during typing */
-.focus-mode .top-toolbar {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.focus-mode:hover .top-toolbar,
-.focus-mode:focus-within .top-toolbar {
-  opacity: 1;
-  pointer-events: auto;
-}

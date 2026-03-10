@@ -100,7 +100,6 @@ export interface TypingPreferences {
   fontSize: import('@/lib/themes').FontSize;
   soundEnabled: boolean;
   soundType: 'mechanical' | 'soft' | 'typewriter';
-  focusMode: boolean;
 }
 
 // ── Mastery Types (Feature 1) ──

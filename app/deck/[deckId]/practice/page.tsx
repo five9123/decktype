@@ -38,7 +38,7 @@ export default function PracticePage() {
 
   const { user } = useAuth();
   const { t } = useLanguage();
-  const { focusMode, confettiEnabled } = usePreferences();
+  const { confettiEnabled } = usePreferences();
   const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
@@ -365,7 +365,7 @@ export default function PracticePage() {
       <ConfettiEffect active={showCardConfetti} />
       <main
         ref={mainRef as React.RefObject<HTMLDivElement>}
-        className={`fixed inset-x-0 flex flex-col ${focusMode ? 'focus-mode' : ''}`}
+        className="fixed inset-x-0 flex flex-col"
         style={{
           height: viewportH || '100vh',
           background: 'var(--bg)',
