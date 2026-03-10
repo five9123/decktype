@@ -1,14 +1,17 @@
 export interface DemoCard {
   id: string;
-  front: string;        // Korean word (shown as prompt)
+  front: string;        // target word (shown as prompt)
   back: string;         // English meaning (typed in front_to_back mode)
   pronunciation: string; // romanization (shown in accent color)
 }
 
+export type DemoLang = 'ko' | 'ja';
+
 export interface DemoDeck {
   id: string;
+  lang: DemoLang;
   name: string;
-  nameko: string;
+  nameLocal: string;    // native language name (한국어 기초, 日本語 基礎, etc.)
   description: string;
   emoji: string;
   accentColor: string;
@@ -18,8 +21,9 @@ export interface DemoDeck {
 export const DEMO_DECKS: DemoDeck[] = [
   {
     id: 'korean-basics',
+    lang: 'ko',
     name: 'Korean Basics',
-    nameko: '한국어 기초',
+    nameLocal: '한국어 기초',
     description: 'Essential everyday Korean vocabulary — perfect for beginners.',
     emoji: '🇰🇷',
     accentColor: '#3730a3',
@@ -43,8 +47,9 @@ export const DEMO_DECKS: DemoDeck[] = [
   },
   {
     id: 'kdrama',
+    lang: 'ko',
     name: 'K-Drama Essentials',
-    nameko: '드라마 필수 단어',
+    nameLocal: '드라마 필수 단어',
     description: 'Words from Squid Game, Crash Landing on You, and more hit dramas.',
     emoji: '🎬',
     accentColor: '#831843',
@@ -68,8 +73,9 @@ export const DEMO_DECKS: DemoDeck[] = [
   },
   {
     id: 'kpop',
+    lang: 'ko',
     name: 'K-Pop Vocabulary',
-    nameko: 'K-팝 단어',
+    nameLocal: 'K-팝 단어',
     description: 'Words from BTS, BLACKPINK, TWICE and more iconic songs.',
     emoji: '🎤',
     accentColor: '#065f46',
@@ -89,6 +95,84 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'kp-13', front: '행운', back: 'good luck', pronunciation: 'haengun' },
       { id: 'kp-14', front: '반짝', back: 'sparkle', pronunciation: 'banjjak' },
       { id: 'kp-15', front: '세상', back: 'world', pronunciation: 'sesang' },
+    ],
+  },
+  {
+    id: 'japanese-basics',
+    lang: 'ja',
+    name: 'Japanese Basics',
+    nameLocal: '日本語 基礎',
+    description: 'Essential everyday Japanese vocabulary — perfect for beginners.',
+    emoji: '🇯🇵',
+    accentColor: '#dc2626',
+    cards: [
+      { id: 'jb-01', front: '愛', back: 'love', pronunciation: 'ai' },
+      { id: 'jb-02', front: '友達', back: 'friend', pronunciation: 'tomodachi' },
+      { id: 'jb-03', front: '家族', back: 'family', pronunciation: 'kazoku' },
+      { id: 'jb-04', front: '学校', back: 'school', pronunciation: 'gakkou' },
+      { id: 'jb-05', front: '食べ物', back: 'food', pronunciation: 'tabemono' },
+      { id: 'jb-06', front: '音楽', back: 'music', pronunciation: 'ongaku' },
+      { id: 'jb-07', front: '空', back: 'sky', pronunciation: 'sora' },
+      { id: 'jb-08', front: '夢', back: 'dream', pronunciation: 'yume' },
+      { id: 'jb-09', front: '時間', back: 'time', pronunciation: 'jikan' },
+      { id: 'jb-10', front: '水', back: 'water', pronunciation: 'mizu' },
+      { id: 'jb-11', front: '光', back: 'light', pronunciation: 'hikari' },
+      { id: 'jb-12', front: '本', back: 'book', pronunciation: 'hon' },
+      { id: 'jb-13', front: '猫', back: 'cat', pronunciation: 'neko' },
+      { id: 'jb-14', front: '花', back: 'flower', pronunciation: 'hana' },
+      { id: 'jb-15', front: '心', back: 'heart', pronunciation: 'kokoro' },
+    ],
+  },
+  {
+    id: 'anime',
+    lang: 'ja',
+    name: 'Anime Essentials',
+    nameLocal: 'アニメ必須単語',
+    description: 'Words from Naruto, One Piece, Demon Slayer and more hit anime.',
+    emoji: '⛩️',
+    accentColor: '#7c3aed',
+    cards: [
+      { id: 'an-01', front: '仲間', back: 'companion', pronunciation: 'nakama' },
+      { id: 'an-02', front: '約束', back: 'promise', pronunciation: 'yakusoku' },
+      { id: 'an-03', front: '勇気', back: 'courage', pronunciation: 'yuuki' },
+      { id: 'an-04', front: '戦い', back: 'battle', pronunciation: 'tatakai' },
+      { id: 'an-05', front: '希望', back: 'hope', pronunciation: 'kibou' },
+      { id: 'an-06', front: '力', back: 'power', pronunciation: 'chikara' },
+      { id: 'an-07', front: '運命', back: 'destiny', pronunciation: 'unmei' },
+      { id: 'an-08', front: '守る', back: 'protect', pronunciation: 'mamoru' },
+      { id: 'an-09', front: '魔法', back: 'magic', pronunciation: 'mahou' },
+      { id: 'an-10', front: '冒険', back: 'adventure', pronunciation: 'bouken' },
+      { id: 'an-11', front: '正義', back: 'justice', pronunciation: 'seigi' },
+      { id: 'an-12', front: '絆', back: 'bond', pronunciation: 'kizuna' },
+      { id: 'an-13', front: '覚悟', back: 'resolve', pronunciation: 'kakugo' },
+      { id: 'an-14', front: '修行', back: 'training', pronunciation: 'shugyou' },
+      { id: 'an-15', front: '英雄', back: 'hero', pronunciation: 'eiyuu' },
+    ],
+  },
+  {
+    id: 'jpop',
+    lang: 'ja',
+    name: 'J-Pop Vocabulary',
+    nameLocal: 'J-ポップ単語',
+    description: 'Words from YOASOBI, Ado, Kenshi Yonezu and more iconic songs.',
+    emoji: '🎵',
+    accentColor: '#0891b2',
+    cards: [
+      { id: 'jp-01', front: '桜', back: 'cherry blossom', pronunciation: 'sakura' },
+      { id: 'jp-02', front: '永遠', back: 'eternity', pronunciation: 'eien' },
+      { id: 'jp-03', front: '涙', back: 'tears', pronunciation: 'namida' },
+      { id: 'jp-04', front: '世界', back: 'world', pronunciation: 'sekai' },
+      { id: 'jp-05', front: '星', back: 'star', pronunciation: 'hoshi' },
+      { id: 'jp-06', front: '歌', back: 'song', pronunciation: 'uta' },
+      { id: 'jp-07', front: '風', back: 'wind', pronunciation: 'kaze' },
+      { id: 'jp-08', front: '恋', back: 'romance', pronunciation: 'koi' },
+      { id: 'jp-09', front: '明日', back: 'tomorrow', pronunciation: 'ashita' },
+      { id: 'jp-10', front: '輝き', back: 'radiance', pronunciation: 'kagayaki' },
+      { id: 'jp-11', front: '願い', back: 'wish', pronunciation: 'negai' },
+      { id: 'jp-12', front: '声', back: 'voice', pronunciation: 'koe' },
+      { id: 'jp-13', front: '旅', back: 'journey', pronunciation: 'tabi' },
+      { id: 'jp-14', front: '未来', back: 'future', pronunciation: 'mirai' },
+      { id: 'jp-15', front: '海', back: 'sea', pronunciation: 'umi' },
     ],
   },
 ];

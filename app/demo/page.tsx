@@ -4,11 +4,20 @@ import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { DEMO_DECKS } from '@/lib/demo-decks';
+import type { DemoLang } from '@/lib/demo-decks';
 import type { PracticeMode } from '@/types';
+
+const LANG_TABS: { value: DemoLang; label: string; flag: string }[] = [
+  { value: 'ja', label: '日本語', flag: '🇯🇵' },
+  { value: 'ko', label: '한국어', flag: '🇰🇷' },
+];
 
 export default function DemoPage() {
   const { t } = useLanguage();
   const [mode, setMode] = useState<PracticeMode>('back_to_front');
+  const [lang, setLang] = useState<DemoLang>('ja');
+
+  const filteredDecks = DEMO_DECKS.filter((d) => d.lang === lang);
 
   return (
     <>
@@ -28,6 +37,25 @@ export default function DemoPage() {
           <p className="text-sm" style={{ color: 'var(--muted)' }}>
             {t.demoSubtitle}
           </p>
+        </div>
+
+        {/* Language tabs */}
+        <div className="flex gap-2 mb-6 justify-center">
+          {LANG_TABS.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setLang(tab.value)}
+              className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
+              style={{
+                background: lang === tab.value ? 'var(--accent)' : 'var(--surface)',
+                color: lang === tab.value ? '#fff' : 'var(--text)',
+                border: lang === tab.value ? 'none' : '1px solid var(--border)',
+                cursor: 'pointer',
+              }}
+            >
+              {tab.flag} {tab.label}
+            </button>
+          ))}
         </div>
 
         {/* Mode selector */}
@@ -63,7 +91,7 @@ export default function DemoPage() {
 
         {/* Deck cards */}
         <div className="space-y-4">
-          {DEMO_DECKS.map((deck) => (
+          {filteredDecks.map((deck) => (
             <div
               key={deck.id}
               className="p-5 rounded-2xl"
@@ -79,7 +107,7 @@ export default function DemoPage() {
                 <div className="min-w-0">
                   <div className="flex items-baseline gap-2 flex-wrap">
                     <h2 className="font-bold text-base" style={{ color: 'var(--text)' }}>{deck.name}</h2>
-                    <span className="text-xs" style={{ color: 'var(--muted)' }}>{deck.nameko}</span>
+                    <span className="text-xs" style={{ color: 'var(--muted)' }}>{deck.nameLocal}</span>
                   </div>
                   <p className="text-sm mt-0.5" style={{ color: 'var(--muted)' }}>{deck.description}</p>
                   <p className="text-xs mt-1 font-medium" style={{ color: deck.accentColor }}>

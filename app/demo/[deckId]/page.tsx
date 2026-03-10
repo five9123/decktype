@@ -44,6 +44,8 @@ export default function DemoPracticePage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCardConfetti, setShowCardConfetti] = useState(false);
   const [wrongSubmit, setWrongSubmit] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
+  const isAdvancingRef = useRef(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [sessionResults, setSessionResults] = useState<{ wpm: number; accuracy: number }[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
@@ -73,8 +75,13 @@ export default function DemoPracticePage() {
     rawHandleInput(val);
   }, [rawHandleInput, playSound, input.length]);
 
-  // Re-focus input whenever card changes
-  useEffect(() => { setTimeout(() => inputRef.current?.focus(), 50); }, [currentIdx]);
+  // Re-focus input on card change (safety net — without key prop the element persists)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (inputRef.current) inputRef.current.focus();
+    }, 60);
+    return () => clearTimeout(id);
+  }, [currentIdx]);
 
   // Guard: prevent duplicate result-saving when effect re-runs while isComplete=true
   const handleSkipRef = useRef<() => void>(() => {});
@@ -95,15 +102,17 @@ export default function DemoPracticePage() {
       setShowConfetti(true);
       setSessionComplete(true);
     } else {
-      setCurrentIdx((i) => i + 1);
+      isAdvancingRef.current = true;
+      if (inputRef.current) inputRef.current.value = '';
       reset();
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setCurrentIdx((i) => i + 1);
+      requestAnimationFrame(() => { isAdvancingRef.current = false; });
     }
   }, [currentIdx, cards.length, reset]);
 
-  // Save result once when card completes
+  // Save result once when card completes (wait for IME composition to finish)
   useEffect(() => {
-    if (!isComplete || sessionComplete || resultSavedRef.current) return;
+    if (!isComplete || isComposing || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
     if (confettiEnabled) {
       if (confettiTimer.current) clearTimeout(confettiTimer.current);
@@ -113,11 +122,11 @@ export default function DemoPracticePage() {
     speak(target);
     setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isComplete, sessionComplete]);
+  }, [isComplete, isComposing, sessionComplete]);
 
   // RAF countdown animation — separate effect so wpm/accuracy re-renders don't restart it
   useEffect(() => {
-    if (!isComplete || sessionComplete) return;
+    if (!isComplete || isComposing || sessionComplete) return;
 
     autoAdvanceStart.current = performance.now();
     const animate = () => {
@@ -135,7 +144,7 @@ export default function DemoPracticePage() {
       if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
       if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
     };
-  }, [isComplete, sessionComplete, advanceToNext]);
+  }, [isComplete, isComposing, sessionComplete, advanceToNext]);
 
   // RAF countdown animation for wrong-submit state (uses separate refs to avoid race with isComplete)
   useEffect(() => {
@@ -191,9 +200,11 @@ export default function DemoPracticePage() {
     if (currentIdx + 1 >= cards.length) {
       setSessionComplete(true);
     } else {
-      setCurrentIdx((i) => i + 1);
+      isAdvancingRef.current = true;
+      if (inputRef.current) inputRef.current.value = '';
       reset();
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setCurrentIdx((i) => i + 1);
+      requestAnimationFrame(() => { isAdvancingRef.current = false; });
     }
   }, [currentIdx, cards.length, reset]);
   useEffect(() => { handleSkipRef.current = handleSkip; });
@@ -420,7 +431,10 @@ export default function DemoPracticePage() {
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => handleInput(e.target.value)}
+            onChange={(e) => {
+              if (isAdvancingRef.current || isComplete || wrongSubmit) return;
+              handleInput(e.target.value);
+            }}
             onKeyDown={(e) => {
               if (isComplete || wrongSubmit) return;
               if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
@@ -435,12 +449,10 @@ export default function DemoPracticePage() {
                 }
               }
             }}
-            onCompositionEnd={(e) => {
-              handleInput((e.target as HTMLInputElement).value);
-            }}
+            onCompositionStart={() => { if (!isAdvancingRef.current) setIsComposing(true); }}
+            onCompositionEnd={() => { setIsComposing(false); }}
             placeholder={t.typeHere}
             autoFocus
-            readOnly={isComplete || wrongSubmit}
             className={`w-full px-4 py-3 rounded-xl text-base text-center${wrongSubmit ? ' wrong-shake' : ''}`}
             style={{
               background: 'var(--surface)',

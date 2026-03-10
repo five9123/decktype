@@ -32,6 +32,15 @@ export function useTyping(target: string): UseTypingReturn {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Reset on target change (useEffect ensures clean lifecycle — no render-time bailouts
+  // that can leave stale DOM values visible during IME transitions)
+  useEffect(() => {
+    setInput('');
+    startTimeRef.current = null;
+    setElapsedSeconds(0);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+  }, [target]);
+
   // NFC normalize for consistent Unicode comparison (works for any language)
   const normalizedTarget = target.normalize('NFC');
   const targetNoSpaces = normalizedTarget.replace(/ /g, '');

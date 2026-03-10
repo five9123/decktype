@@ -58,6 +58,8 @@ export default function PracticePage() {
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCardConfetti, setShowCardConfetti] = useState(false);
   const [wrongSubmit, setWrongSubmit] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
+  const isAdvancingRef = useRef(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [sessionResults, setSessionResults] = useState<CardResult[]>([]);
   const [sessionComplete, setSessionComplete] = useState(false);
@@ -150,9 +152,13 @@ export default function PracticePage() {
     rawHandleInput(val);
   }, [rawHandleInput, playSound, input.length]);
 
-  // Re-focus input whenever card changes (auto-advance, skip)
-  // setTimeout gives React time to remount the input before focusing (needed on mobile)
-  useEffect(() => { setTimeout(() => inputRef.current?.focus(), 50); }, [currentIdx]);
+  // Re-focus input on card change (safety net — without key prop the element persists)
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (inputRef.current) inputRef.current.focus();
+    }, 60);
+    return () => clearTimeout(id);
+  }, [currentIdx]);
 
   // Advance to next card (or finish session)
   const advanceToNext = useCallback(() => {
@@ -168,16 +174,22 @@ export default function PracticePage() {
       setShowConfetti(true);
       setSessionComplete(true);
     } else {
-      setCurrentIdx((i) => i + 1);
+      // Guard: ignore any IME events fired during advance transition
+      isAdvancingRef.current = true;
+      // Clear DOM value directly — prevents stale IME text from flashing
+      if (inputRef.current) inputRef.current.value = '';
       reset();
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setCurrentIdx((i) => i + 1);
+      requestAnimationFrame(() => { isAdvancingRef.current = false; });
     }
   }, [currentIdx, cards.length, reset]);
 
   // Auto-advance after completion with RAF progress bar
-  // Save result once when card completes (wpm/accuracy can re-render but guarded by ref)
+  // Save result once when card completes.
+  // Wait for IME composition to finish (!isComposing) — React skips DOM value
+  // updates during composition, so advancing while composing leaves stale text.
   useEffect(() => {
-    if (!isComplete || sessionComplete || resultSavedRef.current) return;
+    if (!isComplete || isComposing || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
     if (confettiEnabled) {
       if (confettiTimer.current) clearTimeout(confettiTimer.current);
@@ -208,11 +220,11 @@ export default function PracticePage() {
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isComplete, sessionComplete]);
+  }, [isComplete, isComposing, sessionComplete]);
 
   // RAF countdown animation — separate effect so wpm/accuracy re-renders don't restart it
   useEffect(() => {
-    if (!isComplete || sessionComplete) return;
+    if (!isComplete || isComposing || sessionComplete) return;
 
     autoAdvanceStart.current = performance.now();
     const animate = () => {
@@ -230,7 +242,7 @@ export default function PracticePage() {
       if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
       if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
     };
-  }, [isComplete, sessionComplete, advanceToNext]);
+  }, [isComplete, isComposing, sessionComplete, advanceToNext]);
 
   // RAF countdown animation for wrong-submit state (uses separate refs to avoid race with isComplete)
   useEffect(() => {
@@ -346,9 +358,11 @@ export default function PracticePage() {
     if (currentIdx + 1 >= cards.length) {
       setSessionComplete(true);
     } else {
-      setCurrentIdx((i) => i + 1);
+      isAdvancingRef.current = true;
+      if (inputRef.current) inputRef.current.value = '';
       reset();
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setCurrentIdx((i) => i + 1);
+      requestAnimationFrame(() => { isAdvancingRef.current = false; });
     }
   }, [currentIdx, cards.length, reset, currentCard, elapsedSeconds]);
   useEffect(() => { handleSkipRef.current = handleSkip; });
@@ -473,7 +487,10 @@ export default function PracticePage() {
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => handleInput(e.target.value)}
+            onChange={(e) => {
+              if (isAdvancingRef.current || isComplete || wrongSubmit) return;
+              handleInput(e.target.value);
+            }}
             onKeyDown={(e) => {
               if (isComplete || wrongSubmit) return;
               if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
@@ -500,12 +517,10 @@ export default function PracticePage() {
                 }
               }
             }}
-            onCompositionEnd={(e) => {
-              handleInput((e.target as HTMLInputElement).value);
-            }}
+            onCompositionStart={() => { if (!isAdvancingRef.current) setIsComposing(true); }}
+            onCompositionEnd={() => { setIsComposing(false); }}
             placeholder={t.typeHere}
             autoFocus
-            readOnly={isComplete || wrongSubmit}
             className={`w-full px-4 py-3 rounded-xl text-base text-center${wrongSubmit ? ' wrong-shake' : ''}`}
             style={{
               background: 'var(--surface)',
