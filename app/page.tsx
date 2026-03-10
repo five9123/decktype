@@ -16,8 +16,8 @@ export default function HomePage() {
     );
   }
 
-  const ctaHref = user ? '/dashboard' : '/auth/login';
-  const ctaLabel = user ? t.myDecks : t.startForFree;
+  const ctaHref = user ? '/dashboard' : '/demo';
+  const ctaLabel = user ? t.myDecks : t.tryWithoutDeck;
 
   return (
     <>

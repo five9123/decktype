@@ -156,6 +156,7 @@ export type Translations = {
   landingHero2: string;
   landingSubtext: string;
   startForFree: string;
+  tryWithoutDeck: string;
   seeHowItWorks: string;
   howItWorksLabel: string;
   howItWorksTitle: string;
@@ -450,6 +451,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingHero2: 'Master any deck.',
     landingSubtext: 'Turn your Anki flashcards into a typing practice session. Build muscle memory, track WPM, and actually remember what you study.',
     startForFree: 'Start for Free',
+    tryWithoutDeck: 'Try without a Deck',
     seeHowItWorks: 'See how it works',
     howItWorksLabel: 'HOW IT WORKS',
     howItWorksTitle: 'Three steps. Zero friction.',
@@ -739,6 +741,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingHero2: '어떤 덱이든 마스터하세요.',
     landingSubtext: 'Anki 플래시카드를 타이핑 연습 세션으로 변환하세요. 근육 기억을 키우고, WPM을 추적하고, 공부한 내용을 실제로 기억하세요.',
     startForFree: '무료로 시작',
+    tryWithoutDeck: '덱 없이 체험하기',
     seeHowItWorks: '작동 방식 보기',
     howItWorksLabel: '작동 방식',
     howItWorksTitle: '3단계. 간편하게.',
@@ -1025,6 +1028,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingHero2: 'どんなデッキもマスターしよう。',
     landingSubtext: 'AnkiフラッシュカードをタイピングPracticeセッションに変換。筋肉記憶を鍛え、WPMを追跡し、学んだことを本当に覚えましょう。',
     startForFree: '無料で始める',
+    tryWithoutDeck: 'デッキなしで試す',
     seeHowItWorks: '使い方を見る',
     howItWorksLabel: '使い方',
     howItWorksTitle: '3ステップ。簡単シンプル。',
@@ -1311,6 +1315,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingHero2: 'Domina cualquier mazo.',
     landingSubtext: 'Convierte tus tarjetas Anki en sesiones de práctica de mecanografía. Desarrolla memoria muscular, rastrea WPM y recuerda de verdad lo que estudias.',
     startForFree: 'Empezar gratis',
+    tryWithoutDeck: 'Probar sin mazo',
     seeHowItWorks: 'Cómo funciona',
     howItWorksLabel: 'CÓMO FUNCIONA',
     howItWorksTitle: 'Tres pasos. Sin fricción.',
@@ -1597,6 +1602,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingHero2: '掌握任何牌组。',
     landingSubtext: '将你的Anki闪卡转换为打字练习课程。建立肌肉记忆，追踪WPM，真正记住你学的内容。',
     startForFree: '免费开始',
+    tryWithoutDeck: '无需卡组即可体验',
     seeHowItWorks: '了解如何使用',
     howItWorksLabel: '使用方式',
     howItWorksTitle: '三步搞定。零阻力。',
@@ -1883,6 +1889,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingHero2: 'Maîtrisez n\'importe quel deck.',
     landingSubtext: 'Transformez vos cartes Anki en sessions de pratique de frappe. Développez la mémoire musculaire, suivez votre WPM et retenez vraiment ce que vous étudiez.',
     startForFree: 'Commencer gratuitement',
+    tryWithoutDeck: 'Essayer sans paquet',
     seeHowItWorks: 'Voir comment ça marche',
     howItWorksLabel: 'COMMENT ÇA MARCHE',
     howItWorksTitle: 'Trois étapes. Zéro friction.',
