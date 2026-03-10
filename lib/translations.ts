@@ -11,6 +11,7 @@ export type Translations = {
   signIn: string;
   signOut: string;
   signInWithGoogle: string;
+  signInWithTwitter: string;
   signInWithEmail: string;
   emailPlaceholder: string;
 
@@ -330,6 +331,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signIn: 'Sign In',
     signOut: 'Sign Out',
     signInWithGoogle: 'Continue with Google',
+    signInWithTwitter: 'Continue with X',
     signInWithEmail: 'Continue with Email',
     emailPlaceholder: 'Enter your email...',
 
@@ -632,6 +634,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signIn: '로그인',
     signOut: '로그아웃',
     signInWithGoogle: 'Google로 계속',
+    signInWithTwitter: 'X로 계속',
     signInWithEmail: '이메일로 계속',
     emailPlaceholder: '이메일을 입력하세요...',
 
@@ -931,6 +934,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signIn: 'ログイン',
     signOut: 'ログアウト',
     signInWithGoogle: 'Googleで続ける',
+    signInWithTwitter: 'Xで続ける',
     signInWithEmail: 'メールで続ける',
     emailPlaceholder: 'メールアドレスを入力...',
 
@@ -1230,6 +1234,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signIn: 'Iniciar sesión',
     signOut: 'Cerrar sesión',
     signInWithGoogle: 'Continuar con Google',
+    signInWithTwitter: 'Continuar con X',
     signInWithEmail: 'Continuar con Email',
     emailPlaceholder: 'Introduce tu email...',
 
@@ -1529,6 +1534,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signIn: '登录',
     signOut: '退出',
     signInWithGoogle: '使用Google继续',
+    signInWithTwitter: '使用X继续',
     signInWithEmail: '使用邮箱继续',
     emailPlaceholder: '输入邮箱地址...',
 
@@ -1828,6 +1834,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signIn: 'Se connecter',
     signOut: 'Se déconnecter',
     signInWithGoogle: 'Continuer avec Google',
+    signInWithTwitter: 'Continuer avec X',
     signInWithEmail: 'Continuer avec Email',
     emailPlaceholder: 'Entrez votre email...',
 
