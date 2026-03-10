@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { usePreferences } from '@/contexts/PreferencesContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useClickOutside } from '@/hooks/useClickOutside';
@@ -14,6 +14,84 @@ const FONT_SIZES: { key: FontSize; label: string }[] = [
 ];
 
 const SOUND_TYPES = ['mechanical', 'soft', 'typewriter'] as const;
+
+/* ── Tooltip ? button ─────────────────────────────────────────────────── */
+function InfoTooltip({ text }: { text: string }) {
+  const [show, setShow] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setShow(true);
+  };
+  const handleLeave = () => {
+    timeoutRef.current = setTimeout(() => setShow(false), 150);
+  };
+
+  return (
+    <span
+      className="relative inline-flex"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onTouchStart={() => setShow((v) => !v)}
+    >
+      <span
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 16,
+          height: 16,
+          borderRadius: '50%',
+          fontSize: 10,
+          fontWeight: 600,
+          lineHeight: 1,
+          color: 'var(--muted)',
+          border: '1px solid var(--border)',
+          cursor: 'help',
+          marginLeft: 4,
+          flexShrink: 0,
+          userSelect: 'none',
+        }}
+      >
+        ?
+      </span>
+      {show && (
+        <span
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 6px)',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'var(--text)',
+            color: 'var(--surface)',
+            fontSize: 11,
+            lineHeight: 1.4,
+            padding: '6px 10px',
+            borderRadius: 8,
+            whiteSpace: 'nowrap',
+            zIndex: 100,
+            pointerEvents: 'none',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+          }}
+        >
+          {text}
+          <span
+            style={{
+              position: 'absolute',
+              top: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderTop: '5px solid var(--text)',
+            }}
+          />
+        </span>
+      )}
+    </span>
+  );
+}
 
 interface PreferencesPanelProps {
   onClose: () => void;
@@ -77,7 +155,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
       {/* Sound Effects */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.soundEffects}</p>
+          <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.soundEffects}<InfoTooltip text={t.soundEffectsDesc} /></p>
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
             className="relative transition-colors"
@@ -127,7 +205,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
 
       {/* Focus Mode */}
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.focusModeLabel}</p>
+        <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.focusModeLabel}<InfoTooltip text={t.focusModeDesc} /></p>
         <button
           onClick={() => setFocusMode(!focusMode)}
           className="relative transition-colors"
@@ -157,7 +235,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
 
       {/* Feedback Effects */}
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.feedbackEffectsLabel}</p>
+        <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.feedbackEffectsLabel}<InfoTooltip text={t.feedbackEffectsDesc} /></p>
         <button
           onClick={() => setFeedbackEffects(!feedbackEffects)}
           className="relative transition-colors"
@@ -187,7 +265,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
 
       {/* Word Pronunciation (TTS) */}
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.ttsLabel}</p>
+        <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.ttsLabel}<InfoTooltip text={t.ttsDesc} /></p>
         <button
           onClick={() => setTtsEnabled(!ttsEnabled)}
           className="relative transition-colors"
@@ -217,7 +295,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
 
       {/* Confetti Effects */}
       <div className="flex items-center justify-between">
-        <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.confettiLabel}</p>
+        <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.confettiLabel}<InfoTooltip text={t.confettiDesc} /></p>
         <button
           onClick={() => setConfettiEnabled(!confettiEnabled)}
           className="relative transition-colors"
