@@ -31,7 +31,7 @@ export default function DemoPracticePage() {
   const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
 
   const { t } = useLanguage();
-  const { focusMode, feedbackEffects, confettiEnabled } = usePreferences();
+  const { focusMode, confettiEnabled } = usePreferences();
   const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
@@ -103,7 +103,7 @@ export default function DemoPracticePage() {
   useEffect(() => {
     if (!isComplete || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
-    if (feedbackEffects && confettiEnabled) {
+    if (confettiEnabled) {
       setShowCardConfetti(true);
       setTimeout(() => setShowCardConfetti(false), 2500);
     }

@@ -27,7 +27,7 @@ interface GuestDeck {
 
 export default function GuestPracticePage() {
   const { t } = useLanguage();
-  const { focusMode, feedbackEffects, confettiEnabled } = usePreferences();
+  const { focusMode, confettiEnabled } = usePreferences();
   const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
@@ -114,7 +114,7 @@ export default function GuestPracticePage() {
   useEffect(() => {
     if (!isComplete || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
-    if (feedbackEffects && confettiEnabled) {
+    if (confettiEnabled) {
       setShowCardConfetti(true);
       setTimeout(() => setShowCardConfetti(false), 2500);
     }

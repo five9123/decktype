@@ -105,7 +105,6 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
     soundEnabled, setSoundEnabled,
     soundType, setSoundType,
     focusMode, setFocusMode,
-    feedbackEffects, setFeedbackEffects,
     ttsEnabled, setTtsEnabled,
     confettiEnabled, setConfettiEnabled,
   } = usePreferences();
@@ -223,36 +222,6 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
               position: 'absolute',
               top: 2,
               left: focusMode ? 18 : 2,
-              width: 16,
-              height: 16,
-              borderRadius: '50%',
-              background: '#fff',
-              transition: 'left 0.2s ease',
-            }}
-          />
-        </button>
-      </div>
-
-      {/* Feedback Effects */}
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.feedbackEffectsLabel}<InfoTooltip text={t.feedbackEffectsDesc} /></p>
-        <button
-          onClick={() => setFeedbackEffects(!feedbackEffects)}
-          className="relative transition-colors"
-          style={{
-            width: 36,
-            height: 20,
-            borderRadius: 10,
-            border: 'none',
-            cursor: 'pointer',
-            background: feedbackEffects ? 'var(--accent)' : 'var(--surface2)',
-          }}
-        >
-          <span
-            style={{
-              position: 'absolute',
-              top: 2,
-              left: feedbackEffects ? 18 : 2,
               width: 16,
               height: 16,
               borderRadius: '50%',

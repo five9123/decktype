@@ -38,7 +38,7 @@ export default function PracticePage() {
 
   const { user } = useAuth();
   const { t } = useLanguage();
-  const { focusMode, feedbackEffects, confettiEnabled } = usePreferences();
+  const { focusMode, confettiEnabled } = usePreferences();
   const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
@@ -178,7 +178,7 @@ export default function PracticePage() {
   useEffect(() => {
     if (!isComplete || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
-    if (feedbackEffects && confettiEnabled) {
+    if (confettiEnabled) {
       setShowCardConfetti(true);
       setTimeout(() => setShowCardConfetti(false), 2500);
     }

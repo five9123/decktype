@@ -12,7 +12,6 @@ interface Preferences {
   soundEnabled: boolean;
   soundType: 'mechanical' | 'soft' | 'typewriter';
   focusMode: boolean;
-  feedbackEffects: boolean;
   ttsEnabled: boolean;
   confettiEnabled: boolean;
 }
@@ -23,7 +22,6 @@ const DEFAULTS: Preferences = {
   soundEnabled: false,
   soundType: 'mechanical',
   focusMode: false,
-  feedbackEffects: true,
   ttsEnabled: false,
   confettiEnabled: true,
 };
@@ -34,7 +32,6 @@ interface PreferencesContextValue extends Preferences {
   setSoundEnabled: (b: boolean) => void;
   setSoundType: (s: 'mechanical' | 'soft' | 'typewriter') => void;
   setFocusMode: (b: boolean) => void;
-  setFeedbackEffects: (b: boolean) => void;
   setTtsEnabled: (b: boolean) => void;
   setConfettiEnabled: (b: boolean) => void;
 }
@@ -46,7 +43,6 @@ const PreferencesContext = createContext<PreferencesContextValue>({
   setSoundEnabled: () => {},
   setSoundType: () => {},
   setFocusMode: () => {},
-  setFeedbackEffects: () => {},
   setTtsEnabled: () => {},
   setConfettiEnabled: () => {},
 });
@@ -135,7 +131,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     setSoundEnabled: useCallback((b: boolean) => update('soundEnabled', b), [update]),
     setSoundType: useCallback((s: 'mechanical' | 'soft' | 'typewriter') => update('soundType', s), [update]),
     setFocusMode: useCallback((b: boolean) => update('focusMode', b), [update]),
-    setFeedbackEffects: useCallback((b: boolean) => update('feedbackEffects', b), [update]),
     setTtsEnabled: useCallback((b: boolean) => update('ttsEnabled', b), [update]),
     setConfettiEnabled: useCallback((b: boolean) => update('confettiEnabled', b), [update]),
   };

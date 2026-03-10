@@ -85,14 +85,12 @@ export type Translations = {
   sound_soft: string;
   sound_typewriter: string;
   focusModeLabel: string;
-  feedbackEffectsLabel: string;
   ttsLabel: string;
   confettiLabel: string;
 
   // Setting descriptions (tooltips)
   soundEffectsDesc: string;
   focusModeDesc: string;
-  feedbackEffectsDesc: string;
   ttsDesc: string;
   confettiDesc: string;
 
@@ -387,13 +385,13 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'Soft',
     sound_typewriter: 'Typewriter',
     focusModeLabel: 'Focus Mode',
-    feedbackEffectsLabel: 'Feedback Effects',
+
     ttsLabel: 'Word Pronunciation',
     confettiLabel: 'Confetti Effects',
 
     soundEffectsDesc: 'Play keystroke sounds while typing',
     focusModeDesc: 'Hide hints and extra info to focus on typing',
-    feedbackEffectsDesc: 'Show color changes and animations on correct/incorrect input',
+
     ttsDesc: 'Read the word aloud after completing it',
     confettiDesc: 'Show confetti animation on correct answer',
 
@@ -676,13 +674,13 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: '소프트',
     sound_typewriter: '타자기',
     focusModeLabel: '집중 모드',
-    feedbackEffectsLabel: '피드백 효과',
+
     ttsLabel: '단어 발음',
     confettiLabel: '콘페티 효과',
 
     soundEffectsDesc: '타이핑할 때 키보드 소리를 재생합니다',
     focusModeDesc: '힌트와 부가 정보를 숨겨 타이핑에 집중합니다',
-    feedbackEffectsDesc: '정답/오답 시 색상 변화와 애니메이션을 표시합니다',
+
     ttsDesc: '단어 완성 후 해당 언어로 발음을 읽어줍니다',
     confettiDesc: '정답 시 콘페티 애니메이션을 표시합니다',
 
@@ -962,13 +960,13 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'ソフト',
     sound_typewriter: 'タイプライター',
     focusModeLabel: '集中モード',
-    feedbackEffectsLabel: 'フィードバック効果',
+
     ttsLabel: '単語の発音',
     confettiLabel: '紙吹雪エフェクト',
 
     soundEffectsDesc: 'タイピング中にキー入力音を再生します',
     focusModeDesc: 'ヒントや補足情報を非表示にしてタイピングに集中します',
-    feedbackEffectsDesc: '正解・不正解時に色の変化やアニメーションを表示します',
+
     ttsDesc: '単語の入力完了後に発音を読み上げます',
     confettiDesc: '正解時に紙吹雪アニメーションを表示します',
 
@@ -1248,13 +1246,13 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'Suave',
     sound_typewriter: 'Máquina',
     focusModeLabel: 'Modo enfoque',
-    feedbackEffectsLabel: 'Efectos de retroalimentación',
+
     ttsLabel: 'Pronunciación de palabras',
     confettiLabel: 'Efectos de confeti',
 
     soundEffectsDesc: 'Reproduce sonidos de teclas al escribir',
     focusModeDesc: 'Oculta pistas e información extra para concentrarte',
-    feedbackEffectsDesc: 'Muestra cambios de color y animaciones en respuestas correctas/incorrectas',
+
     ttsDesc: 'Lee la palabra en voz alta al completarla',
     confettiDesc: 'Muestra animación de confeti en respuesta correcta',
 
@@ -1534,13 +1532,13 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: '柔和',
     sound_typewriter: '打字机',
     focusModeLabel: '专注模式',
-    feedbackEffectsLabel: '反馈效果',
+
     ttsLabel: '单词发音',
     confettiLabel: '彩纸效果',
 
     soundEffectsDesc: '打字时播放按键声音',
     focusModeDesc: '隐藏提示和额外信息以专注打字',
-    feedbackEffectsDesc: '正确/错误输入时显示颜色变化和动画',
+
     ttsDesc: '完成单词后朗读发音',
     confettiDesc: '正确回答时显示彩纸动画',
 
@@ -1820,13 +1818,13 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_soft: 'Doux',
     sound_typewriter: 'Machine à écrire',
     focusModeLabel: 'Mode concentration',
-    feedbackEffectsLabel: 'Effets de retour',
+
     ttsLabel: 'Prononciation des mots',
     confettiLabel: 'Effets de confettis',
 
     soundEffectsDesc: 'Joue des sons de touches en tapant',
     focusModeDesc: 'Masque les indices et infos supplémentaires pour se concentrer',
-    feedbackEffectsDesc: 'Affiche des changements de couleur et animations pour les réponses',
+
     ttsDesc: 'Lit le mot à voix haute après l\'avoir complété',
     confettiDesc: 'Affiche une animation de confettis pour les bonnes réponses',
 
