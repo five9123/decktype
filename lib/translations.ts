@@ -14,6 +14,19 @@ export type Translations = {
   signInWithEmail: string;
   emailPlaceholder: string;
 
+  // Login page (2-column)
+  loginHeroTitle: string;
+  loginHeroDesc: string;
+  loginFeature1: string;
+  loginFeature2: string;
+  loginFeature3: string;
+  loginWelcome: string;
+  loginDesc: string;
+  loginOrDivider: string;
+  loginTryDemo: string;
+  loginReassurance1: string;
+  loginReassurance2: string;
+
   // Dashboard
   myDecks: string;
   uploadDeck: string;
@@ -320,6 +333,18 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signInWithEmail: 'Continue with Email',
     emailPlaceholder: 'Enter your email...',
 
+    loginHeroTitle: 'Turn flashcards into typing mastery',
+    loginHeroDesc: 'Upload your Anki deck, practice typing, and track your progress with smart spaced repetition.',
+    loginFeature1: 'Smart spaced repetition',
+    loginFeature2: 'Track WPM & accuracy',
+    loginFeature3: 'Any language, any deck',
+    loginWelcome: 'Welcome',
+    loginDesc: 'Sign in to save your progress and unlock all features.',
+    loginOrDivider: 'or',
+    loginTryDemo: 'Try without an account',
+    loginReassurance1: '1 free deck included',
+    loginReassurance2: 'No credit card required',
+
     myDecks: 'My Decks',
     uploadDeck: 'Upload Deck',
     noDeckYet: 'No decks yet. Upload an .apkg file to get started!',
@@ -610,6 +635,18 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signInWithEmail: '이메일로 계속',
     emailPlaceholder: '이메일을 입력하세요...',
 
+    loginHeroTitle: '플래시카드를 타이핑 마스터리로',
+    loginHeroDesc: 'Anki 덱을 업로드하고, 타이핑으로 연습하며, 스마트 복습으로 진행률을 추적하세요.',
+    loginFeature1: '스마트 간격 반복',
+    loginFeature2: 'WPM과 정확도 추적',
+    loginFeature3: '모든 언어, 모든 덱',
+    loginWelcome: '환영합니다',
+    loginDesc: '진행 상황을 저장하고 모든 기능을 이용하려면 로그인하세요.',
+    loginOrDivider: '또는',
+    loginTryDemo: '가입 없이 체험하기',
+    loginReassurance1: '무료로 1개 덱 사용 가능',
+    loginReassurance2: '신용카드 필요 없음',
+
     myDecks: '내 덱',
     uploadDeck: '덱 업로드',
     noDeckYet: '아직 덱이 없습니다. .apkg 파일을 업로드해서 시작하세요!',
@@ -896,6 +933,18 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signInWithGoogle: 'Googleで続ける',
     signInWithEmail: 'メールで続ける',
     emailPlaceholder: 'メールアドレスを入力...',
+
+    loginHeroTitle: 'フラッシュカードをタイピング練習に',
+    loginHeroDesc: 'Ankiデッキをアップロードして、タイピングで練習し、スマートな間隔反復で進捗を追跡しましょう。',
+    loginFeature1: 'スマート間隔反復',
+    loginFeature2: 'WPMと正確度を追跡',
+    loginFeature3: 'あらゆる言語、あらゆるデッキ',
+    loginWelcome: 'ようこそ',
+    loginDesc: 'ログインして進捗を保存し、すべての機能をご利用ください。',
+    loginOrDivider: 'または',
+    loginTryDemo: 'アカウントなしで体験',
+    loginReassurance1: '無料で1デッキ利用可能',
+    loginReassurance2: 'クレジットカード不要',
 
     myDecks: 'マイデッキ',
     uploadDeck: 'デッキをアップロード',
@@ -1184,6 +1233,18 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signInWithEmail: 'Continuar con Email',
     emailPlaceholder: 'Introduce tu email...',
 
+    loginHeroTitle: 'Convierte flashcards en dominio de escritura',
+    loginHeroDesc: 'Sube tu mazo Anki, practica escribiendo y sigue tu progreso con repetición espaciada inteligente.',
+    loginFeature1: 'Repetición espaciada inteligente',
+    loginFeature2: 'Seguimiento de WPM y precisión',
+    loginFeature3: 'Cualquier idioma, cualquier mazo',
+    loginWelcome: 'Bienvenido',
+    loginDesc: 'Inicia sesión para guardar tu progreso y desbloquear todas las funciones.',
+    loginOrDivider: 'o',
+    loginTryDemo: 'Probar sin cuenta',
+    loginReassurance1: '1 mazo gratis incluido',
+    loginReassurance2: 'No se requiere tarjeta de crédito',
+
     myDecks: 'Mis Mazos',
     uploadDeck: 'Subir Mazo',
     noDeckYet: 'Aún no hay mazos. ¡Sube un archivo .apkg para empezar!',
@@ -1471,6 +1532,18 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signInWithEmail: '使用邮箱继续',
     emailPlaceholder: '输入邮箱地址...',
 
+    loginHeroTitle: '将闪卡变为打字练习',
+    loginHeroDesc: '上传你的Anki牌组，通过打字练习，配合智能间隔重复追踪你的进度。',
+    loginFeature1: '智能间隔重复',
+    loginFeature2: '追踪WPM和准确率',
+    loginFeature3: '任何语言，任何牌组',
+    loginWelcome: '欢迎',
+    loginDesc: '登录以保存进度并解锁所有功能。',
+    loginOrDivider: '或',
+    loginTryDemo: '无需账户即可体验',
+    loginReassurance1: '免费包含1个牌组',
+    loginReassurance2: '无需信用卡',
+
     myDecks: '我的牌组',
     uploadDeck: '上传牌组',
     noDeckYet: '还没有牌组。上传.apkg文件开始学习！',
@@ -1757,6 +1830,18 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     signInWithGoogle: 'Continuer avec Google',
     signInWithEmail: 'Continuer avec Email',
     emailPlaceholder: 'Entrez votre email...',
+
+    loginHeroTitle: 'Transformez vos flashcards en pratique de frappe',
+    loginHeroDesc: 'Importez votre deck Anki, pratiquez la frappe et suivez vos progrès avec la répétition espacée intelligente.',
+    loginFeature1: 'Répétition espacée intelligente',
+    loginFeature2: 'Suivi WPM et précision',
+    loginFeature3: 'Toute langue, tout deck',
+    loginWelcome: 'Bienvenue',
+    loginDesc: 'Connectez-vous pour sauvegarder vos progrès et débloquer toutes les fonctionnalités.',
+    loginOrDivider: 'ou',
+    loginTryDemo: 'Essayer sans compte',
+    loginReassurance1: '1 deck gratuit inclus',
+    loginReassurance2: 'Aucune carte de crédit requise',
 
     myDecks: 'Mes Decks',
     uploadDeck: 'Importer un Deck',
