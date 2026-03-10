@@ -86,6 +86,8 @@ export type Translations = {
   sound_typewriter: string;
   focusModeLabel: string;
   feedbackEffectsLabel: string;
+  ttsLabel: string;
+  confettiLabel: string;
 
   // Theme names
   themeDark: string;
@@ -379,6 +381,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_typewriter: 'Typewriter',
     focusModeLabel: 'Focus Mode',
     feedbackEffectsLabel: 'Feedback Effects',
+    ttsLabel: 'Word Pronunciation',
+    confettiLabel: 'Confetti Effects',
 
     themeDark: 'Dark',
     themeLight: 'Light',
@@ -660,6 +664,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_typewriter: '타자기',
     focusModeLabel: '집중 모드',
     feedbackEffectsLabel: '피드백 효과',
+    ttsLabel: '단어 발음',
+    confettiLabel: '콘페티 효과',
 
     themeDark: '다크',
     themeLight: '라이트',
@@ -938,6 +944,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_typewriter: 'タイプライター',
     focusModeLabel: '集中モード',
     feedbackEffectsLabel: 'フィードバック効果',
+    ttsLabel: '単語の発音',
+    confettiLabel: '紙吹雪エフェクト',
 
     themeDark: 'ダーク',
     themeLight: 'ライト',
@@ -1216,6 +1224,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_typewriter: 'Máquina',
     focusModeLabel: 'Modo enfoque',
     feedbackEffectsLabel: 'Efectos de retroalimentación',
+    ttsLabel: 'Pronunciación de palabras',
+    confettiLabel: 'Efectos de confeti',
 
     themeDark: 'Oscuro',
     themeLight: 'Claro',
@@ -1494,6 +1504,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_typewriter: '打字机',
     focusModeLabel: '专注模式',
     feedbackEffectsLabel: '反馈效果',
+    ttsLabel: '单词发音',
+    confettiLabel: '彩纸效果',
 
     themeDark: '深色',
     themeLight: '浅色',
@@ -1772,6 +1784,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     sound_typewriter: 'Machine à écrire',
     focusModeLabel: 'Mode concentration',
     feedbackEffectsLabel: 'Effets de retour',
+    ttsLabel: 'Prononciation des mots',
+    confettiLabel: 'Effets de confettis',
 
     themeDark: 'Sombre',
     themeLight: 'Clair',

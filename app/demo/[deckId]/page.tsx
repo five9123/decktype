@@ -7,6 +7,7 @@ import { usePreferences } from '@/contexts/PreferencesContext';
 import { useTyping } from '@/hooks/useTyping';
 import { useViewport } from '@/hooks/useViewport';
 import { useSound } from '@/hooks/useSound';
+import { useTTS } from '@/hooks/useTTS';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { PreferencesPanel } from '@/components/PreferencesPanel';
@@ -30,7 +31,8 @@ export default function DemoPracticePage() {
   const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
 
   const { t } = useLanguage();
-  const { focusMode, feedbackEffects } = usePreferences();
+  const { focusMode, feedbackEffects, confettiEnabled } = usePreferences();
+  const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -101,10 +103,11 @@ export default function DemoPracticePage() {
   useEffect(() => {
     if (!isComplete || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
-    if (feedbackEffects) {
+    if (feedbackEffects && confettiEnabled) {
       setShowCardConfetti(true);
       setTimeout(() => setShowCardConfetti(false), 2500);
     }
+    speak(target);
     setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, sessionComplete]);
@@ -443,14 +446,14 @@ export default function DemoPracticePage() {
             placeholder={t.typeHere}
             autoFocus
             readOnly={isComplete || wrongSubmit}
-            className="w-full px-4 py-3 rounded-xl text-base"
+            className={`w-full px-4 py-3 rounded-xl text-base${wrongSubmit ? ' wrong-shake' : ''}`}
             style={{
               background: 'var(--surface)',
-              border: '1.5px solid var(--border)',
+              border: wrongSubmit ? '1.5px solid var(--incorrect)' : '1.5px solid var(--border)',
               color: 'var(--text)',
               outline: 'none',
               transition: 'border-color 200ms',
-              opacity: isComplete || wrongSubmit ? 0.5 : 1,
+              opacity: isComplete ? 0.5 : 1,
             }}
           />
           {!isComplete && !wrongSubmit && (

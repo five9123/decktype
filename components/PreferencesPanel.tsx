@@ -28,6 +28,8 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
     soundType, setSoundType,
     focusMode, setFocusMode,
     feedbackEffects, setFeedbackEffects,
+    ttsEnabled, setTtsEnabled,
+    confettiEnabled, setConfettiEnabled,
   } = usePreferences();
 
   useClickOutside(ref, onClose);
@@ -154,7 +156,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
       </div>
 
       {/* Feedback Effects */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.feedbackEffectsLabel}</p>
         <button
           onClick={() => setFeedbackEffects(!feedbackEffects)}
@@ -173,6 +175,66 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
               position: 'absolute',
               top: 2,
               left: feedbackEffects ? 18 : 2,
+              width: 16,
+              height: 16,
+              borderRadius: '50%',
+              background: '#fff',
+              transition: 'left 0.2s ease',
+            }}
+          />
+        </button>
+      </div>
+
+      {/* Word Pronunciation (TTS) */}
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.ttsLabel}</p>
+        <button
+          onClick={() => setTtsEnabled(!ttsEnabled)}
+          className="relative transition-colors"
+          style={{
+            width: 36,
+            height: 20,
+            borderRadius: 10,
+            border: 'none',
+            cursor: 'pointer',
+            background: ttsEnabled ? 'var(--accent)' : 'var(--surface2)',
+          }}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              top: 2,
+              left: ttsEnabled ? 18 : 2,
+              width: 16,
+              height: 16,
+              borderRadius: '50%',
+              background: '#fff',
+              transition: 'left 0.2s ease',
+            }}
+          />
+        </button>
+      </div>
+
+      {/* Confetti Effects */}
+      <div className="flex items-center justify-between">
+        <p className="text-xs" style={{ color: 'var(--muted)' }}>{t.confettiLabel}</p>
+        <button
+          onClick={() => setConfettiEnabled(!confettiEnabled)}
+          className="relative transition-colors"
+          style={{
+            width: 36,
+            height: 20,
+            borderRadius: 10,
+            border: 'none',
+            cursor: 'pointer',
+            background: confettiEnabled ? 'var(--accent)' : 'var(--surface2)',
+          }}
+        >
+          <span
+            style={{
+              position: 'absolute',
+              top: 2,
+              left: confettiEnabled ? 18 : 2,
               width: 16,
               height: 16,
               borderRadius: '50%',

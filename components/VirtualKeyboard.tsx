@@ -1,22 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 
-// ── Language detection ──────────────────────────────────────────────────────
-
-type Lang = 'ko' | 'ja' | 'zh' | 'en';
-
-function detectLang(text: string): Lang {
-  if (!text) return 'en';
-  const clean = text.replace(/\s/g, '');
-  const total = clean.length || 1;
-  const hangul = (clean.match(/[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]/g) ?? []).length;
-  const hirakata = (clean.match(/[\u3040-\u30FF]/g) ?? []).length;
-  const hanzi = (clean.match(/[\u4E00-\u9FFF]/g) ?? []).length;
-  if (hangul / total > 0.2) return 'ko';
-  if (hirakata / total > 0.2) return 'ja';
-  if (hanzi / total > 0.3) return 'zh';
-  return 'en';
-}
+type Lang = ScriptLang;
 
 // ── Korean Dubeolsik (두벌식) mapping ───────────────────────────────────────
 
