@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Try Demo',
@@ -16,6 +17,18 @@ export const metadata: Metadata = {
   },
 };
 
+const demoBreadcrumb = breadcrumbSchema([
+  { name: 'Demo', url: 'https://www.typee.app/demo' },
+]);
+
 export default function DemoLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(demoBreadcrumb) }}
+      />
+      {children}
+    </>
+  );
 }

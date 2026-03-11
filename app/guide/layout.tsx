@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Usage Guide',
@@ -14,6 +15,40 @@ export const metadata: Metadata = {
     title: 'Usage Guide — typee',
     description: 'Step-by-step guide to typing practice with your Anki decks.',
   },
+};
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to Practice Typing with Anki Decks on typee',
+  description:
+    'Learn how to upload your Anki deck and practice typing flashcards with WPM and accuracy tracking.',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Upload Your Deck',
+      text: 'Export an .apkg file from Anki, then drag and drop it into typee or click Browse to upload. You can also try the built-in demo decks.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Choose a Practice Mode',
+      text: 'Select a practice direction (front-to-back or back-to-front), card order (sequential, random, or difficult-first), and start your session.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Type Your Answers',
+      text: 'The front of each card is displayed. Type the correct answer and press Enter. typee shows real-time WPM and per-character accuracy feedback.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 4,
+      name: 'Track Your Progress',
+      text: 'View your WPM trends, accuracy stats, and mastery level for each card. Smart Review automatically prioritizes cards you find difficult.',
+    },
+  ],
 };
 
 const faqSchema = {
@@ -60,7 +95,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            howToSchema,
+            faqSchema,
+            breadcrumbSchema([{ name: 'Usage Guide', url: 'https://www.typee.app/guide' }]),
+          ]),
+        }}
       />
       {children}
     </>

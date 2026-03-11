@@ -64,9 +64,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 '@type': 'Organization',
                 name: 'typee',
                 url: 'https://www.typee.app',
-                logo: 'https://www.typee.app/icon.png',
+                logo: 'https://www.typee.app/icon',
                 description:
                   'typee transforms Anki flashcard decks into interactive typing practice with WPM tracking and spaced repetition.',
+                sameAs: [
+                  'https://github.com/a-type-web',
+                ],
               },
               {
                 '@context': 'https://schema.org',
@@ -75,11 +78,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 url: 'https://www.typee.app',
                 description:
                   'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
-                potentialAction: {
-                  '@type': 'SearchAction',
-                  target: 'https://www.typee.app/demo',
-                  'query-input': 'required name=search_term_string',
-                },
               },
             ]),
           }}

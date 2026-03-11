@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { breadcrumbSchema } from '@/lib/schema';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -67,7 +68,12 @@ export default function PricingLayout({ children }: { children: React.ReactNode 
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            ...pricingSchema,
+            breadcrumbSchema([{ name: 'Pricing', url: 'https://www.typee.app/pricing' }]),
+          ]),
+        }}
       />
       {children}
     </>
