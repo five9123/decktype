@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -7,6 +8,7 @@ import { TopToolbar } from '@/components/TopToolbar';
 export default function HomePage() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const ctaHref = user ? '/dashboard' : '/demo';
   const ctaLabel = user ? t.myDecks : t.tryWithoutDeck;
@@ -338,25 +340,50 @@ export default function HomePage() {
 
         {/* ── What is typee? ── */}
         <section className="px-4 py-24">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <p className="text-xs font-bold tracking-widest mb-4 text-center" style={{ color: 'var(--accent)' }}>
               ABOUT
             </p>
-            <h2 className="text-4xl font-bold mb-8 text-center" style={{ color: 'var(--text)' }}>
+            <h2 className="text-4xl font-bold mb-12 text-center" style={{ color: 'var(--text)' }}>
               {t.whatIsTitle}
             </h2>
-            <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--muted)' }}>
-              {t.whatIsDesc}
-            </p>
-            <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--muted)' }}>
-              {t.whatIsDetail1}
-            </p>
-            <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--muted)' }}>
-              {t.whatIsDetail2}
-            </p>
-            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
-              {t.whatIsDetail3}
-            </p>
+
+            {/* Main description card */}
+            <div
+              className="p-8 rounded-2xl mb-8"
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
+                borderLeft: '4px solid var(--accent)',
+              }}
+            >
+              <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+                {t.whatIsDesc}
+              </p>
+            </div>
+
+            {/* Detail cards grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                { icon: '📦', label: 'Any Deck', desc: t.whatIsDetail1 },
+                { icon: '🔄', label: 'Smart Review', desc: t.whatIsDetail2 },
+                { icon: '🌐', label: 'Global', desc: t.whatIsDetail3 },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="p-6 rounded-2xl"
+                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                >
+                  <div className="text-2xl mb-3">{item.icon}</div>
+                  <p className="text-xs font-bold tracking-widest mb-2" style={{ color: 'var(--accent)' }}>
+                    {item.label.toUpperCase()}
+                  </p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -369,21 +396,50 @@ export default function HomePage() {
             <h2 className="text-4xl font-bold mb-12 text-center" style={{ color: 'var(--text)' }}>
               {t.homeFaqTitle}
             </h2>
-            <div className="space-y-4">
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+            >
               {[
                 { q: t.homeFaq1Q, a: t.homeFaq1A },
                 { q: t.homeFaq2Q, a: t.homeFaq2A },
                 { q: t.homeFaq3Q, a: t.homeFaq3A },
                 { q: t.homeFaq4Q, a: t.homeFaq4A },
                 { q: t.homeFaq5Q, a: t.homeFaq5A },
-              ].map((faq, i) => (
+              ].map((faq, i, arr) => (
                 <div
                   key={i}
-                  className="p-6 rounded-2xl"
-                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                  style={i < arr.length - 1 ? { borderBottom: '1px solid var(--border)' } : undefined}
                 >
-                  <h3 className="font-semibold mb-2" style={{ color: 'var(--text)' }}>{faq.q}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{faq.a}</p>
+                  <button
+                    type="button"
+                    className="w-full flex items-center justify-between gap-4 p-6 text-left cursor-pointer"
+                    style={{ background: 'transparent', color: 'var(--text)' }}
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  >
+                    <h3 className="font-semibold text-base">{faq.q}</h3>
+                    <span
+                      className="flex-shrink-0 text-lg"
+                      style={{
+                        color: 'var(--accent)',
+                        transform: openFaq === i ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.25s ease',
+                      }}
+                    >
+                      ▾
+                    </span>
+                  </button>
+                  <div
+                    style={{
+                      maxHeight: openFaq === i ? 300 : 0,
+                      overflow: 'hidden',
+                      transition: 'max-height 0.3s ease',
+                    }}
+                  >
+                    <p className="text-sm leading-relaxed px-6 pb-6" style={{ color: 'var(--muted)' }}>
+                      {faq.a}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
