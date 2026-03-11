@@ -48,9 +48,6 @@ export const metadata: Metadata = {
     description:
       'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
   },
-  icons: {
-    icon: '/favicon.ico',
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -67,7 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 '@type': 'Organization',
                 name: 'typee',
                 url: 'https://www.typee.app',
-                logo: 'https://www.typee.app/favicon.ico',
+                logo: 'https://www.typee.app/icon.png',
                 description:
                   'typee transforms Anki flashcard decks into interactive typing practice with WPM tracking and spaced repetition.',
               },
