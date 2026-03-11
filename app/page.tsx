@@ -5,16 +5,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 
 export default function HomePage() {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const { t } = useLanguage();
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
-        <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
-      </div>
-    );
-  }
 
   const ctaHref = user ? '/dashboard' : '/demo';
   const ctaLabel = user ? t.myDecks : t.tryWithoutDeck;
@@ -25,34 +17,84 @@ export default function HomePage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: JSON.stringify([{
             '@context': 'https://schema.org',
             '@type': 'SoftwareApplication',
             name: 'typee',
             applicationCategory: 'EducationApplication',
+            applicationSubCategory: 'Language Learning',
             operatingSystem: 'Web Browser',
-            url: 'https://typee.app',
+            url: 'https://www.typee.app',
             description:
               'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
+            featureList:
+              'Anki deck upload, WPM tracking, accuracy statistics, spaced repetition, multi-language support, 10+ color themes',
             offers: [
               {
                 '@type': 'Offer',
                 price: '0',
                 priceCurrency: 'USD',
                 name: 'Free',
+                description: '1 deck, up to 100 cards',
               },
               {
                 '@type': 'Offer',
                 price: '5',
                 priceCurrency: 'USD',
                 name: 'Pro Monthly',
+                description: 'Unlimited decks, advanced stats, priority support',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
                   billingDuration: 'P1M',
                 },
               },
             ],
-          }),
+          }, {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'What is typee and how does it work?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'typee is a typing practice app for Anki flashcard users. Upload your .apkg deck file, and typee converts each card into a typing exercise. You see the front of a card and type the answer. The app tracks your WPM (words per minute), accuracy, and mastery level for every card.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Is typee free to use?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Yes. The free plan includes 1 deck with up to 100 cards, all practice modes, all themes, and basic statistics. The Pro plan ($5/month or $48/year) unlocks unlimited decks, advanced progress tracking, and priority support.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'What languages does typee support?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'typee supports any language that works in Anki. This includes Japanese, Korean, Chinese, Spanish, French, German, Arabic, Thai, and many more.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Do I need an Anki account to use typee?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'No. typee is a standalone web app. You just need an .apkg file exported from Anki. You can also try the built-in demo decks without uploading anything or creating an account.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'How is typee different from regular Anki review?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Anki uses passive recognition. typee adds active recall through typing. You must physically type the answer, which builds stronger muscle memory and deeper retention.',
+                },
+              },
+            ],
+          }]),
         }}
       />
       <main style={{ background: 'var(--bg)', color: 'var(--text)' }}>
@@ -290,6 +332,60 @@ export default function HomePage() {
                   <span key={lang} className="px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }}>{lang}</span>
                 ))}
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── What is typee? ── */}
+        <section className="px-4 py-24">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-xs font-bold tracking-widest mb-4 text-center" style={{ color: 'var(--accent)' }}>
+              ABOUT
+            </p>
+            <h2 className="text-4xl font-bold mb-8 text-center" style={{ color: 'var(--text)' }}>
+              {t.whatIsTitle}
+            </h2>
+            <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--muted)' }}>
+              {t.whatIsDesc}
+            </p>
+            <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--muted)' }}>
+              {t.whatIsDetail1}
+            </p>
+            <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--muted)' }}>
+              {t.whatIsDetail2}
+            </p>
+            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+              {t.whatIsDetail3}
+            </p>
+          </div>
+        </section>
+
+        {/* ── FAQ ── */}
+        <section className="px-4 py-24">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-xs font-bold tracking-widest mb-4 text-center" style={{ color: 'var(--accent)' }}>
+              FAQ
+            </p>
+            <h2 className="text-4xl font-bold mb-12 text-center" style={{ color: 'var(--text)' }}>
+              {t.homeFaqTitle}
+            </h2>
+            <div className="space-y-4">
+              {[
+                { q: t.homeFaq1Q, a: t.homeFaq1A },
+                { q: t.homeFaq2Q, a: t.homeFaq2A },
+                { q: t.homeFaq3Q, a: t.homeFaq3A },
+                { q: t.homeFaq4Q, a: t.homeFaq4A },
+                { q: t.homeFaq5Q, a: t.homeFaq5A },
+              ].map((faq, i) => (
+                <div
+                  key={i}
+                  className="p-6 rounded-2xl"
+                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                >
+                  <h3 className="font-semibold mb-2" style={{ color: 'var(--text)' }}>{faq.q}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{faq.a}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>

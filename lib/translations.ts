@@ -194,6 +194,24 @@ export type Translations = {
   getStartedTitle: string;
   getStartedDesc: string;
 
+  // Homepage — What is typee / FAQ
+  whatIsTitle: string;
+  whatIsDesc: string;
+  whatIsDetail1: string;
+  whatIsDetail2: string;
+  whatIsDetail3: string;
+  homeFaqTitle: string;
+  homeFaq1Q: string;
+  homeFaq1A: string;
+  homeFaq2Q: string;
+  homeFaq2A: string;
+  homeFaq3Q: string;
+  homeFaq3A: string;
+  homeFaq4Q: string;
+  homeFaq4A: string;
+  homeFaq5Q: string;
+  homeFaq5A: string;
+
   // Demo page
   tryDemo: string;
   demoSubtitle: string;
@@ -502,6 +520,23 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     getStartedTitle: 'Start typing in seconds.',
     getStartedDesc: 'Upload your deck, pick a mode, and start building real memory. No setup. No config.',
 
+    whatIsTitle: 'What is typee?',
+    whatIsDesc: 'typee is a web-based typing practice tool designed for Anki users. Instead of passively reviewing flashcards, you actively type your answers — building stronger muscle memory and deeper recall. Upload any .apkg deck file and practice typing your cards while tracking real-time WPM and accuracy statistics.',
+    whatIsDetail1: 'Works with any Anki deck: language vocabulary, medical terms, history facts, programming concepts, and more. typee parses your deck instantly in the browser — no server upload needed.',
+    whatIsDetail2: 'The Smart Review system adapts to your performance using spaced repetition. Cards you struggle with appear more frequently, while mastered cards gradually fade back — just like Anki, but with typing as the active recall method.',
+    whatIsDetail3: 'Available in 6 interface languages (English, Korean, Japanese, Chinese, Spanish, French) with 10+ editor themes. Free to start with 1 deck and up to 100 cards. Pro plan unlocks unlimited decks for $5/month.',
+    homeFaqTitle: 'Frequently Asked Questions',
+    homeFaq1Q: 'What is typee and how does it work?',
+    homeFaq1A: 'typee is a typing practice app for Anki flashcard users. Upload your .apkg deck file, and typee converts each card into a typing exercise. You see the front of a card and type the answer. The app tracks your WPM (words per minute), accuracy, and mastery level for every card.',
+    homeFaq2Q: 'Is typee free to use?',
+    homeFaq2A: 'Yes. The free plan includes 1 deck with up to 100 cards, all practice modes, all themes, and basic statistics. The Pro plan ($5/month or $48/year) unlocks unlimited decks, advanced progress tracking, and priority support.',
+    homeFaq3Q: 'What languages does typee support?',
+    homeFaq3A: 'typee supports any language that works in Anki. This includes Japanese, Korean, Chinese, Spanish, French, German, Arabic, Thai, and many more. The app handles IME input for CJK languages and uses Unicode grapheme segmentation for accurate character-level feedback.',
+    homeFaq4Q: 'Do I need an Anki account to use typee?',
+    homeFaq4A: 'No. typee is a standalone web app. You just need an .apkg file exported from Anki. You can also try the built-in demo decks without uploading anything or creating an account.',
+    homeFaq5Q: 'How is typee different from regular Anki review?',
+    homeFaq5A: 'Anki uses passive recognition — you see a card and rate how well you knew it. typee adds active recall through typing. You must physically type the answer, which builds stronger muscle memory and deeper retention. typee also tracks your typing speed and accuracy over time.',
+
     tryDemo: 'Try Without a Deck',
     demoSubtitle: 'No account needed. Pick a deck and start typing.',
     demoModeHintMeaning: 'See the word → type the English meaning',
@@ -805,6 +840,23 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     getStartedTitle: '몇 초 만에 타이핑 시작.',
     getStartedDesc: '덱을 업로드하고 모드를 선택한 다음 실제 기억을 만들어 보세요. 설정 없음.',
 
+    whatIsTitle: 'typee란?',
+    whatIsDesc: 'typee는 Anki 사용자를 위한 웹 기반 타이핑 연습 도구입니다. 플래시카드를 수동적으로 복습하는 대신, 답을 직접 타이핑하여 더 강한 근육 기억과 깊은 회상력을 키울 수 있습니다. .apkg 덱 파일을 업로드하고 실시간 WPM 및 정확도를 추적하며 카드를 타이핑하세요.',
+    whatIsDetail1: '어떤 Anki 덱이든 사용 가능: 언어 어휘, 의학 용어, 역사, 프로그래밍 개념 등. typee는 브라우저에서 즉시 덱을 파싱합니다 — 서버 업로드가 필요 없습니다.',
+    whatIsDetail2: '스마트 리뷰 시스템은 간격 반복을 사용하여 성과에 맞게 조정됩니다. 어려운 카드는 더 자주, 숙달한 카드는 점차 덜 나타납니다.',
+    whatIsDetail3: '6개 언어 인터페이스(영어, 한국어, 일본어, 중국어, 스페인어, 프랑스어)와 10+ 에디터 테마. 1개 덱, 최대 100장 무료. Pro 플랜은 월 $5.',
+    homeFaqTitle: '자주 묻는 질문',
+    homeFaq1Q: 'typee는 무엇이고 어떻게 작동하나요?',
+    homeFaq1A: 'typee는 Anki 플래시카드 사용자를 위한 타이핑 연습 앱입니다. .apkg 덱 파일을 업로드하면 각 카드가 타이핑 연습으로 변환됩니다. 카드 앞면을 보고 답을 타이핑하세요. WPM, 정확도, 숙달도를 추적합니다.',
+    homeFaq2Q: 'typee는 무료인가요?',
+    homeFaq2A: '네. 무료 플랜에는 1개 덱(최대 100장), 모든 연습 모드, 모든 테마, 기본 통계가 포함됩니다. Pro 플랜(월 $5 또는 연 $48)은 무제한 덱, 고급 진행 추적, 우선 지원을 제공합니다.',
+    homeFaq3Q: '어떤 언어를 지원하나요?',
+    homeFaq3A: 'Anki에서 작동하는 모든 언어를 지원합니다. 일본어, 한국어, 중국어, 스페인어, 프랑스어, 독일어, 아랍어, 태국어 등. CJK 언어의 IME 입력과 유니코드 자소 분할을 지원합니다.',
+    homeFaq4Q: 'Anki 계정이 필요한가요?',
+    homeFaq4A: '아니요. typee는 독립적인 웹 앱입니다. Anki에서 내보낸 .apkg 파일만 있으면 됩니다. 계정 없이 내장 데모 덱도 체험할 수 있습니다.',
+    homeFaq5Q: '일반 Anki 복습과 어떻게 다른가요?',
+    homeFaq5A: 'Anki는 수동적 인식을 사용합니다. typee는 타이핑을 통한 능동적 회상을 추가합니다. 답을 직접 타이핑해야 하므로 더 강한 근육 기억과 깊은 기억력이 형성됩니다.',
+
     tryDemo: '덱 없이 체험',
     demoSubtitle: '로그인 없이 바로 체험하세요. 덱을 선택하고 타이핑을 시작하세요.',
     demoModeHintMeaning: '단어를 보고 → 영어 뜻을 타이핑',
@@ -1104,6 +1156,23 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     getStartedLabel: '今すぐ始める',
     getStartedTitle: '数秒でタイピング開始。',
     getStartedDesc: 'デッキをアップロードし、モードを選択して、本物の記憶を作り始めましょう。設定不要。',
+
+    whatIsTitle: 'typeeとは？',
+    whatIsDesc: 'typeeはAnkiユーザーのためのウェブベースのタイピング練習ツールです。フラッシュカードを受動的に復習する代わりに、答えを積極的にタイピングすることで、より強い筋肉記憶とより深い想起力を構築します。.apkgデッキファイルをアップロードし、リアルタイムのWPMと精度を追跡しながらカードをタイピングしましょう。',
+    whatIsDetail1: 'どんなAnkiデッキでも使用可能：言語の語彙、医学用語、歴史、プログラミング概念など。typeeはブラウザで即座にデッキを解析します。',
+    whatIsDetail2: 'スマートレビューシステムは間隔反復を使用してパフォーマンスに適応します。苦手なカードはより頻繁に、習得したカードは徐々に少なく表示されます。',
+    whatIsDetail3: '6言語のインターフェース（英語、韓国語、日本語、中国語、スペイン語、フランス語）と10以上のエディターテーマ。1デッキ最大100枚まで無料。Proプランは月額$5。',
+    homeFaqTitle: 'よくある質問',
+    homeFaq1Q: 'typeeとは何ですか？どのように動作しますか？',
+    homeFaq1A: 'typeeはAnkiフラッシュカードユーザーのためのタイピング練習アプリです。.apkgデッキファイルをアップロードすると、各カードがタイピング練習に変換されます。カードの表面を見て答えをタイピングします。WPM、精度、習得レベルを追跡します。',
+    homeFaq2Q: 'typeeは無料ですか？',
+    homeFaq2A: 'はい。無料プランには1デッキ（最大100枚）、すべての練習モード、すべてのテーマ、基本統計が含まれます。Proプラン（月額$5または年額$48）で無制限デッキ、高度な進捗追跡、優先サポートが利用できます。',
+    homeFaq3Q: 'どの言語に対応していますか？',
+    homeFaq3A: 'Ankiで動作するすべての言語に対応しています。日本語、韓国語、中国語、スペイン語、フランス語、ドイツ語、アラビア語、タイ語など。CJK言語のIME入力とUnicode書記素分割に対応しています。',
+    homeFaq4Q: 'Ankiアカウントは必要ですか？',
+    homeFaq4A: 'いいえ。typeeは独立したウェブアプリです。Ankiからエクスポートした.apkgファイルがあれば十分です。アカウントなしで内蔵デモデッキも体験できます。',
+    homeFaq5Q: '通常のAnki復習とどう違いますか？',
+    homeFaq5A: 'Ankiは受動的な認識を使用します。typeeはタイピングによる能動的な想起を追加します。答えを実際にタイピングすることで、より強い筋肉記憶と深い記憶定着が形成されます。',
 
     tryDemo: 'デッキなしで体験',
     demoSubtitle: 'アカウント不要。デッキを選んでタイピングを始めましょう。',
@@ -1405,6 +1474,23 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     getStartedTitle: 'Empieza a escribir en segundos.',
     getStartedDesc: 'Sube tu mazo, elige un modo y empieza a construir memoria real. Sin configuración.',
 
+    whatIsTitle: '¿Qué es typee?',
+    whatIsDesc: 'typee es una herramienta web de práctica de escritura diseñada para usuarios de Anki. En lugar de revisar pasivamente tus tarjetas, escribes activamente las respuestas, construyendo una memoria muscular más fuerte y un recuerdo más profundo.',
+    whatIsDetail1: 'Funciona con cualquier mazo de Anki: vocabulario de idiomas, términos médicos, historia, conceptos de programación y más. typee analiza tu mazo al instante en el navegador.',
+    whatIsDetail2: 'El sistema de Revisión Inteligente se adapta a tu rendimiento usando repetición espaciada. Las tarjetas difíciles aparecen con más frecuencia, mientras que las dominadas se muestran menos.',
+    whatIsDetail3: 'Disponible en 6 idiomas de interfaz con más de 10 temas. Gratis para empezar con 1 mazo y hasta 100 tarjetas. Plan Pro a $5/mes.',
+    homeFaqTitle: 'Preguntas frecuentes',
+    homeFaq1Q: '¿Qué es typee y cómo funciona?',
+    homeFaq1A: 'typee es una app de práctica de escritura para usuarios de tarjetas Anki. Sube tu archivo .apkg y cada tarjeta se convierte en un ejercicio de escritura. Rastrea tu WPM, precisión y nivel de dominio.',
+    homeFaq2Q: '¿Es typee gratis?',
+    homeFaq2A: 'Sí. El plan gratuito incluye 1 mazo (hasta 100 tarjetas), todos los modos de práctica, todos los temas y estadísticas básicas. El plan Pro ($5/mes o $48/año) desbloquea mazos ilimitados.',
+    homeFaq3Q: '¿Qué idiomas soporta typee?',
+    homeFaq3A: 'typee soporta cualquier idioma que funcione en Anki: japonés, coreano, chino, español, francés, alemán, árabe, tailandés y más.',
+    homeFaq4Q: '¿Necesito una cuenta de Anki?',
+    homeFaq4A: 'No. typee es una app web independiente. Solo necesitas un archivo .apkg exportado de Anki. También puedes probar los mazos demo sin crear una cuenta.',
+    homeFaq5Q: '¿Cómo es diferente typee de la revisión normal de Anki?',
+    homeFaq5A: 'Anki usa reconocimiento pasivo. typee añade recuerdo activo a través de la escritura. Al escribir físicamente las respuestas, construyes una memoria muscular más fuerte.',
+
     tryDemo: 'Probar sin mazo',
     demoSubtitle: 'Sin cuenta necesaria. Elige un mazo y empieza a escribir.',
     demoModeHintMeaning: 'Ve la palabra → escribe el significado en inglés',
@@ -1705,6 +1791,23 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     getStartedTitle: '几秒内开始打字练习。',
     getStartedDesc: '上传你的牌组，选择模式，开始建立真正的记忆。无需设置。',
 
+    whatIsTitle: '什么是typee？',
+    whatIsDesc: 'typee是为Anki用户设计的网页版打字练习工具。不再被动复习闪卡，而是主动输入答案——建立更强的肌肉记忆和更深的记忆。上传.apkg牌组文件，实时跟踪WPM和准确率。',
+    whatIsDetail1: '支持任何Anki牌组：语言词汇、医学术语、历史、编程概念等。typee在浏览器中即时解析牌组，无需服务器上传。',
+    whatIsDetail2: '智能复习系统使用间隔重复根据你的表现进行调整。难的卡片出现更频繁，已掌握的卡片逐渐减少。',
+    whatIsDetail3: '支持6种界面语言和10多个编辑器主题。免费使用1个牌组（最多100张卡片）。Pro计划每月$5。',
+    homeFaqTitle: '常见问题',
+    homeFaq1Q: 'typee是什么？如何使用？',
+    homeFaq1A: 'typee是Anki闪卡用户的打字练习应用。上传.apkg牌组文件，每张卡片会转换为打字练习。查看卡片正面并输入答案，追踪WPM、准确率和掌握程度。',
+    homeFaq2Q: 'typee免费吗？',
+    homeFaq2A: '是的。免费计划包括1个牌组（最多100张卡片）、所有练习模式、所有主题和基本统计。Pro计划（月$5或年$48）解锁无限牌组。',
+    homeFaq3Q: 'typee支持哪些语言？',
+    homeFaq3A: '支持Anki中所有可用的语言：日语、韩语、中文、西班牙语、法语、德语、阿拉伯语、泰语等。',
+    homeFaq4Q: '需要Anki账户吗？',
+    homeFaq4A: '不需要。typee是独立的网页应用。只需要从Anki导出的.apkg文件。也可以不创建账户直接试用内置演示牌组。',
+    homeFaq5Q: 'typee和普通Anki复习有什么区别？',
+    homeFaq5A: 'Anki使用被动识别。typee通过打字添加主动回忆。物理输入答案可以建立更强的肌肉记忆和更深的记忆保持。',
+
     tryDemo: '无需牌组体验',
     demoSubtitle: '无需账户。选择牌组，立即开始打字练习。',
     demoModeHintMeaning: '看到单词 → 输入英语意思',
@@ -2004,6 +2107,23 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     getStartedLabel: 'COMMENCER',
     getStartedTitle: 'Commencez à taper en quelques secondes.',
     getStartedDesc: 'Importez votre deck, choisissez un mode et commencez à construire une vraie mémoire. Sans configuration.',
+
+    whatIsTitle: "Qu'est-ce que typee ?",
+    whatIsDesc: "typee est un outil web de pratique de frappe conçu pour les utilisateurs d'Anki. Au lieu de réviser passivement vos cartes, vous tapez activement les réponses — construisant une mémoire musculaire plus forte et un rappel plus profond.",
+    whatIsDetail1: "Fonctionne avec n'importe quel deck Anki : vocabulaire, termes médicaux, histoire, concepts de programmation et plus. typee analyse votre deck instantanément dans le navigateur.",
+    whatIsDetail2: "Le système de Révision Intelligente s'adapte à vos performances en utilisant la répétition espacée. Les cartes difficiles apparaissent plus souvent, les cartes maîtrisées moins fréquemment.",
+    whatIsDetail3: "Disponible en 6 langues d'interface avec plus de 10 thèmes. Gratuit pour commencer avec 1 deck et jusqu'à 100 cartes. Plan Pro à 5$/mois.",
+    homeFaqTitle: 'Questions fréquentes',
+    homeFaq1Q: "Qu'est-ce que typee et comment ça marche ?",
+    homeFaq1A: "typee est une app de pratique de frappe pour les utilisateurs de cartes Anki. Téléchargez votre fichier .apkg et chaque carte devient un exercice de frappe. Suivez votre WPM, précision et niveau de maîtrise.",
+    homeFaq2Q: 'typee est-il gratuit ?',
+    homeFaq2A: "Oui. Le plan gratuit inclut 1 deck (jusqu'à 100 cartes), tous les modes de pratique, tous les thèmes et les statistiques de base. Le plan Pro (5$/mois ou 48$/an) débloque les decks illimités.",
+    homeFaq3Q: 'Quelles langues typee supporte-t-il ?',
+    homeFaq3A: "typee supporte toutes les langues qui fonctionnent dans Anki : japonais, coréen, chinois, espagnol, français, allemand, arabe, thaï et plus.",
+    homeFaq4Q: "Ai-je besoin d'un compte Anki ?",
+    homeFaq4A: "Non. typee est une app web indépendante. Vous avez juste besoin d'un fichier .apkg exporté d'Anki. Vous pouvez aussi essayer les decks de démonstration sans créer de compte.",
+    homeFaq5Q: "En quoi typee est-il différent de la révision Anki normale ?",
+    homeFaq5A: "Anki utilise la reconnaissance passive. typee ajoute le rappel actif par la frappe. En tapant physiquement les réponses, vous construisez une mémoire musculaire plus forte.",
 
     tryDemo: 'Essayer sans deck',
     demoSubtitle: 'Sans compte. Choisissez un deck et commencez à taper.',

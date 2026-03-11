@@ -1,0 +1,43 @@
+# typee — Anki Deck Typing Practice
+
+> typee is a web application that transforms Anki flashcard decks into interactive typing practice sessions. Upload your .apkg file and practice typing your flashcards while tracking WPM (words per minute) and accuracy.
+
+## Core Features
+
+- Upload any Anki deck (.apkg file) and practice typing flashcards
+- Real-time WPM and accuracy tracking per session
+- Smart Review system using spaced repetition (SRS) for adaptive practice
+- Supports any language: Korean, Japanese, Chinese, Spanish, French, and more
+- Two practice modes: front-to-back (see word, type meaning) and back-to-front (see meaning, type word)
+- 10+ color themes including Catppuccin, Dracula, Nord, Tokyo Night, and more
+- Free tier with 1 deck (up to 100 cards) — Pro plan at $5/month for unlimited decks
+
+## Pages
+
+- Homepage: https://www.typee.app/
+- Demo (try without sign-up): https://www.typee.app/demo
+- Pricing: https://www.typee.app/pricing
+- Usage Guide: https://www.typee.app/guide
+- Contact: https://www.typee.app/contact
+- Privacy Policy: https://www.typee.app/privacy
+- Terms of Service: https://www.typee.app/terms
+
+## How It Works
+
+1. Upload your Anki deck (.apkg file) or try the built-in demo decks
+2. Choose a practice mode and start typing — the app shows flashcards one at a time
+3. Track your progress with WPM, accuracy, and mastery statistics over time
+
+## Use Cases
+
+- Language learners practicing vocabulary recall through active typing
+- Medical students memorizing terminology with Anki decks
+- Anyone who wants to reinforce flashcard knowledge through muscle memory
+- Supplementing Anki review sessions with active recall through typing
+
+## Technical Details
+
+- Built with Next.js and hosted on Vercel
+- Anki deck parsing happens client-side using sql.js (WebAssembly SQLite)
+- Authentication via Supabase (Google, Twitter/X, Email)
+- Payments via Stripe

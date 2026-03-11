@@ -31,6 +31,9 @@ export const metadata: Metadata = {
     'memory training',
     'study tool',
   ],
+  alternates: {
+    canonical: BASE_URL,
+  },
   openGraph: {
     type: 'website',
     siteName: 'typee',
@@ -55,6 +58,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       {/* Inline script runs before paint — prevents FOUC by applying CSS variables immediately */}
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: 'typee',
+                url: 'https://www.typee.app',
+                logo: 'https://www.typee.app/favicon.ico',
+                description:
+                  'typee transforms Anki flashcard decks into interactive typing practice with WPM tracking and spaced repetition.',
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'typee',
+                url: 'https://www.typee.app',
+                description:
+                  'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: 'https://www.typee.app/demo',
+                  'query-input': 'required name=search_term_string',
+                },
+              },
+            ]),
+          }}
+        />
         <script dangerouslySetInnerHTML={{ __html: `
 (function(){
   try {

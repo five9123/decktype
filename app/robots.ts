@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         '/api/',
       ],
     },
-    sitemap: 'https://typee.app/sitemap.xml',
+    sitemap: 'https://www.typee.app/sitemap.xml',
   };
 }
