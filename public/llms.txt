@@ -18,6 +18,7 @@
 - Demo (try without sign-up): https://www.typee.app/demo
 - Pricing: https://www.typee.app/pricing
 - Usage Guide: https://www.typee.app/guide
+- About: https://www.typee.app/about
 - Contact: https://www.typee.app/contact
 - Privacy Policy: https://www.typee.app/privacy
 - Terms of Service: https://www.typee.app/terms

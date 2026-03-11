@@ -16,6 +16,60 @@ export const metadata: Metadata = {
   },
 };
 
+const pricingSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'typee Free',
+    description:
+      'Free Anki typing practice with 1 deck, 100 cards, all practice modes, WPM and accuracy tracking.',
+    brand: { '@type': 'Organization', name: 'typee' },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: 'https://www.typee.app/pricing',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'typee Pro',
+    description:
+      'Unlimited Anki decks and cards, activity heatmap, WPM trend chart, and priority support.',
+    brand: { '@type': 'Organization', name: 'typee' },
+    offers: [
+      {
+        '@type': 'Offer',
+        price: '5.00',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: 'https://www.typee.app/pricing',
+        priceValidUntil: '2026-12-31',
+        billingDuration: 'P1M',
+      },
+      {
+        '@type': 'Offer',
+        price: '48.00',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: 'https://www.typee.app/pricing',
+        priceValidUntil: '2026-12-31',
+        billingDuration: 'P1Y',
+      },
+    ],
+  },
+];
+
 export default function PricingLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingSchema) }}
+      />
+      {children}
+    </>
+  );
 }

@@ -73,6 +73,11 @@ export function GlobalFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/about" className="no-underline transition-colors hover:opacity-80" style={{ color: 'var(--muted)' }}>
+                  {t.footerAbout}
+                </Link>
+              </li>
+              <li>
                 <Link href="/contact" className="no-underline transition-colors hover:opacity-80" style={{ color: 'var(--muted)' }}>
                   {t.footerContact}
                 </Link>

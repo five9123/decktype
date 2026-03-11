@@ -259,10 +259,39 @@ export type Translations = {
   footerUpload: string;
   footerPricing: string;
   footerGuide: string;
+  footerAbout: string;
   footerContact: string;
   footerTerms: string;
   footerPrivacy: string;
   comingSoon: string;
+
+  // About page
+  aboutTitle: string;
+  aboutMission: string;
+  aboutMissionDesc: string;
+  aboutStory: string;
+  aboutStoryP1: string;
+  aboutStoryP2: string;
+  aboutStoryP3: string;
+  aboutWhyTitle: string;
+  aboutWhy1: string;
+  aboutWhy2: string;
+  aboutWhy3: string;
+  aboutWhy4: string;
+  aboutTechTitle: string;
+  aboutTechDesc: string;
+
+  // Contact page
+  contactTitle: string;
+  contactIntro: string;
+  contactEmailLabel: string;
+  contactEmailDesc: string;
+  contactResponseTime: string;
+  contactTopics: string;
+  contactTopic1: string;
+  contactTopic2: string;
+  contactTopic3: string;
+  contactTopic4: string;
 
   // Guide page
   guideTitle: string;
@@ -580,10 +609,37 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerUpload: 'Upload deck',
     footerPricing: 'Pricing',
     footerGuide: 'Usage guide',
+    footerAbout: 'About',
     footerContact: 'Contact us',
     footerTerms: 'Terms of Service',
     footerPrivacy: 'Privacy Policy',
     comingSoon: 'Coming soon.',
+
+    aboutTitle: 'About typee',
+    aboutMission: 'Our Mission',
+    aboutMissionDesc: 'typee exists to make flashcard learning more effective through active recall. By turning passive review into typing practice, we help students build stronger muscle memory, retain knowledge longer, and track their progress with precision.',
+    aboutStory: 'The Story',
+    aboutStoryP1: 'typee was born from a simple frustration: Anki is great for spaced repetition, but the review process is too passive. You see a card, think about the answer, flip it over, and rate yourself. There\'s no way to know if you truly remember the answer or if you\'re just recognizing familiar text.',
+    aboutStoryP2: 'What if you had to type the answer? Typing forces active recall — you can\'t cheat. Every keystroke reveals whether you really know the material. Plus, typing itself is a form of muscle memory, reinforcing the neural pathways for each piece of knowledge.',
+    aboutStoryP3: 'typee launched in 2026 as a free web tool. Upload any Anki .apkg deck, and instantly start typing practice with real-time WPM tracking, accuracy stats, and adaptive spaced repetition. No downloads, no complicated setup — just upload and type.',
+    aboutWhyTitle: 'Why Typing?',
+    aboutWhy1: 'Active recall — physically producing the answer strengthens memory more than recognition alone.',
+    aboutWhy2: 'Muscle memory — repeated typing builds automatic recall, especially for language vocabulary and CJK characters.',
+    aboutWhy3: 'Honest feedback — you either type it correctly or you don\'t. No more over-rating your confidence in Anki reviews.',
+    aboutWhy4: 'Measurable progress — WPM and accuracy give you concrete metrics that "I knew it" can\'t provide.',
+    aboutTechTitle: 'Built With',
+    aboutTechDesc: 'typee is a Next.js web application hosted on Vercel. Decks are parsed entirely in the browser — your .apkg files never leave your device. We use Supabase for authentication and progress syncing, and Stripe for secure payments.',
+
+    contactTitle: 'Contact Us',
+    contactIntro: 'Have a question, feature request, or found a bug? We\'d love to hear from you.',
+    contactEmailLabel: 'Email Us',
+    contactEmailDesc: 'Send us an email and we\'ll get back to you.',
+    contactResponseTime: 'We typically respond within 24 hours.',
+    contactTopics: 'What can we help with?',
+    contactTopic1: 'Bug reports & technical issues',
+    contactTopic2: 'Feature requests & suggestions',
+    contactTopic3: 'Billing & subscription questions',
+    contactTopic4: 'General questions & feedback',
 
     // Guide page
     guideTitle: 'Usage Guide',
@@ -900,10 +956,37 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerUpload: '덱 업로드',
     footerPricing: '요금제',
     footerGuide: '사용 가이드',
+    footerAbout: '소개',
     footerContact: '문의하기',
     footerTerms: '이용약관',
     footerPrivacy: '개인정보처리방침',
     comingSoon: '준비 중입니다.',
+
+    aboutTitle: 'typee 소개',
+    aboutMission: '미션',
+    aboutMissionDesc: 'typee는 능동적 회상을 통해 플래시카드 학습을 더 효과적으로 만들기 위해 존재합니다. 수동적 복습을 타이핑 연습으로 전환하여 더 강한 근육 기억, 더 오래 지속되는 지식 보유, 정밀한 진행 추적을 도와줍니다.',
+    aboutStory: '이야기',
+    aboutStoryP1: 'typee는 단순한 불편함에서 탄생했습니다. Anki는 간격 반복에 뛰어나지만, 복습 과정이 너무 수동적입니다. 카드를 보고, 답을 생각하고, 뒤집고, 자기 평가를 합니다. 정말로 답을 기억하는지 아닌지 알 수 없습니다.',
+    aboutStoryP2: '답을 타이핑해야 한다면? 타이핑은 능동적 회상을 강제합니다 — 속일 수 없습니다. 모든 키 입력이 실제로 자료를 알고 있는지 드러냅니다. 게다가 타이핑 자체가 근육 기억의 한 형태로, 각 지식에 대한 신경 경로를 강화합니다.',
+    aboutStoryP3: 'typee는 2026년 무료 웹 도구로 출시되었습니다. Anki .apkg 덱을 업로드하면 실시간 WPM 추적, 정확도 통계, 적응형 간격 반복과 함께 즉시 타이핑 연습을 시작할 수 있습니다.',
+    aboutWhyTitle: '왜 타이핑인가?',
+    aboutWhy1: '능동적 회상 — 답을 직접 생산하면 인식만 하는 것보다 기억이 강화됩니다.',
+    aboutWhy2: '근육 기억 — 반복적인 타이핑이 자동 회상을 구축합니다. 특히 언어 어휘와 CJK 문자에 효과적입니다.',
+    aboutWhy3: '정직한 피드백 — 정확히 타이핑하거나 못하거나. Anki 복습에서 자신감을 과대평가할 수 없습니다.',
+    aboutWhy4: '측정 가능한 진행 — WPM과 정확도는 "알고 있었어"가 제공할 수 없는 구체적인 지표를 제공합니다.',
+    aboutTechTitle: '기술 스택',
+    aboutTechDesc: 'typee는 Vercel에서 호스팅되는 Next.js 웹 앱입니다. 덱은 브라우저에서 완전히 파싱됩니다 — .apkg 파일은 기기를 떠나지 않습니다. 인증과 진행 동기화에 Supabase, 결제에 Stripe을 사용합니다.',
+
+    contactTitle: '문의하기',
+    contactIntro: '질문, 기능 요청, 또는 버그를 발견하셨나요? 연락 주세요.',
+    contactEmailLabel: '이메일 보내기',
+    contactEmailDesc: '이메일을 보내주시면 답변 드리겠습니다.',
+    contactResponseTime: '보통 24시간 내에 답변합니다.',
+    contactTopics: '무엇을 도와드릴까요?',
+    contactTopic1: '버그 신고 및 기술 문제',
+    contactTopic2: '기능 요청 및 제안',
+    contactTopic3: '결제 및 구독 질문',
+    contactTopic4: '일반 질문 및 피드백',
 
     guideTitle: '사용 가이드',
     guideIntro: 'typee는 Anki 플래시카드를 타이핑 연습 세션으로 변환합니다. 카드를 넘기는 대신 답을 직접 타이핑하여 근육 기억을 만들고 어휘를 더 빠르게 기억하세요.',
@@ -1217,10 +1300,37 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerUpload: 'デッキをアップロード',
     footerPricing: '料金プラン',
     footerGuide: '使い方ガイド',
+    footerAbout: '概要',
     footerContact: 'お問い合わせ',
     footerTerms: '利用規約',
     footerPrivacy: 'プライバシーポリシー',
     comingSoon: '準備中です。',
+
+    aboutTitle: 'typeeについて',
+    aboutMission: 'ミッション',
+    aboutMissionDesc: 'typeeは、能動的想起を通じてフラッシュカード学習をより効果的にするために存在します。受動的な復習をタイピング練習に変換し、より強い筋肉記憶、より長い知識保持、正確な進捗追跡を実現します。',
+    aboutStory: 'ストーリー',
+    aboutStoryP1: 'typeeはシンプルな不満から生まれました。Ankiは間隔反復に優れていますが、復習プロセスは受動的すぎます。カードを見て、答えを考え、裏返して、自己評価する。本当に答えを覚えているかどうかは分かりません。',
+    aboutStoryP2: '答えをタイピングしなければならないとしたら？タイピングは能動的想起を強制します — ごまかせません。すべてのキー入力が、本当に教材を知っているかどうかを明らかにします。',
+    aboutStoryP3: 'typeeは2026年に無料ウェブツールとしてリリースされました。Anki .apkgデッキをアップロードすると、リアルタイムWPM追跡、精度統計、適応型間隔反復でタイピング練習を即座に開始できます。',
+    aboutWhyTitle: 'なぜタイピング？',
+    aboutWhy1: '能動的想起 — 答えを自分で生産することで、認識だけよりも記憶が強化されます。',
+    aboutWhy2: '筋肉記憶 — 繰り返しのタイピングが自動的な想起を構築します。特に語彙とCJK文字に効果的です。',
+    aboutWhy3: '正直なフィードバック — 正確にタイピングするか、しないか。Ankiレビューで自信を過大評価できません。',
+    aboutWhy4: '測定可能な進歩 — WPMと精度は「知っていた」では得られない具体的な指標を提供します。',
+    aboutTechTitle: '技術スタック',
+    aboutTechDesc: 'typeeはVercelでホストされるNext.jsウェブアプリです。デッキはブラウザで完全に解析されます — .apkgファイルはデバイスから離れません。認証とSupabase、決済にStripeを使用しています。',
+
+    contactTitle: 'お問い合わせ',
+    contactIntro: 'ご質問、機能リクエスト、バグの報告がありましたらお気軽にどうぞ。',
+    contactEmailLabel: 'メールを送る',
+    contactEmailDesc: 'メールをお送りいただければ、ご返信いたします。',
+    contactResponseTime: '通常24時間以内にご返信いたします。',
+    contactTopics: 'サポート内容',
+    contactTopic1: 'バグ報告と技術的な問題',
+    contactTopic2: '機能リクエストと提案',
+    contactTopic3: '請求とサブスクリプションの質問',
+    contactTopic4: '一般的な質問とフィードバック',
 
     guideTitle: '使い方ガイド',
     guideIntro: 'typeeはAnkiフラッシュカードをタイピング練習セッションに変換します。カードをめくる代わりに答えをタイピングして、筋肉記憶を構築し、語彙をより早く定着させましょう。',
@@ -1534,10 +1644,37 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerUpload: 'Subir mazo',
     footerPricing: 'Precios',
     footerGuide: 'Guía de uso',
+    footerAbout: 'Acerca de',
     footerContact: 'Contacto',
     footerTerms: 'Términos de servicio',
     footerPrivacy: 'Política de privacidad',
     comingSoon: 'Próximamente.',
+
+    aboutTitle: 'Acerca de typee',
+    aboutMission: 'Nuestra misión',
+    aboutMissionDesc: 'typee existe para hacer el aprendizaje con tarjetas más efectivo a través del recuerdo activo. Al convertir la revisión pasiva en práctica de escritura, ayudamos a construir una memoria muscular más fuerte y un seguimiento preciso del progreso.',
+    aboutStory: 'La historia',
+    aboutStoryP1: 'typee nació de una simple frustración: Anki es excelente para la repetición espaciada, pero el proceso de revisión es demasiado pasivo. Ves una tarjeta, piensas en la respuesta, la volteas y te calificas. No hay forma de saber si realmente recuerdas la respuesta.',
+    aboutStoryP2: '¿Y si tuvieras que escribir la respuesta? Escribir fuerza el recuerdo activo — no puedes hacer trampa. Cada tecla revela si realmente conoces el material.',
+    aboutStoryP3: 'typee se lanzó en 2026 como herramienta web gratuita. Sube cualquier mazo .apkg de Anki y comienza a practicar con seguimiento WPM en tiempo real, estadísticas de precisión y repetición espaciada adaptativa.',
+    aboutWhyTitle: '¿Por qué escribir?',
+    aboutWhy1: 'Recuerdo activo — producir la respuesta fortalece la memoria más que el reconocimiento.',
+    aboutWhy2: 'Memoria muscular — la escritura repetida construye recuerdo automático, especialmente para vocabulario.',
+    aboutWhy3: 'Retroalimentación honesta — o lo escribes correctamente o no. Sin sobrevalorar tu confianza.',
+    aboutWhy4: 'Progreso medible — WPM y precisión te dan métricas concretas.',
+    aboutTechTitle: 'Tecnología',
+    aboutTechDesc: 'typee es una aplicación web Next.js alojada en Vercel. Los mazos se analizan en el navegador — tus archivos .apkg nunca salen de tu dispositivo. Usamos Supabase para autenticación y Stripe para pagos seguros.',
+
+    contactTitle: 'Contáctanos',
+    contactIntro: '¿Tienes una pregunta, solicitud de función o encontraste un error? Nos encantaría saber de ti.',
+    contactEmailLabel: 'Envíanos un email',
+    contactEmailDesc: 'Envíanos un email y te responderemos.',
+    contactResponseTime: 'Normalmente respondemos en 24 horas.',
+    contactTopics: '¿En qué podemos ayudarte?',
+    contactTopic1: 'Reportes de errores y problemas técnicos',
+    contactTopic2: 'Solicitudes de funciones y sugerencias',
+    contactTopic3: 'Preguntas de facturación y suscripción',
+    contactTopic4: 'Preguntas generales y comentarios',
 
     guideTitle: 'Guía de uso',
     guideIntro: 'typee convierte tus tarjetas de Anki en sesiones de práctica de escritura. Escribe las respuestas en lugar de voltear tarjetas — construye memoria muscular y retén vocabulario más rápido.',
@@ -1851,10 +1988,37 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerUpload: '上传牌组',
     footerPricing: '定价',
     footerGuide: '使用指南',
+    footerAbout: '关于',
     footerContact: '联系我们',
     footerTerms: '服务条款',
     footerPrivacy: '隐私政策',
     comingSoon: '即将推出。',
+
+    aboutTitle: '关于 typee',
+    aboutMission: '我们的使命',
+    aboutMissionDesc: 'typee 通过主动回忆让闪卡学习更有效。将被动复习转化为打字练习，帮助建立更强的肌肉记忆、更长久的知识保留和精确的进度追踪。',
+    aboutStory: '故事',
+    aboutStoryP1: 'typee 源于一个简单的困扰：Anki 的间隔重复很棒，但复习过程太被动了。你看到卡片，想答案，翻转，自我评分。你无法知道自己是否真正记住了答案。',
+    aboutStoryP2: '如果你必须打出答案呢？打字迫使主动回忆——你无法作弊。每次按键都揭示你是否真正掌握了材料。',
+    aboutStoryP3: 'typee 于 2026 年作为免费网络工具推出。上传任何 Anki .apkg 牌组，即可开始带有实时 WPM 追踪、准确率统计和自适应间隔重复的打字练习。',
+    aboutWhyTitle: '为什么是打字？',
+    aboutWhy1: '主动回忆——亲自产出答案比仅仅识别能更好地增强记忆。',
+    aboutWhy2: '肌肉记忆——重复打字建立自动回忆，特别适合语言词汇和 CJK 字符。',
+    aboutWhy3: '诚实反馈——你要么打对，要么打错。不再在 Anki 复习中高估自己的信心。',
+    aboutWhy4: '可衡量的进步——WPM 和准确率提供"我知道"无法给出的具体指标。',
+    aboutTechTitle: '技术栈',
+    aboutTechDesc: 'typee 是托管在 Vercel 上的 Next.js 网络应用。牌组完全在浏览器中解析——你的 .apkg 文件不会离开设备。我们使用 Supabase 进行身份验证，Stripe 进行安全支付。',
+
+    contactTitle: '联系我们',
+    contactIntro: '有问题、功能请求或发现了bug？我们很乐意收到您的来信。',
+    contactEmailLabel: '发送邮件',
+    contactEmailDesc: '给我们发邮件，我们会尽快回复。',
+    contactResponseTime: '我们通常在24小时内回复。',
+    contactTopics: '我们能帮您什么？',
+    contactTopic1: 'Bug报告和技术问题',
+    contactTopic2: '功能请求和建议',
+    contactTopic3: '账单和订阅问题',
+    contactTopic4: '一般问题和反馈',
 
     guideTitle: '使用指南',
     guideIntro: 'typee将你的Anki闪卡转化为打字练习。用打字代替翻卡——建立肌肉记忆，更快地记住词汇。',
@@ -2168,10 +2332,37 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerUpload: 'Importer un paquet',
     footerPricing: 'Tarifs',
     footerGuide: "Guide d'utilisation",
+    footerAbout: 'À propos',
     footerContact: 'Nous contacter',
     footerTerms: "Conditions d'utilisation",
     footerPrivacy: 'Politique de confidentialité',
     comingSoon: 'Bientôt disponible.',
+
+    aboutTitle: 'À propos de typee',
+    aboutMission: 'Notre mission',
+    aboutMissionDesc: "typee existe pour rendre l'apprentissage par cartes plus efficace grâce au rappel actif. En transformant la révision passive en pratique de frappe, nous aidons à construire une mémoire musculaire plus forte et un suivi précis des progrès.",
+    aboutStory: "L'histoire",
+    aboutStoryP1: "typee est né d'une simple frustration : Anki est excellent pour la répétition espacée, mais le processus de révision est trop passif. Vous voyez une carte, pensez à la réponse, la retournez et vous auto-évaluez. Impossible de savoir si vous connaissez vraiment la réponse.",
+    aboutStoryP2: "Et si vous deviez taper la réponse ? La frappe force le rappel actif — impossible de tricher. Chaque touche révèle si vous maîtrisez vraiment le contenu.",
+    aboutStoryP3: "typee a été lancé en 2026 comme outil web gratuit. Téléchargez n'importe quel paquet .apkg d'Anki et commencez la pratique avec suivi WPM en temps réel, statistiques de précision et répétition espacée adaptative.",
+    aboutWhyTitle: 'Pourquoi la frappe ?',
+    aboutWhy1: 'Rappel actif — produire la réponse renforce la mémoire plus que la reconnaissance seule.',
+    aboutWhy2: 'Mémoire musculaire — la frappe répétée construit le rappel automatique, surtout pour le vocabulaire.',
+    aboutWhy3: 'Retour honnête — vous tapez correctement ou non. Plus de surestimation de confiance.',
+    aboutWhy4: 'Progrès mesurables — WPM et précision fournissent des métriques concrètes.',
+    aboutTechTitle: 'Technologie',
+    aboutTechDesc: "typee est une application web Next.js hébergée sur Vercel. Les paquets sont analysés dans le navigateur — vos fichiers .apkg ne quittent jamais votre appareil. Nous utilisons Supabase pour l'authentification et Stripe pour les paiements sécurisés.",
+
+    contactTitle: 'Nous contacter',
+    contactIntro: "Vous avez une question, une demande de fonctionnalité ou trouvé un bug ? Nous serions ravis d'avoir de vos nouvelles.",
+    contactEmailLabel: 'Envoyez-nous un email',
+    contactEmailDesc: 'Envoyez-nous un email et nous vous répondrons.',
+    contactResponseTime: 'Nous répondons généralement sous 24 heures.',
+    contactTopics: 'Comment pouvons-nous vous aider ?',
+    contactTopic1: 'Rapports de bugs et problèmes techniques',
+    contactTopic2: 'Demandes de fonctionnalités et suggestions',
+    contactTopic3: 'Questions de facturation et abonnement',
+    contactTopic4: 'Questions générales et commentaires',
 
     guideTitle: "Guide d'utilisation",
     guideIntro: "typee transforme vos cartes Anki en sessions de pratique de frappe. Tapez les réponses au lieu de retourner les cartes — développez la mémoire musculaire et retenez le vocabulaire plus rapidement.",
