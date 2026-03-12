@@ -166,7 +166,32 @@ export default function UploadPage() {
       <TopToolbar />
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--text)' }}>{t.uploadTitle}</h1>
-        <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>{t.uploadSubtitle}</p>
+        <p className="text-sm mb-4" style={{ color: 'var(--muted)' }}>{t.uploadSubtitle}</p>
+
+        {/* Link to Create page */}
+        <div
+          className="flex items-center gap-3 px-4 py-3 rounded-xl mb-8 transition-opacity hover:opacity-90"
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            cursor: 'pointer',
+          }}
+          onClick={() => router.push('/create')}
+          role="link"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter') router.push('/create'); }}
+        >
+          <span className="text-lg">✨</span>
+          <div className="flex-1">
+            <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+              Create from URL or Text
+            </p>
+            <p className="text-xs" style={{ color: 'var(--muted)' }}>
+              Paste a link or raw text to auto-generate a vocabulary deck
+            </p>
+          </div>
+          <span style={{ color: 'var(--accent)', fontSize: '1.1rem' }}>→</span>
+        </div>
 
         {/* Drop Zone */}
         {(state === 'idle' || state === 'error') && (

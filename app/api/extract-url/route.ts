@@ -1,0 +1,144 @@
+import { NextResponse } from 'next/server';
+import { detectLang } from '@/lib/lang-detect';
+
+export const runtime = 'nodejs';
+
+const MAX_TEXT_LENGTH = 50_000;
+const FETCH_TIMEOUT = 10_000;
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { url } = body as { url?: string };
+
+    if (!url || typeof url !== 'string') {
+      return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+    }
+
+    // Validate URL
+    let parsed: URL;
+    try {
+      parsed = new URL(url.startsWith('http') ? url : `https://${url}`);
+    } catch {
+      return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
+    }
+
+    if (!['http:', 'https:'].includes(parsed.protocol)) {
+      return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400 });
+    }
+
+    // Fetch with timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+    let html: string;
+    try {
+      const res = await fetch(parsed.href, {
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; typee/1.0; +https://www.typee.app)',
+          'Accept': 'text/html,application/xhtml+xml',
+          'Accept-Language': 'en-US,en;q=0.9,ko;q=0.8,ja;q=0.7',
+        },
+      });
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        return NextResponse.json({ error: `Failed to fetch URL: ${res.status}` }, { status: 502 });
+      }
+
+      const contentType = res.headers.get('content-type') ?? '';
+      if (!contentType.includes('text/html') && !contentType.includes('application/xhtml')) {
+        return NextResponse.json({ error: 'URL does not point to an HTML page' }, { status: 400 });
+      }
+
+      html = await res.text();
+    } catch (err) {
+      clearTimeout(timeout);
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        return NextResponse.json({ error: 'Request timed out' }, { status: 504 });
+      }
+      return NextResponse.json({ error: 'Failed to fetch URL' }, { status: 502 });
+    }
+
+    // Extract title
+    const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
+    const title = titleMatch ? decodeHtmlEntities(titleMatch[1].trim()) : '';
+
+    // Extract main text content
+    const text = extractText(html, parsed.hostname);
+
+    if (!text || text.trim().length < 20) {
+      return NextResponse.json({ error: 'Could not extract meaningful text from this page' }, { status: 404 });
+    }
+
+    const truncated = text.slice(0, MAX_TEXT_LENGTH);
+    const lang = detectLang(truncated);
+
+    return NextResponse.json({ title, text: truncated, lang });
+  } catch {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+/**
+ * Extract clean text from HTML, with special handling for Wikipedia and news sites.
+ */
+function extractText(html: string, hostname: string): string {
+  let content = html;
+
+  // Wikipedia: focus on mw-content-text
+  if (hostname.includes('wikipedia.org')) {
+    const wikiMatch = content.match(/<div[^>]*id="mw-content-text"[^>]*>([\s\S]*?)<\/div>\s*<div[^>]*id="/i);
+    if (wikiMatch) content = wikiMatch[1];
+    // Remove infobox, sidebar, navbox
+    content = content.replace(/<table[^>]*class="[^"]*(?:infobox|sidebar|navbox|wikitable)[^"]*"[^>]*>[\s\S]*?<\/table>/gi, '');
+    // Remove references section
+    content = content.replace(/<ol[^>]*class="references"[^>]*>[\s\S]*?<\/ol>/gi, '');
+  }
+
+  // Try <article> first
+  const articleMatch = content.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
+  if (articleMatch) content = articleMatch[1];
+  else {
+    // Try <main>
+    const mainMatch = content.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+    if (mainMatch) content = mainMatch[1];
+  }
+
+  // Remove unwanted tags and their content
+  content = content.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+  content = content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+  content = content.replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '');
+  content = content.replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '');
+  content = content.replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '');
+  content = content.replace(/<aside[^>]*>[\s\S]*?<\/aside>/gi, '');
+  content = content.replace(/<noscript[^>]*>[\s\S]*?<\/noscript>/gi, '');
+  content = content.replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '');
+  content = content.replace(/<form[^>]*>[\s\S]*?<\/form>/gi, '');
+  // Remove HTML comments
+  content = content.replace(/<!--[\s\S]*?-->/g, '');
+
+  // Strip remaining HTML tags
+  content = content.replace(/<[^>]+>/g, ' ');
+
+  // Decode entities
+  content = decodeHtmlEntities(content);
+
+  // Normalize whitespace
+  content = content.replace(/\s+/g, ' ').trim();
+
+  return content;
+}
+
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, num) => String.fromCharCode(parseInt(num, 10)))
+    .replace(/&#x([a-fA-F0-9]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
