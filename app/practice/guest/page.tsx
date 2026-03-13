@@ -151,7 +151,7 @@ function GuestPracticePageInner() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target);
+    speak(target, currentCard?.pronunciation ?? undefined);
     setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, isComposing, sessionComplete]);

@@ -6,11 +6,11 @@ import { detectLang, langToTTSCode } from '@/lib/lang-detect';
 export function useTTS() {
   const { ttsEnabled } = usePreferences();
 
-  const speak = useCallback((text: string) => {
+  const speak = useCallback((text: string, hint?: string) => {
     if (!ttsEnabled) return;
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
 
-    const lang = detectLang(text);
+    const lang = detectLang(text, hint);
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = langToTTSCode(lang);
     utterance.rate = 0.9;

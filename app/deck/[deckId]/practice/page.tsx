@@ -205,7 +205,7 @@ export default function PracticePage() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target);
+    speak(target, currentCard?.pronunciation ?? undefined);
     const cardWpm = wpm ?? 0;
     const cardAccuracy = accuracy ?? 100;
     setSessionResults((prev) => [
