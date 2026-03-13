@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
-export const maxDuration = 30; // seconds (Vercel Pro: up to 300s, Hobby: capped at 10s)
+export const maxDuration = 60; // seconds (Vercel Pro)
 
 // Rate limit: 5 requests per minute per IP (LLM calls cost money)
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW = 60_000;
-const MAX_INPUT_CHARS = 1500; // reduced to fit within Vercel 10s hobby timeout
-const MAX_TOKENS = 800;
+const MAX_INPUT_CHARS = 4000;
+const MAX_TOKENS = 2000;
 
 interface VocabItem {
   word: string;
@@ -119,7 +119,7 @@ async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cl
       max_tokens: MAX_TOKENS,
       temperature: 0.3,
     }),
-    signal: AbortSignal.timeout(9_000),
+    signal: AbortSignal.timeout(55_000),
   });
 
   if (!res.ok) {
@@ -152,7 +152,7 @@ export async function POST(req: Request) {
     }
 
     const body = (await req.json()) as ProcessMediaBody;
-    const { text, sourceLang, targetLang, mode = 'both', maxWords = 20 } = body;
+    const { text, sourceLang, targetLang, mode = 'both', maxWords = 30 } = body;
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
       return NextResponse.json({ error: 'text is required' }, { status: 400 });

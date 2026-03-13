@@ -64,7 +64,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
 
   // Generate options
   const [genMode, setGenMode] = useState<GenerateMode>('both');
-  const [maxWords, setMaxWords] = useState(20);
+  const [maxWords, setMaxWords] = useState(30);
 
   // Generated cards
   const [cards, setCards] = useState<GeneratedCard[]>([]);
