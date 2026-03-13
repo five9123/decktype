@@ -211,24 +211,41 @@ export default function DeckDetailPage() {
             <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>ORDER</p>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: 'sequential' as CardOrder, label: t.sequential },
-                { value: 'random' as CardOrder, label: t.random },
-                { value: 'difficult_first' as CardOrder, label: t.difficultFirst },
-                { value: 'smart_review' as CardOrder, label: t.smartReview },
+                { value: 'sequential' as CardOrder, label: t.sequential, desc: null },
+                { value: 'random' as CardOrder, label: t.random, desc: null },
+                { value: 'difficult_first' as CardOrder, label: t.difficultFirst, desc: t.difficultFirstDesc },
+                { value: 'smart_review' as CardOrder, label: t.smartReview, desc: t.smartReviewDesc },
               ].map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => setOrder(opt.value)}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                  style={{
-                    background: order === opt.value ? 'var(--accent)' : 'var(--surface2)',
-                    color: order === opt.value ? '#fff' : 'var(--text)',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {opt.label}
-                </button>
+                <div key={opt.value} className="relative group/tip">
+                  <button
+                    onClick={() => setOrder(opt.value)}
+                    className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    style={{
+                      background: order === opt.value ? 'var(--accent)' : 'var(--surface2)',
+                      color: order === opt.value ? '#fff' : 'var(--text)',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {opt.label}
+                    {opt.desc && (
+                      <span className="text-xs opacity-50">(?)</span>
+                    )}
+                  </button>
+                  {opt.desc && (
+                    <div
+                      className="absolute bottom-full left-0 mb-2 px-3 py-2 rounded-lg text-xs w-56 pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity z-20"
+                      style={{
+                        background: 'var(--surface2)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text)',
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+                      }}
+                    >
+                      {opt.desc}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>

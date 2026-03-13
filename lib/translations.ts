@@ -120,6 +120,8 @@ export type Translations = {
 
   // Smart Review (Feature 1)
   smartReview: string;
+  difficultFirstDesc: string;
+  smartReviewDesc: string;
   learning: string;
   familiar: string;
   mastered: string;
@@ -524,6 +526,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     themeRosePine: 'Rosé Pine',
 
     smartReview: 'Smart Review',
+    difficultFirstDesc: 'Cards you\'ve typed incorrectly most often appear first.',
+    smartReviewDesc: 'Prioritizes cards due for spaced-repetition review. New cards are interleaved.',
     learning: 'Learning',
     familiar: 'Familiar',
     mastered: 'Mastered',
@@ -915,6 +919,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     themeRosePine: 'Rosé Pine',
 
     smartReview: '스마트 복습',
+    difficultFirstDesc: '가장 많이 틀린 카드를 먼저 보여줍니다.',
+    smartReviewDesc: '간격 반복 기반으로 복습 기한이 된 카드를 우선 표시합니다. 새 카드는 중간에 섞입니다.',
     learning: '학습 중',
     familiar: '익숙함',
     mastered: '마스터',
@@ -1299,6 +1305,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     themeRosePine: 'Rosé Pine',
 
     smartReview: 'スマート復習',
+    difficultFirstDesc: 'よく間違えたカードを最初に表示します。',
+    smartReviewDesc: '間隔反復に基づき復習期限のカードを優先表示します。新しいカードはその間に挟まれます。',
     learning: '学習中',
     familiar: '馴染み',
     mastered: 'マスター',
@@ -1683,6 +1691,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     themeRosePine: 'Rosé Pine',
 
     smartReview: 'Revisión inteligente',
+    difficultFirstDesc: 'Muestra primero las tarjetas que más has fallado.',
+    smartReviewDesc: 'Prioriza las tarjetas pendientes según repetición espaciada. Las nuevas se intercalan.',
     learning: 'Aprendiendo',
     familiar: 'Familiar',
     mastered: 'Dominado',
@@ -2067,6 +2077,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     themeRosePine: 'Rosé Pine',
 
     smartReview: '智能复习',
+    difficultFirstDesc: '优先显示错误最多的卡片。',
+    smartReviewDesc: '基于间隔重复，优先显示到期复习的卡片，新卡穿插其中。',
     learning: '学习中',
     familiar: '熟悉',
     mastered: '已掌握',
@@ -2451,6 +2463,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     themeRosePine: 'Rosé Pine',
 
     smartReview: 'Révision intelligente',
+    difficultFirstDesc: 'Affiche en premier les cartes les plus souvent ratées.',
+    smartReviewDesc: 'Priorise les cartes à réviser selon la répétition espacée. Les nouvelles cartes sont intercalées.',
     learning: 'En apprentissage',
     familiar: 'Familier',
     mastered: 'Maîtrisé',
