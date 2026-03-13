@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { MDXRemote, type MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { TopToolbar } from '@/components/TopToolbar';
-import { blogMDXComponents, extractHeadings } from '@/components/BlogMDXComponents';
+import { blogMDXComponents } from '@/components/BlogMDXComponents';
 import { BlogPostHeader, TableOfContents, RelatedPosts } from '@/components/BlogPost';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { BlogPostMeta } from '@/lib/blog';
@@ -81,9 +82,9 @@ export default function BlogPostPage() {
           <h1 className="text-2xl font-bold mb-4" style={{ color: 'var(--text)' }}>
             {error || 'Post not found'}
           </h1>
-          <a href="/blog" style={{ color: 'var(--accent)' }}>
+          <Link href="/blog" style={{ color: 'var(--accent)' }}>
             &larr; {t.blogBackToList}
-          </a>
+          </Link>
         </main>
       </>
     );
@@ -138,13 +139,13 @@ export default function BlogPostPage() {
         />
 
         {/* Back link */}
-        <a
+        <Link
           href="/blog"
           className="inline-block text-sm mb-6 no-underline transition-opacity hover:opacity-80"
           style={{ color: 'var(--muted)' }}
         >
           &larr; {t.blogBackToList}
-        </a>
+        </Link>
 
         {/* Post Header */}
         <BlogPostHeader
