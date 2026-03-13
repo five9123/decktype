@@ -45,6 +45,26 @@ const TARGET_LANGS = [
 ];
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+const MAX_INPUT_CHARS = 4000;
+
+function friendlyError(msg: string): string {
+  if (msg.includes('timeout') || msg.includes('aborted')) {
+    return 'Processing timed out. Try reducing the text or lowering the max words count.';
+  }
+  if (msg.includes('Too many requests') || msg.includes('429')) {
+    return 'Too many requests. Please wait a minute and try again. (Limit: 5/min)';
+  }
+  if (msg.includes('not configured') || msg.includes('OPENAI_API_KEY')) {
+    return 'AI processing is not configured on the server.';
+  }
+  if (msg.includes('OpenAI API error')) {
+    return 'AI service error. Please try again in a moment.';
+  }
+  if (msg.includes('Empty response')) {
+    return 'AI returned an empty response. Try with shorter text.';
+  }
+  return msg;
+}
 
 // ── Component ──────────────────────────────────────────────────────────
 
@@ -97,13 +117,13 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
       setState('preview');
       setError('');
     } catch {
-      setError('Failed to parse file');
+      setError('Failed to parse file. Make sure it is a valid .srt, .txt, or .lrc file.');
     }
   }, [deckName, setDeckName, t.mediaNoContent]);
 
   const handleFileSelect = (file: File) => {
     if (file.size > MAX_FILE_SIZE) {
-      setError('File is too large (max 2MB)');
+      setError(`File is too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Maximum size is 2 MB.`);
       return;
     }
     const reader = new FileReader();
@@ -149,7 +169,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? 'Failed to generate cards');
+        setError(friendlyError(data.error ?? 'Failed to generate cards'));
         setState('preview');
         return;
       }
@@ -185,15 +205,16 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
       }
 
       if (generated.length === 0) {
-        setError('AI generated no cards. Try with different text.');
+        setError('AI generated no cards. Try with different text or a higher max words count.');
         setState('preview');
         return;
       }
 
       setCards(generated);
       setState('editing');
-    } catch {
-      setError('Network error. Please try again.');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : '';
+      setError(friendlyError(msg) || 'Network error. Check your connection and try again.');
       setState('preview');
     }
   };
@@ -241,14 +262,21 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
     <div>
       {error && (
         <div
-          className="px-4 py-3 rounded-xl text-sm mb-4"
+          className="px-4 py-3 rounded-xl text-sm mb-4 flex items-start gap-2"
           style={{
             background: 'rgba(248,113,113,0.1)',
             border: '1px solid rgba(248,113,113,0.3)',
             color: 'var(--incorrect)',
           }}
         >
-          {error}
+          <span className="flex-1">{error}</span>
+          <button
+            onClick={() => setError('')}
+            className="text-xs opacity-60 hover:opacity-100 shrink-0"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--incorrect)' }}
+          >
+            ✕
+          </button>
         </div>
       )}
 
@@ -335,9 +363,21 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
             style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
           >
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-                {parsed.type.toUpperCase()} · {parsed.lines.length} {t.lineCount ?? 'lines'}
-              </p>
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                  {parsed.type.toUpperCase()} · {parsed.lines.length} {t.lineCount ?? 'lines'}
+                </p>
+                <span
+                  className="text-xs px-1.5 py-0.5 rounded"
+                  style={{
+                    background: parsed.fullText.length > MAX_INPUT_CHARS ? 'rgba(251,191,36,0.15)' : 'var(--surface2)',
+                    color: parsed.fullText.length > MAX_INPUT_CHARS ? '#b45309' : 'var(--muted)',
+                  }}
+                >
+                  {Math.min(parsed.fullText.length, MAX_INPUT_CHARS).toLocaleString()} / {MAX_INPUT_CHARS.toLocaleString()} chars
+                  {parsed.fullText.length > MAX_INPUT_CHARS && ' (truncated)'}
+                </span>
+              </div>
               <button
                 onClick={handleReset}
                 className="text-xs px-2 py-1 rounded"
@@ -466,10 +506,13 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
         <div className="flex flex-col items-center py-16">
           <div
             className="w-8 h-8 rounded-full border-3 border-t-transparent animate-spin mb-4"
-            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent', borderWidth: 3 }}
           />
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>
             {t.generating ?? 'Generating cards with AI...'}
+          </p>
+          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+            This may take up to 30 seconds
           </p>
         </div>
       )}
