@@ -6,6 +6,28 @@ export const runtime = 'nodejs';
 const MAX_TEXT_LENGTH = 50_000;
 const FETCH_TIMEOUT = 10_000;
 
+/**
+ * Block SSRF: reject private/reserved IP ranges and localhost.
+ */
+function isPrivateHost(hostname: string): boolean {
+  const h = hostname.toLowerCase();
+  if (h === 'localhost' || h === '127.0.0.1' || h === '[::1]' || h === '::1') return true;
+  // Reject any IPv6 bracket notation
+  if (h.startsWith('[')) return true;
+  // Reject private IPv4 ranges
+  const ipv4 = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (ipv4) {
+    const [a, b] = [Number(ipv4[1]), Number(ipv4[2])];
+    if (a === 10) return true;                          // 10.0.0.0/8
+    if (a === 172 && b >= 16 && b <= 31) return true;   // 172.16.0.0/12
+    if (a === 192 && b === 168) return true;             // 192.168.0.0/16
+    if (a === 169 && b === 254) return true;             // 169.254.0.0/16 (link-local / AWS metadata)
+    if (a === 127) return true;                          // 127.0.0.0/8
+    if (a === 0) return true;                            // 0.0.0.0/8
+  }
+  return false;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -25,6 +47,11 @@ export async function POST(req: Request) {
 
     if (!['http:', 'https:'].includes(parsed.protocol)) {
       return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400 });
+    }
+
+    // Block SSRF: reject private/internal hosts
+    if (isPrivateHost(parsed.hostname)) {
+      return NextResponse.json({ error: 'Internal/private URLs are not allowed' }, { status: 400 });
     }
 
     // Fetch with timeout

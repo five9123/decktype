@@ -44,6 +44,10 @@ export async function POST(req: Request) {
 
     const src = LANG_CODES[sourceLang] ?? sourceLang;
     const tgt = LANG_CODES[targetLang] ?? targetLang;
+    const validScriptLangs: ScriptLang[] = ['ko', 'ja', 'zh', 'en'];
+    const scriptLang: ScriptLang = validScriptLangs.includes(sourceLang as ScriptLang)
+      ? (sourceLang as ScriptLang)
+      : 'en';
     const batch = words.slice(0, MAX_WORDS);
 
     // Process in parallel with limited concurrency
@@ -51,7 +55,7 @@ export async function POST(req: Request) {
     for (let i = 0; i < batch.length; i += BATCH_CONCURRENCY) {
       const chunk = batch.slice(i, i + BATCH_CONCURRENCY);
       const chunkResults = await Promise.all(
-        chunk.map(word => lookupWord(word, src, tgt, sourceLang as ScriptLang))
+        chunk.map(word => lookupWord(word, src, tgt, scriptLang))
       );
       results.push(...chunkResults);
 

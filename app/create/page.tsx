@@ -7,7 +7,7 @@ import { TopToolbar } from '@/components/TopToolbar';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { FREE_CARDS_PER_DECK } from '@/lib/constants';
-import { extractWords, type ExtractedWord } from '@/lib/text-parser';
+import { extractWords } from '@/lib/text-parser';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 
 // ─── Types ──────────────────────────────────────────────────────────────
@@ -39,13 +39,6 @@ const TARGET_LANGS = [
   { code: 'fr', label: 'Français' },
 ];
 
-let _nextId = 1;
-function nextId() { return _nextId++; }
-
-function makeManualRow(): ManualRow {
-  return { id: nextId(), front: '', back: '', pronunciation: '' };
-}
-
 // ─── Component ──────────────────────────────────────────────────────────
 
 export default function CreateDeckPage() {
@@ -53,6 +46,11 @@ export default function CreateDeckPage() {
   const { t } = useLanguage();
   const { isPro } = useProfile();
   const router = useRouter();
+
+  // Stable ID counter (survives re-renders, safe with Strict Mode)
+  const idRef = useRef(0);
+  const nextId = () => ++idRef.current;
+  const makeManualRow = (): ManualRow => ({ id: nextId(), front: '', back: '', pronunciation: '' });
 
   // --- Shared ---
   const [tab, setTab] = useState<Tab>('url');
@@ -363,19 +361,27 @@ export default function CreateDeckPage() {
             { key: 'url' as const, label: '🔗 URL' },
             { key: 'text' as const, label: '📝 Text' },
             { key: 'manual' as const, label: '✏️ Manual' },
-          ]).map((t) => (
+          ]).map((tabItem) => (
             <button
-              key={t.key}
-              onClick={() => { setTab(t.key); setError(''); }}
+              key={tabItem.key}
+              onClick={() => {
+                setTab(tabItem.key);
+                setError('');
+                // Reset extract state when switching tabs to prevent cross-tab state corruption
+                if (tabItem.key !== tab && extractState !== 'idle') {
+                  setExtractState('idle');
+                  setWordEntries([]);
+                }
+              }}
               className="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
               style={{
-                background: tab === t.key ? 'var(--accent)' : 'transparent',
-                color: tab === t.key ? '#fff' : 'var(--muted)',
+                background: tab === tabItem.key ? 'var(--accent)' : 'transparent',
+                color: tab === tabItem.key ? '#fff' : 'var(--muted)',
                 border: 'none',
                 cursor: 'pointer',
               }}
             >
-              {t.label}
+              {tabItem.label}
             </button>
           ))}
         </div>
@@ -719,7 +725,7 @@ export default function CreateDeckPage() {
                 </>
               )}
               <span className="text-xs ml-2" style={{ color: 'var(--muted)' }}>
-                {manualRows.length} / {FREE_CARDS_PER_DECK}
+                {manualRows.length}{!isPro && ` / ${FREE_CARDS_PER_DECK}`}
                 {manualAtLimit && <span style={{ color: '#fbbf24' }}> {t.maxLabel}</span>}
               </span>
             </div>
