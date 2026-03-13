@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 import { detectLang } from '@/lib/lang-detect';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 const MAX_TEXT_LENGTH = 50_000;
 const FETCH_TIMEOUT = 10_000;
+// Rate limit: 10 requests per minute per IP
+const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW = 60_000;
 
 /**
  * Block SSRF: reject private/reserved IP ranges and localhost.
@@ -30,6 +34,16 @@ function isPrivateHost(hostname: string): boolean {
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    const { limited, resetMs } = rateLimit(`extract-url:${ip}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
+    if (limited) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(resetMs / 1000)) } },
+      );
+    }
+
     const body = await req.json();
     const { url } = body as { url?: string };
 
@@ -158,14 +172,30 @@ function extractText(html: string, hostname: string): string {
   return content;
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&apos;': "'",
+  '&nbsp;': ' ', '&ensp;': '\u2002', '&emsp;': '\u2003', '&thinsp;': '\u2009',
+  '&mdash;': '—', '&ndash;': '–', '&hellip;': '…',
+  '&lsquo;': '\u2018', '&rsquo;': '\u2019', '&ldquo;': '\u201C', '&rdquo;': '\u201D',
+  '&bull;': '•', '&middot;': '·', '&copy;': '©', '&reg;': '®', '&trade;': '™',
+  '&deg;': '°', '&plusmn;': '±', '&times;': '×', '&divide;': '÷',
+  '&laquo;': '«', '&raquo;': '»',
+  '&eacute;': 'é', '&egrave;': 'è', '&ecirc;': 'ê', '&euml;': 'ë',
+  '&aacute;': 'á', '&agrave;': 'à', '&acirc;': 'â', '&auml;': 'ä',
+  '&oacute;': 'ó', '&ograve;': 'ò', '&ocirc;': 'ô', '&ouml;': 'ö',
+  '&uacute;': 'ú', '&ugrave;': 'ù', '&ucirc;': 'û', '&uuml;': 'ü',
+  '&iacute;': 'í', '&igrave;': 'ì', '&icirc;': 'î', '&iuml;': 'ï',
+  '&ntilde;': 'ñ', '&ccedil;': 'ç', '&szlig;': 'ß',
+};
+
 function decodeHtmlEntities(text: string): string {
   return text
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
+    // Named entities (case-insensitive lookup)
+    .replace(/&[a-zA-Z]+;/g, (entity) => NAMED_ENTITIES[entity.toLowerCase()] ?? entity)
+    // Legacy &#39; (not covered by named pattern)
     .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
+    // Decimal numeric entities
     .replace(/&#(\d+);/g, (_, num) => String.fromCharCode(parseInt(num, 10)))
+    // Hexadecimal numeric entities
     .replace(/&#x([a-fA-F0-9]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
 }

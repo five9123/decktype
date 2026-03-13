@@ -60,19 +60,29 @@ function tokenizeWestern(text: string): string[] {
 
 /**
  * Korean: split by whitespace, strip particles/suffixes with regex.
+ * Only strip when result is at least 2 syllables to avoid over-stripping real words.
  */
 function tokenizeKorean(text: string): string[] {
-  // Korean particle/suffix patterns (rough stripping)
-  const particlePattern = /(?:은|는|이|가|을|를|의|에|에서|으로|로|와|과|도|만|까지|부터|라|며|고|지만|에게|한테|께|보다|처럼|같이)$/;
+  // Multi-character particles first (longer patterns take priority)
+  const multiParticlePattern = /(?:에서|으로|까지|부터|지만|에게|한테|처럼|같이|보다)$/;
+  // Single-character particles (only strip if remainder is ≥ 2 chars)
+  const singleParticlePattern = /(?:은|는|이|가|을|를|의|에|로|와|과|도|만|라|며|고|께)$/;
 
   return text
     .split(/\s+/)
     .map(w => w.replace(/^[^\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]+|[^\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]+$/g, ''))
     .filter(w => w.length >= 1 && w.length <= 30)
     .map(w => {
-      // Try stripping one particle
-      const stripped = w.replace(particlePattern, '');
-      return stripped.length >= 1 ? stripped : w;
+      // Try multi-char particle first (safe: result always shorter by 2+)
+      const stripped1 = w.replace(multiParticlePattern, '');
+      if (stripped1.length >= 2 && stripped1 !== w) return stripped1;
+
+      // Try single-char particle only if result is ≥ 2 chars
+      const stripped2 = w.replace(singleParticlePattern, '');
+      if (stripped2.length >= 2 && stripped2 !== w) return stripped2;
+
+      // Keep original if stripping would leave < 2 chars
+      return w;
     })
     .filter(w => /[\uAC00-\uD7A3]/u.test(w)); // must contain Hangul syllable
 }
@@ -105,9 +115,11 @@ function tokenizeJapanese(text: string): string[] {
 
 /**
  * Chinese: extract runs of CJK ideographs (2-4 chars preferred, single chars as fallback).
+ * Uses a Set to track characters already covered by multi-char tokens to avoid duplication.
  */
 function tokenizeChinese(text: string): string[] {
   const results: string[] = [];
+  const coveredPositions = new Set<number>();
 
   // Extract 2-4 character Chinese words
   const multiPattern = /[\u4E00-\u9FFF]{2,4}/g;
@@ -116,14 +128,20 @@ function tokenizeChinese(text: string): string[] {
   // eslint-disable-next-line no-cond-assign
   while ((m = multiPattern.exec(text)) !== null) {
     results.push(m[0]);
+    // Mark all character positions as covered
+    for (let j = m.index; j < m.index + m[0].length; j++) {
+      coveredPositions.add(j);
+    }
   }
 
-  // If very few multi-char results, also extract single chars
+  // If very few multi-char results, also extract single chars NOT already covered
   if (results.length < 20) {
     const singlePattern = /[\u4E00-\u9FFF]/g;
     // eslint-disable-next-line no-cond-assign
     while ((m = singlePattern.exec(text)) !== null) {
-      results.push(m[0]);
+      if (!coveredPositions.has(m.index)) {
+        results.push(m[0]);
+      }
     }
   }
 

@@ -91,9 +91,14 @@ function romanizeJapanese(text: string): string {
 
     // Small tsu (っ) — double the next consonant
     if (ch === 'っ') {
-      const nextRoman = lookupHiragana(hiragana, i + 1);
-      if (nextRoman && nextRoman.roman.length > 0) {
-        result.push(nextRoman.roman[0]); // double consonant
+      if (i + 1 < hiragana.length) {
+        const nextRoman = lookupHiragana(hiragana, i + 1);
+        if (nextRoman && nextRoman.roman.length > 0) {
+          result.push(nextRoman.roman[0]); // double consonant
+        }
+      } else {
+        // っ at end of string — represent as glottal stop marker
+        result.push('t');
       }
       i++;
       continue;

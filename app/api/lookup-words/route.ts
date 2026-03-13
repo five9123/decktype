@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
 import { romanize } from '@/lib/romanize';
 import type { ScriptLang } from '@/lib/lang-detect';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 const MAX_WORDS = 50;
 const BATCH_CONCURRENCY = 5;
 const DELAY_MS = 200;
+// Rate limit: 20 requests per minute per IP
+const RATE_LIMIT_MAX = 20;
+const RATE_LIMIT_WINDOW = 60_000;
 
 interface LookupResult {
   word: string;
@@ -28,6 +32,16 @@ const LANG_CODES: Record<string, string> = {
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    const { limited, resetMs } = rateLimit(`lookup-words:${ip}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
+    if (limited) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(resetMs / 1000)) } },
+      );
+    }
+
     const body = await req.json();
     const { words, sourceLang, targetLang } = body as {
       words?: string[];

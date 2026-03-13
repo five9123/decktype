@@ -148,8 +148,13 @@ export default function CreateDeckPage() {
 
   // ─── Lookup Meanings ───────────────────────────────────────────────────
 
+  // Keep a ref to wordEntries so the async loop always reads the latest snapshot
+  const wordEntriesRef = useRef(wordEntries);
+  wordEntriesRef.current = wordEntries;
+
   const handleLookup = useCallback(async () => {
-    const pending = wordEntries.filter((w) => w.status === 'pending' && w.front.trim());
+    // Read pending words from the ref to avoid stale closure during the async loop
+    const pending = wordEntriesRef.current.filter((w) => w.status === 'pending' && w.front.trim());
     if (pending.length === 0) return;
 
     setExtractState('looking_up');
@@ -197,7 +202,7 @@ export default function CreateDeckPage() {
 
     setExtractState('editing');
     setLookupProgress(100);
-  }, [wordEntries, detectedLang, targetLang]);
+  }, [detectedLang, targetLang]);
 
   // ─── Word Entry Editing ────────────────────────────────────────────────
 
@@ -295,6 +300,7 @@ export default function CreateDeckPage() {
     }
 
     const BATCH = 100;
+    let cardInsertFailed = false;
     for (let i = 0; i < cardsToSave.length; i += BATCH) {
       const batch = cardsToSave.slice(i, i + BATCH).map((card, idx) => ({
         deck_id: deck.id,
@@ -307,12 +313,21 @@ export default function CreateDeckPage() {
       }));
       const { error: cardsErr } = await supabase.from('cards').insert(batch);
       if (cardsErr) {
-        setError(t.cardSaveError);
-        setSaving(false);
-        return;
+        cardInsertFailed = true;
+        break;
       }
     }
 
+    // Rollback: delete orphaned deck + any partial cards on failure
+    if (cardInsertFailed) {
+      await supabase.from('cards').delete().eq('deck_id', deck.id);
+      await supabase.from('decks').delete().eq('id', deck.id);
+      setError(t.cardSaveError);
+      setSaving(false);
+      return;
+    }
+
+    setSaving(false);
     router.push(`/deck/${deck.id}`);
   };
 
