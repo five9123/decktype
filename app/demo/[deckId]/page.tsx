@@ -11,9 +11,25 @@ import { useTTS } from '@/hooks/useTTS';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { PreferencesPanel } from '@/components/PreferencesPanel';
+import { AcidRainGame } from '@/components/AcidRainGame';
+import { FillBlankGame } from '@/components/FillBlankGame';
 import { DEMO_DECKS } from '@/lib/demo-decks';
+import type { DemoCard } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
-import type { PracticeMode } from '@/types';
+import type { Card, PracticeMode } from '@/types';
+
+function toDemoCards(demoCards: DemoCard[]): Card[] {
+  return demoCards.map((c, i) => ({
+    id: c.id,
+    deck_id: 'demo',
+    front: c.front,
+    back: c.back,
+    pronunciation: c.pronunciation,
+    extra: c.extra ?? '',
+    note_type: (c.noteType as Card['note_type']) ?? 'Basic',
+    sort_order: i,
+  }));
+}
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -39,7 +55,10 @@ export default function DemoPracticePage() {
   const { play: playSound } = useSound();
 
   const deck = DEMO_DECKS.find((d) => d.id === deckId);
-  const [cards] = useState(() => deck ? [...deck.cards] : []);
+  // Classic typing uses Basic cards only; game modes filter themselves at routing time
+  const [cards] = useState(() =>
+    deck ? deck.cards.filter(c => !c.noteType || c.noteType === 'Basic') : []
+  );
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [showCardConfetti, setShowCardConfetti] = useState(false);
@@ -60,10 +79,8 @@ export default function DemoPracticePage() {
   const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentCard = cards[currentIdx];
-  const meaningHint = currentCard && mode === 'back_to_front' ? currentCard.back : null;
-  const target = currentCard
-    ? mode === 'front_to_back' ? currentCard.back : currentCard.front
-    : '';
+  const meaningHint = currentCard ? currentCard.back : null;
+  const target = currentCard?.front ?? '';
 
   const {
     input, charStates, isComplete, wpm, accuracy, elapsedSeconds,
@@ -87,6 +104,13 @@ export default function DemoPracticePage() {
   const handleSkipRef = useRef<() => void>(() => {});
   const resultSavedRef = useRef(false);
   useEffect(() => { resultSavedRef.current = false; setWrongSubmit(false); }, [currentIdx]);
+
+  // Fallback: force-clear isComposing when word is complete in case compositionEnd doesn't fire
+  useEffect(() => {
+    if (!isComplete || !isComposing) return;
+    const id = setTimeout(() => setIsComposing(false), 150);
+    return () => clearTimeout(id);
+  }, [isComplete, isComposing]);
 
   // Advance to next card (or finish session)
   const advanceToNext = useCallback(() => {
@@ -119,7 +143,7 @@ export default function DemoPracticePage() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target);
+    speak(target, currentCard?.pronunciation ?? undefined);
     setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, isComposing, sessionComplete]);
@@ -223,6 +247,16 @@ export default function DemoPracticePage() {
         <p style={{ color: 'var(--muted)' }}>Deck not found</p>
       </div>
     );
+  }
+
+  // Route to game-specific components (use deck.cards directly to access all card types)
+  if (mode === 'acid_rain') {
+    const basicCards = deck.cards.filter(c => !c.noteType || c.noteType === 'Basic');
+    return <AcidRainGame cards={toDemoCards(basicCards)} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
+  }
+  if (mode === 'fill_blank') {
+    const clozeCards = deck.cards.filter(c => c.noteType === 'Cloze');
+    return <FillBlankGame cards={toDemoCards(clozeCards)} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
   }
 
   // ── Results screen ──

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePreferences } from '@/contexts/PreferencesContext';
@@ -46,14 +46,13 @@ function toCards(guestCards: GuestCard[]): Card[] {
 function GuestPracticePageInner() {
   const { t } = useLanguage();
   const { confettiEnabled } = usePreferences();
-  const searchParams = useSearchParams();
-  const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
   const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
   const { play: playSound } = useSound();
 
+  const [selectedMode, setSelectedMode] = useState<PracticeMode | null>(null);
   const [deck, setDeck] = useState<GuestDeck | null>(null);
   const [cards, setCards] = useState<GuestCard[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -94,8 +93,13 @@ function GuestPracticePageInner() {
     }
   }, [router]);
 
-  // mode is always back_to_front: show front, type back
-  const currentCard = cards[currentIdx];
+  // Derive filtered cards based on selected mode (Cloze for fill_blank, non-Cloze for others)
+  const filteredCards = selectedMode === 'fill_blank'
+    ? cards.filter(c => (c.noteType ?? 'Basic') === 'Cloze')
+    : cards.filter(c => (c.noteType ?? 'Basic') !== 'Cloze');
+
+  // Classic typing (back_to_front): show front, type back
+  const currentCard = filteredCards[currentIdx];
   const target = currentCard?.back ?? '';
 
   const {
@@ -137,7 +141,7 @@ function GuestPracticePageInner() {
     setAutoAdvanceProgress(0);
     setShowCardConfetti(false);
 
-    if (currentIdx + 1 >= cards.length) {
+    if (currentIdx + 1 >= filteredCards.length) {
       setShowConfetti(true);
       setSessionComplete(true);
     } else {
@@ -147,7 +151,7 @@ function GuestPracticePageInner() {
       setCurrentIdx((i) => i + 1);
       requestAnimationFrame(() => { isAdvancingRef.current = false; });
     }
-  }, [currentIdx, cards.length, reset]);
+  }, [currentIdx, filteredCards.length, reset]);
 
   // Save result once when card completes (wait for IME composition to finish)
   useEffect(() => {
@@ -235,7 +239,7 @@ function GuestPracticePageInner() {
       resultSavedRef.current = true;
       setSessionResults((prev) => [...prev, { wpm: 0, accuracy: 0 }]);
     }
-    if (currentIdx + 1 >= cards.length) {
+    if (currentIdx + 1 >= filteredCards.length) {
       setSessionComplete(true);
     } else {
       isAdvancingRef.current = true;
@@ -244,10 +248,19 @@ function GuestPracticePageInner() {
       setCurrentIdx((i) => i + 1);
       requestAnimationFrame(() => { isAdvancingRef.current = false; });
     }
-  }, [currentIdx, cards.length, reset]);
+  }, [currentIdx, filteredCards.length, reset]);
   useEffect(() => { handleSkipRef.current = handleSkip; });
 
   const handleRestart = useCallback(() => {
+    setCurrentIdx(0);
+    setSessionResults([]);
+    setSessionComplete(false);
+    setShowConfetti(false);
+    reset();
+  }, [reset]);
+
+  const handleBackToModes = useCallback(() => {
+    setSelectedMode(null);
     setCurrentIdx(0);
     setSessionResults([]);
     setSessionComplete(false);
@@ -263,12 +276,68 @@ function GuestPracticePageInner() {
     );
   }
 
-  // Route to game-specific components
-  if (mode === 'acid_rain') {
-    return <AcidRainGame cards={toCards(cards)} deckId="guest" onExit={() => router.push('/create')} />;
+  // ── Mode selection pre-screen ──
+  if (!selectedMode) {
+    const basicCount = cards.filter(c => (c.noteType ?? 'Basic') !== 'Cloze').length;
+    const clozeCount = cards.filter(c => (c.noteType ?? 'Basic') === 'Cloze').length;
+    const modeOptions: { value: PracticeMode; label: string; count: number }[] = [
+      { value: 'back_to_front', label: t.backToFront, count: basicCount },
+      { value: 'fill_blank', label: t.fillBlank, count: clozeCount },
+      { value: 'acid_rain', label: t.acidRain, count: basicCount },
+    ];
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12" style={{ background: 'var(--bg)' }}>
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <span
+              className="text-xs px-2 py-0.5 rounded-full font-bold"
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--accent)' }}
+            >
+              PREVIEW
+            </span>
+            <h1 className="text-2xl font-bold mt-4 mb-1" style={{ color: 'var(--text)' }}>{deck.name}</h1>
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>{cards.length} {t.cards}</p>
+          </div>
+          <div className="space-y-3 mb-6">
+            {modeOptions.map((m) => (
+              <button
+                key={m.value}
+                onClick={() => { if (m.count > 0) setSelectedMode(m.value); }}
+                disabled={m.count === 0}
+                className="w-full p-4 rounded-xl text-left"
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  cursor: m.count === 0 ? 'not-allowed' : 'pointer',
+                  opacity: m.count === 0 ? 0.4 : 1,
+                  color: 'var(--text)',
+                }}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-sm">{m.label}</span>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>{m.count} {t.cards}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+          <Link
+            href="/create"
+            className="block text-center text-sm"
+            style={{ color: 'var(--muted)', textDecoration: 'none' }}
+          >
+            ← {t.uploadYourDeck}
+          </Link>
+        </div>
+      </div>
+    );
   }
-  if (mode === 'fill_blank') {
-    return <FillBlankGame cards={toCards(cards)} deckId="guest" onExit={() => router.push('/create')} />;
+
+  // Route to game-specific components
+  if (selectedMode === 'acid_rain') {
+    return <AcidRainGame cards={toCards(filteredCards)} deckId="guest" onExit={handleBackToModes} />;
+  }
+  if (selectedMode === 'fill_blank') {
+    return <FillBlankGame cards={toCards(filteredCards)} deckId="guest" onExit={handleBackToModes} />;
   }
 
   // ── Results screen ──
@@ -348,20 +417,20 @@ function GuestPracticePageInner() {
             >
               {t.practiceAgain}
             </button>
-            <Link
-              href="/create"
-              className="text-sm px-4 py-2 rounded-lg no-underline"
-              style={{ color: 'var(--text)', background: 'var(--surface)', border: '1px solid var(--border)' }}
+            <button
+              onClick={handleBackToModes}
+              className="text-sm px-4 py-2 rounded-lg"
+              style={{ color: 'var(--text)', background: 'var(--surface)', border: '1px solid var(--border)', cursor: 'pointer' }}
             >
               ← {t.uploadYourDeck}
-            </Link>
+            </button>
           </div>
         </div>
       </div>
     );
   }
 
-  if (cards.length === 0) {
+  if (filteredCards.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
         <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
@@ -386,7 +455,7 @@ function GuestPracticePageInner() {
             style={{ maxWidth: '700px' }}
           >
             <button
-              onClick={() => router.push('/create')}
+              onClick={handleBackToModes}
               className="text-sm"
               style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
             >
@@ -423,15 +492,15 @@ function GuestPracticePageInner() {
           role="progressbar"
           aria-valuenow={currentIdx + 1}
           aria-valuemin={1}
-          aria-valuemax={cards.length}
+          aria-valuemax={filteredCards.length}
         >
           <span className="text-xs font-medium tabular-nums" style={{ color: 'var(--muted)', minWidth: 48 }}>
-            {currentIdx + 1} / {cards.length}
+            {currentIdx + 1} / {filteredCards.length}
           </span>
           <div className="flex-1 rounded-full overflow-hidden" style={{ height: 5, background: 'var(--surface)' }}>
             <div
               className="h-full rounded-full transition-all duration-300"
-              style={{ width: `${((currentIdx + 1) / cards.length) * 100}%`, background: 'var(--accent)' }}
+              style={{ width: `${((currentIdx + 1) / filteredCards.length) * 100}%`, background: 'var(--accent)' }}
             />
           </div>
         </div>
@@ -547,7 +616,7 @@ function GuestPracticePageInner() {
               role="status"
               aria-live="assertive"
             >
-              ✓ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              ✓ {currentIdx + 1 >= filteredCards.length ? t.seeResults : t.nextCard} →
               <div
                 className="absolute bottom-0 left-0 h-1"
                 style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
@@ -562,7 +631,7 @@ function GuestPracticePageInner() {
               role="status"
               aria-live="assertive"
             >
-              ✗ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              ✗ {currentIdx + 1 >= filteredCards.length ? t.seeResults : t.nextCard} →
               <div
                 className="absolute bottom-0 left-0 h-1"
                 style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}

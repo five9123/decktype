@@ -64,10 +64,11 @@ export default function DemoPage() {
           style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
         >
           <p className="text-xs font-bold mb-3" style={{ color: 'var(--muted)' }}>MODE</p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {([
               { value: 'back_to_front' as PracticeMode, label: t.backToFront },
-              { value: 'front_to_back' as PracticeMode, label: t.frontToBack },
+              { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
+              { value: 'acid_rain' as PracticeMode, label: t.acidRain },
             ] as const).map((opt) => (
               <button
                 key={opt.value}
@@ -85,7 +86,7 @@ export default function DemoPage() {
             ))}
           </div>
           <p className="text-xs mt-2" style={{ color: 'var(--muted)' }}>
-            {mode === 'front_to_back' ? t.demoModeHintMeaning : t.demoModeHintWord}
+            {t.demoModeHintWord}
           </p>
         </div>
 

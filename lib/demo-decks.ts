@@ -1,8 +1,10 @@
 export interface DemoCard {
   id: string;
-  front: string;        // target word (shown as prompt)
-  back: string;         // English meaning (typed in front_to_back mode)
+  front: string;        // Basic: target word / Cloze: sentence with _____
+  back: string;         // Basic: English meaning / Cloze: answer word
   pronunciation: string; // romanization (shown in accent color)
+  noteType?: 'Basic' | 'Cloze';
+  extra?: string;       // Cloze: full sentence
 }
 
 export type DemoLang = 'ko' | 'ja';
@@ -43,6 +45,12 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'kb-13', front: '빛', back: 'light', pronunciation: 'bit' },
       { id: 'kb-14', front: '책', back: 'book', pronunciation: 'chaek' },
       { id: 'kb-15', front: '고양이', back: 'cat', pronunciation: 'goyangi' },
+      // Cloze cards
+      { id: 'kb-c01', noteType: 'Cloze', front: '나는 가족을 _____합니다.', back: '사랑', pronunciation: 'sarang', extra: '나는 가족을 사랑합니다.' },
+      { id: 'kb-c02', noteType: 'Cloze', front: '함께 있으면 _____해요.', back: '행복', pronunciation: 'haengbok', extra: '함께 있으면 행복해요.' },
+      { id: 'kb-c03', noteType: 'Cloze', front: '_____에서 열심히 공부해요.', back: '학교', pronunciation: 'hakgyo', extra: '학교에서 열심히 공부해요.' },
+      { id: 'kb-c04', noteType: 'Cloze', front: '좋은 _____을 들으면 기분이 좋아요.', back: '음악', pronunciation: 'eumak', extra: '좋은 음악을 들으면 기분이 좋아요.' },
+      { id: 'kb-c05', noteType: 'Cloze', front: '파란 _____을 바라보며 꿈을 꿔요.', back: '하늘', pronunciation: 'haneul', extra: '파란 하늘을 바라보며 꿈을 꿔요.' },
     ],
   },
   {
@@ -69,6 +77,12 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'kd-13', front: '그리움', back: 'longing', pronunciation: 'geuriwum' },
       { id: 'kd-14', front: '마음', back: 'heart', pronunciation: 'maeum' },
       { id: 'kd-15', front: '상금', back: 'prize money', pronunciation: 'sanggeum' },
+      // Cloze cards
+      { id: 'kd-c01', noteType: 'Cloze', front: '우리가 만난 건 _____이었어요.', back: '운명', pronunciation: 'unmyeong', extra: '우리가 만난 건 운명이었어요.' },
+      { id: 'kd-c02', noteType: 'Cloze', front: '아직 _____을 잃지 마세요.', back: '희망', pronunciation: 'huimang', extra: '아직 희망을 잃지 마세요.' },
+      { id: 'kd-c03', noteType: 'Cloze', front: '그녀의 눈에 _____이 흘렀어요.', back: '눈물', pronunciation: 'nunmul', extra: '그녀의 눈에 눈물이 흘렀어요.' },
+      { id: 'kd-c04', noteType: 'Cloze', front: '당신의 _____을 믿어요.', back: '마음', pronunciation: 'maeum', extra: '당신의 마음을 믿어요.' },
+      { id: 'kd-c05', noteType: 'Cloze', front: '모든 것에는 나만의 _____가 있어요.', back: '비밀', pronunciation: 'bimil', extra: '모든 것에는 나만의 비밀이 있어요.' },
     ],
   },
   {
@@ -95,6 +109,12 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'kp-13', front: '행운', back: 'good luck', pronunciation: 'haengun' },
       { id: 'kp-14', front: '반짝', back: 'sparkle', pronunciation: 'banjjak' },
       { id: 'kp-15', front: '세상', back: 'world', pronunciation: 'sesang' },
+      // Cloze cards
+      { id: 'kp-c01', noteType: 'Cloze', front: '저 _____처럼 빛나고 싶어.', back: '별', pronunciation: 'byeol', extra: '저 별처럼 빛나고 싶어.' },
+      { id: 'kp-c02', noteType: 'Cloze', front: '우리 _____히 같이 있자.', back: '영원', pronunciation: 'yeongwon', extra: '우리 영원히 같이 있자.' },
+      { id: 'kp-c03', noteType: 'Cloze', front: '온 _____이 우리 편이야.', back: '세상', pronunciation: 'sesang', extra: '온 세상이 우리 편이야.' },
+      { id: 'kp-c04', noteType: 'Cloze', front: '네 _____가 나를 설레게 해.', back: '노래', pronunciation: 'norae', extra: '네 노래가 나를 설레게 해.' },
+      { id: 'kp-c05', noteType: 'Cloze', front: '네가 있는 곳이 내 _____야.', back: '우주', pronunciation: 'uju', extra: '네가 있는 곳이 내 우주야.' },
     ],
   },
   {
@@ -121,6 +141,12 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'jb-13', front: '猫', back: 'cat', pronunciation: 'neko' },
       { id: 'jb-14', front: '花', back: 'flower', pronunciation: 'hana' },
       { id: 'jb-15', front: '心', back: 'heart', pronunciation: 'kokoro' },
+      // Cloze cards
+      { id: 'jb-c01', noteType: 'Cloze', front: '毎日_____を飲みます。', back: '水', pronunciation: 'mizu', extra: '毎日水を飲みます。' },
+      { id: 'jb-c02', noteType: 'Cloze', front: '_____が青くて綺麗です。', back: '空', pronunciation: 'sora', extra: '空が青くて綺麗です。' },
+      { id: 'jb-c03', noteType: 'Cloze', front: '好きな_____は寿司です。', back: '食べ物', pronunciation: 'tabemono', extra: '好きな食べ物は寿司です。' },
+      { id: 'jb-c04', noteType: 'Cloze', front: '毎朝_____を聴きます。', back: '音楽', pronunciation: 'ongaku', extra: '毎朝音楽を聴きます。' },
+      { id: 'jb-c05', noteType: 'Cloze', front: '彼女の_____はとても優しい。', back: '心', pronunciation: 'kokoro', extra: '彼女の心はとても優しい。' },
     ],
   },
   {
@@ -147,6 +173,12 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'an-13', front: '覚悟', back: 'resolve', pronunciation: 'kakugo' },
       { id: 'an-14', front: '修行', back: 'training', pronunciation: 'shugyou' },
       { id: 'an-15', front: '英雄', back: 'hero', pronunciation: 'eiyuu' },
+      // Cloze cards
+      { id: 'an-c01', noteType: 'Cloze', front: '友達との_____は必ず守る。', back: '約束', pronunciation: 'yakusoku', extra: '友達との約束は必ず守る。' },
+      { id: 'an-c02', noteType: 'Cloze', front: '君を_____ために戦い続ける。', back: '守る', pronunciation: 'mamoru', extra: '君を守るために戦い続ける。' },
+      { id: 'an-c03', noteType: 'Cloze', front: 'これが僕たちの_____だ。', back: '運命', pronunciation: 'unmei', extra: 'これが僕たちの運命だ。' },
+      { id: 'an-c04', noteType: 'Cloze', front: '_____の力で世界を救う。', back: '魔法', pronunciation: 'mahou', extra: '魔法の力で世界を救う。' },
+      { id: 'an-c05', noteType: 'Cloze', front: '諦めない_____がある限り。', back: '勇気', pronunciation: 'yuuki', extra: '諦めない勇気がある限り。' },
     ],
   },
   {
@@ -173,6 +205,12 @@ export const DEMO_DECKS: DemoDeck[] = [
       { id: 'jp-13', front: '旅', back: 'journey', pronunciation: 'tabi' },
       { id: 'jp-14', front: '未来', back: 'future', pronunciation: 'mirai' },
       { id: 'jp-15', front: '海', back: 'sea', pronunciation: 'umi' },
+      // Cloze cards
+      { id: 'jp-c01', noteType: 'Cloze', front: 'あなたの_____が聴こえる。', back: '声', pronunciation: 'koe', extra: 'あなたの声が聴こえる。' },
+      { id: 'jp-c02', noteType: 'Cloze', front: '春には_____が咲く。', back: '桜', pronunciation: 'sakura', extra: '春には桜が咲く。' },
+      { id: 'jp-c03', noteType: 'Cloze', front: '瞳に_____が光る。', back: '涙', pronunciation: 'namida', extra: '瞳に涙が光る。' },
+      { id: 'jp-c04', noteType: 'Cloze', front: '君と_____に旅したい。', back: '永遠', pronunciation: 'eien', extra: '君と永遠に旅したい。' },
+      { id: 'jp-c05', noteType: 'Cloze', front: '君への_____は届くだろう。', back: '願い', pronunciation: 'negai', extra: '君への願いは届くだろう。' },
     ],
   },
 ];
