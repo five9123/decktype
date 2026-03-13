@@ -48,14 +48,6 @@ export default function AboutPage() {
           </ul>
         </section>
 
-        {/* Tech */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-3">{t.aboutTechTitle}</h2>
-          <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
-            {t.aboutTechDesc}
-          </p>
-        </section>
-
         {/* CTA */}
         <div className="text-center py-8">
           <Link
