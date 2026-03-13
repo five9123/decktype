@@ -21,7 +21,7 @@ export default function DeckDetailPage() {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
-  const [mode, setMode] = useState<PracticeMode>('front_to_back');
+  const [mode, setMode] = useState<PracticeMode>('back_to_front');
   const [order, setOrder] = useState<CardOrder>('sequential');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
@@ -185,7 +185,7 @@ export default function DeckDetailPage() {
             <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>MODE</p>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: 'front_to_back' as PracticeMode, label: t.frontToBack },
+                { value: 'back_to_front' as PracticeMode, label: t.backToFront },
                 { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
                 { value: 'acid_rain' as PracticeMode, label: t.acidRain },
               ].map((opt) => (
