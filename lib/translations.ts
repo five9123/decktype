@@ -377,6 +377,39 @@ export type Translations = {
   blogToc: string;
   blogRelated: string;
   footerBlog: string;
+
+  // Media tab
+  mediaTab: string;
+  uploadMediaFile: string;
+  pasteSubtitles: string;
+  generateWithAI: string;
+  generating: string;
+  vocabularyCards: string;
+  clozeCards: string;
+  bothCardTypes: string;
+  supportedFormats: string;
+  mediaNoContent: string;
+  mediaPreview: string;
+  generateMode: string;
+  lineCount: string;
+
+  // Game modes
+  acidRain: string;
+  fillBlank: string;
+  classicTyping: string;
+
+  // Acid Rain
+  score: string;
+  combo: string;
+  level: string;
+  gameOver: string;
+  finalScore: string;
+  playAgain: string;
+  acidRainDesc: string;
+
+  // Fill Blank
+  showHint: string;
+  fillInMissing: string;
 };
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
@@ -736,6 +769,39 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     blogToc: 'Table of Contents',
     blogRelated: 'Related Articles',
     footerBlog: 'Blog',
+
+    // Media tab
+    mediaTab: 'Media',
+    uploadMediaFile: 'Drop SRT or lyrics file here',
+    pasteSubtitles: 'Paste subtitles, lyrics, or any text here...',
+    generateWithAI: 'Generate with AI',
+    generating: 'Generating cards with AI...',
+    vocabularyCards: 'Vocabulary',
+    clozeCards: 'Fill-in-blank',
+    bothCardTypes: 'Both',
+    supportedFormats: 'Supports .srt, .txt, .lrc files (max 2MB)',
+    mediaNoContent: 'No content found in file',
+    mediaPreview: 'Preview',
+    generateMode: 'Card Type',
+    lineCount: 'lines',
+
+    // Game modes
+    acidRain: 'Acid Rain',
+    fillBlank: 'Fill Blank',
+    classicTyping: 'Classic Typing',
+
+    // Acid Rain
+    score: 'Score',
+    combo: 'Combo',
+    level: 'Level',
+    gameOver: 'Game Over',
+    finalScore: 'Final Score',
+    playAgain: 'Play Again',
+    acidRainDesc: 'Words fall from above — type them to destroy!',
+
+    // Fill Blank
+    showHint: 'Show hint',
+    fillInMissing: 'Type the missing word',
   },
 
   ko: {
@@ -1091,6 +1157,35 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     blogToc: '목차',
     blogRelated: '관련 글',
     footerBlog: '블로그',
+
+    mediaTab: '미디어',
+    uploadMediaFile: 'SRT 또는 가사 파일을 여기에 끌어다 놓기',
+    pasteSubtitles: '자막, 가사 또는 텍스트를 붙여넣기...',
+    generateWithAI: 'AI로 생성',
+    generating: 'AI로 카드 생성 중...',
+    vocabularyCards: '어휘',
+    clozeCards: '빈칸 채우기',
+    bothCardTypes: '둘 다',
+    supportedFormats: '.srt, .txt, .lrc 파일 지원 (최대 2MB)',
+    mediaNoContent: '파일에서 내용을 찾을 수 없습니다',
+    mediaPreview: '미리보기',
+    generateMode: '카드 유형',
+    lineCount: '줄',
+
+    acidRain: '산성비',
+    fillBlank: '빈칸 채우기',
+    classicTyping: '클래식 타이핑',
+
+    score: '점수',
+    combo: '콤보',
+    level: '레벨',
+    gameOver: '게임 오버',
+    finalScore: '최종 점수',
+    playAgain: '다시 하기',
+    acidRainDesc: '단어가 위에서 떨어집니다 — 타이핑으로 파괴하세요!',
+
+    showHint: '힌트 보기',
+    fillInMissing: '빠진 단어를 입력하세요',
   },
 
   ja: {
@@ -1446,6 +1541,35 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     blogToc: '目次',
     blogRelated: '関連記事',
     footerBlog: 'ブログ',
+
+    mediaTab: 'メディア',
+    uploadMediaFile: 'SRTまたは歌詞ファイルをここにドロップ',
+    pasteSubtitles: '字幕、歌詞、テキストを貼り付け...',
+    generateWithAI: 'AIで生成',
+    generating: 'AIでカード生成中...',
+    vocabularyCards: '語彙',
+    clozeCards: '穴埋め',
+    bothCardTypes: '両方',
+    supportedFormats: '.srt, .txt, .lrcファイル対応（最大2MB）',
+    mediaNoContent: 'ファイルにコンテンツが見つかりません',
+    mediaPreview: 'プレビュー',
+    generateMode: 'カードタイプ',
+    lineCount: '行',
+
+    acidRain: '酸性雨',
+    fillBlank: '穴埋め',
+    classicTyping: 'クラシックタイピング',
+
+    score: 'スコア',
+    combo: 'コンボ',
+    level: 'レベル',
+    gameOver: 'ゲームオーバー',
+    finalScore: '最終スコア',
+    playAgain: 'もう一度',
+    acidRainDesc: '上から単語が落ちてくる — タイピングで破壊！',
+
+    showHint: 'ヒントを表示',
+    fillInMissing: '欠けている単語を入力',
   },
 
   es: {
@@ -1801,6 +1925,35 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     blogToc: 'Tabla de Contenidos',
     blogRelated: 'Artículos Relacionados',
     footerBlog: 'Blog',
+
+    mediaTab: 'Medios',
+    uploadMediaFile: 'Suelta aquí un archivo SRT o de letras',
+    pasteSubtitles: 'Pega subtítulos, letras o texto aquí...',
+    generateWithAI: 'Generar con IA',
+    generating: 'Generando tarjetas con IA...',
+    vocabularyCards: 'Vocabulario',
+    clozeCards: 'Completar espacio',
+    bothCardTypes: 'Ambos',
+    supportedFormats: 'Compatible con .srt, .txt, .lrc (máx. 2MB)',
+    mediaNoContent: 'No se encontró contenido en el archivo',
+    mediaPreview: 'Vista previa',
+    generateMode: 'Tipo de tarjeta',
+    lineCount: 'líneas',
+
+    acidRain: 'Lluvia Ácida',
+    fillBlank: 'Completar',
+    classicTyping: 'Escritura Clásica',
+
+    score: 'Puntos',
+    combo: 'Combo',
+    level: 'Nivel',
+    gameOver: 'Fin del Juego',
+    finalScore: 'Puntuación Final',
+    playAgain: 'Jugar de nuevo',
+    acidRainDesc: '¡Las palabras caen desde arriba — escríbelas para destruirlas!',
+
+    showHint: 'Mostrar pista',
+    fillInMissing: 'Escribe la palabra que falta',
   },
 
   zh: {
@@ -2156,6 +2309,35 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     blogToc: '目录',
     blogRelated: '相关文章',
     footerBlog: '博客',
+
+    mediaTab: '媒体',
+    uploadMediaFile: '将SRT或歌词文件拖放到此处',
+    pasteSubtitles: '粘贴字幕、歌词或文本...',
+    generateWithAI: 'AI生成',
+    generating: 'AI正在生成卡片...',
+    vocabularyCards: '词汇',
+    clozeCards: '填空',
+    bothCardTypes: '两者',
+    supportedFormats: '支持.srt、.txt、.lrc文件（最大2MB）',
+    mediaNoContent: '文件中未找到内容',
+    mediaPreview: '预览',
+    generateMode: '卡片类型',
+    lineCount: '行',
+
+    acidRain: '酸雨',
+    fillBlank: '填空',
+    classicTyping: '经典打字',
+
+    score: '分数',
+    combo: '连击',
+    level: '等级',
+    gameOver: '游戏结束',
+    finalScore: '最终分数',
+    playAgain: '再来一次',
+    acidRainDesc: '单词从上方落下——打字消灭它们！',
+
+    showHint: '显示提示',
+    fillInMissing: '输入缺失的单词',
   },
 
   fr: {
@@ -2511,5 +2693,34 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     blogToc: 'Table des matières',
     blogRelated: 'Articles connexes',
     footerBlog: 'Blog',
+
+    mediaTab: 'Médias',
+    uploadMediaFile: 'Déposez un fichier SRT ou de paroles ici',
+    pasteSubtitles: 'Collez des sous-titres, paroles ou texte ici...',
+    generateWithAI: 'Générer avec IA',
+    generating: 'Génération de cartes avec IA...',
+    vocabularyCards: 'Vocabulaire',
+    clozeCards: 'Texte à trous',
+    bothCardTypes: 'Les deux',
+    supportedFormats: 'Fichiers .srt, .txt, .lrc pris en charge (max 2 Mo)',
+    mediaNoContent: 'Aucun contenu trouvé dans le fichier',
+    mediaPreview: 'Aperçu',
+    generateMode: 'Type de carte',
+    lineCount: 'lignes',
+
+    acidRain: 'Pluie Acide',
+    fillBlank: 'Texte à trous',
+    classicTyping: 'Frappe Classique',
+
+    score: 'Score',
+    combo: 'Combo',
+    level: 'Niveau',
+    gameOver: 'Partie Terminée',
+    finalScore: 'Score Final',
+    playAgain: 'Rejouer',
+    acidRainDesc: 'Les mots tombent du ciel — tapez-les pour les détruire !',
+
+    showHint: 'Afficher l\'indice',
+    fillInMissing: 'Tapez le mot manquant',
   },
 };

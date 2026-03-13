@@ -33,7 +33,7 @@ export interface CharState {
   status: CharStatus;
 }
 
-export type PracticeMode = 'front_to_back' | 'back_to_front';
+export type PracticeMode = 'front_to_back' | 'back_to_front' | 'acid_rain' | 'fill_blank';
 export type CardOrder = 'sequential' | 'random' | 'difficult_first' | 'smart_review';
 
 // ── Session & Stats Types ──

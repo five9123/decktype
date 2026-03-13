@@ -17,6 +17,8 @@ import { smartOrder } from '@/lib/smart-order';
 import { useMastery } from '@/hooks/useMastery';
 import { usePersonalBest } from '@/hooks/usePersonalBest';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
+import { AcidRainGame } from '@/components/AcidRainGame';
+import { FillBlankGame } from '@/components/FillBlankGame';
 import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
 
 /** Unbiased Fisher-Yates shuffle */
@@ -373,6 +375,14 @@ export default function PracticePage() {
         <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
       </div>
     );
+  }
+
+  // Route to game-specific components
+  if (mode === 'acid_rain') {
+    return <AcidRainGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
+  }
+  if (mode === 'fill_blank') {
+    return <FillBlankGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
 
   return (

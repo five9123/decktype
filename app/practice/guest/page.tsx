@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePreferences } from '@/contexts/PreferencesContext';
@@ -11,12 +11,17 @@ import { useTTS } from '@/hooks/useTTS';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { PreferencesPanel } from '@/components/PreferencesPanel';
+import { AcidRainGame } from '@/components/AcidRainGame';
+import { FillBlankGame } from '@/components/FillBlankGame';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
+import type { Card, PracticeMode } from '@/types';
 
 interface GuestCard {
   front: string;
   back: string;
   pronunciation: string;
+  extra?: string;
+  noteType?: string;
 }
 
 interface GuestDeck {
@@ -24,10 +29,25 @@ interface GuestDeck {
   cards: GuestCard[];
 }
 
+function toCards(guestCards: GuestCard[]): Card[] {
+  return guestCards.map((c, i) => ({
+    id: `guest-${i}`,
+    deck_id: 'guest',
+    front: c.front,
+    back: c.back,
+    pronunciation: c.pronunciation || '',
+    extra: c.extra || '',
+    note_type: (c.noteType as Card['note_type']) || 'Basic',
+    sort_order: i,
+  }));
+}
+
 
 export default function GuestPracticePage() {
   const { t } = useLanguage();
   const { confettiEnabled } = usePreferences();
+  const searchParams = useSearchParams();
+  const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
   const { speak } = useTTS();
   const router = useRouter();
   const { viewportH, compact, mainRef } = useViewport();
@@ -234,6 +254,14 @@ export default function GuestPracticePage() {
         <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
       </div>
     );
+  }
+
+  // Route to game-specific components
+  if (mode === 'acid_rain') {
+    return <AcidRainGame cards={toCards(cards)} deckId="guest" onExit={() => router.push('/create')} />;
+  }
+  if (mode === 'fill_blank') {
+    return <FillBlankGame cards={toCards(cards)} deckId="guest" onExit={() => router.push('/create')} />;
   }
 
   // ── Results screen ──

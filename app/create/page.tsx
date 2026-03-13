@@ -9,10 +9,11 @@ import { useProfile } from '@/hooks/useProfile';
 import { FREE_CARDS_PER_DECK } from '@/lib/constants';
 import { extractWords } from '@/lib/text-parser';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
+import { MediaTabContent, type MediaCardsResult } from '@/components/MediaTabContent';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
-type Tab = 'url' | 'text' | 'manual';
+type Tab = 'url' | 'text' | 'manual' | 'media';
 type ExtractState = 'idle' | 'extracting' | 'words' | 'looking_up' | 'editing' | 'saving';
 
 interface WordEntry {
@@ -78,6 +79,7 @@ export default function CreateDeckPage() {
     Array.from({ length: 5 }, makeManualRow)
   );
   const tableRef = useRef<HTMLDivElement>(null);
+  const mediaCardsRef = useRef<MediaCardsResult[]>([]);
 
   const filledManualRows = manualRows.filter((r) => r.front.trim() || r.back.trim());
   const manualAtLimit = !isPro && manualRows.length >= FREE_CARDS_PER_DECK;
@@ -242,12 +244,23 @@ export default function CreateDeckPage() {
 
   // ─── Save Deck ─────────────────────────────────────────────────────────
 
-  const getCardsToSave = (): { front: string; back: string; pronunciation: string }[] => {
+  const getCardsToSave = (): { front: string; back: string; pronunciation: string; extra: string; noteType: string }[] => {
+    if (tab === 'media') {
+      return mediaCardsRef.current.map((c) => ({
+        front: c.front.trim(),
+        back: c.back.trim(),
+        pronunciation: c.pronunciation.trim(),
+        extra: c.extra.trim(),
+        noteType: c.noteType,
+      }));
+    }
     if (tab === 'manual') {
       return filledManualRows.map((r) => ({
         front: r.front.trim(),
         back: r.back.trim(),
         pronunciation: r.pronunciation.trim(),
+        extra: '',
+        noteType: 'Basic',
       }));
     }
     return wordEntries
@@ -256,6 +269,8 @@ export default function CreateDeckPage() {
         front: w.front.trim(),
         back: w.back.trim(),
         pronunciation: w.pronunciation.trim(),
+        extra: '',
+        noteType: 'Basic',
       }));
   };
 
@@ -287,7 +302,7 @@ export default function CreateDeckPage() {
         user_id: user.id,
         name: deckName.trim(),
         card_count: cardsToSave.length,
-        note_type: 'Basic',
+        note_type: cardsToSave.some((c) => c.noteType === 'Cloze') ? 'Cloze' : 'Basic',
         tags: [],
       })
       .select()
@@ -307,8 +322,8 @@ export default function CreateDeckPage() {
         front: card.front,
         back: card.back,
         pronunciation: card.pronunciation,
-        extra: '',
-        note_type: 'Basic',
+        extra: card.extra,
+        note_type: card.noteType,
         sort_order: i + idx,
       }));
       const { error: cardsErr } = await supabase.from('cards').insert(batch);
@@ -329,6 +344,11 @@ export default function CreateDeckPage() {
 
     setSaving(false);
     router.push(`/deck/${deck.id}`);
+  };
+
+  const handleMediaCardsReady = (cards: MediaCardsResult[]) => {
+    mediaCardsRef.current = cards;
+    handleSave();
   };
 
   // ─── Render ────────────────────────────────────────────────────────────
@@ -376,6 +396,7 @@ export default function CreateDeckPage() {
             { key: 'url' as const, label: '🔗 URL' },
             { key: 'text' as const, label: '📝 Text' },
             { key: 'manual' as const, label: '✏️ Manual' },
+            { key: 'media' as const, label: '🎬 Media' },
           ]).map((tabItem) => (
             <button
               key={tabItem.key}
@@ -745,6 +766,16 @@ export default function CreateDeckPage() {
               </span>
             </div>
           </div>
+        )}
+
+        {/* ═══ Media Tab ═══ */}
+        {tab === 'media' && (
+          <MediaTabContent
+            deckName={deckName}
+            setDeckName={setDeckName}
+            onCardsReady={handleMediaCardsReady}
+            isPro={isPro}
+          />
         )}
 
         {/* Saving overlay */}

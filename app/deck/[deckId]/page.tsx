@@ -183,10 +183,12 @@ export default function DeckDetailPage() {
           {/* Mode */}
           <div className="mb-4">
             <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>MODE</p>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {[
                 { value: 'back_to_front' as PracticeMode, label: t.backToFront },
                 { value: 'front_to_back' as PracticeMode, label: t.frontToBack },
+                { value: 'acid_rain' as PracticeMode, label: t.acidRain },
+                { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
               ].map((opt) => (
                 <button
                   key={opt.value}
