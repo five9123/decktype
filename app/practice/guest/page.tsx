@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -43,7 +43,7 @@ function toCards(guestCards: GuestCard[]): Card[] {
 }
 
 
-export default function GuestPracticePage() {
+function GuestPracticePageInner() {
   const { t } = useLanguage();
   const { confettiEnabled } = usePreferences();
   const searchParams = useSearchParams();
@@ -248,7 +248,7 @@ export default function GuestPracticePage() {
     reset();
   }, [reset]);
 
-  if (!deck || cards.length === 0) {
+  if (!deck) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
         <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
@@ -350,6 +350,14 @@ export default function GuestPracticePage() {
             </Link>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (cards.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
       </div>
     );
   }
@@ -558,5 +566,13 @@ export default function GuestPracticePage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function GuestPracticePage() {
+  return (
+    <Suspense>
+      <GuestPracticePageInner />
+    </Suspense>
   );
 }
