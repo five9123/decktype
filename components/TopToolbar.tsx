@@ -25,6 +25,13 @@ export function TopToolbar() {
       </Link>
 
       <nav className="flex items-center gap-2 sm:gap-3">
+        <Link
+          href="/blog"
+          className="px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+          style={{ color: 'var(--text)' }}
+        >
+          {t.footerBlog}
+        </Link>
         {user && (
           <>
             <Link

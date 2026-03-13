@@ -1,6 +1,23 @@
 import { MetadataRoute } from 'next';
+import { getAllSlugs } from '@/lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const blogSlugs = getAllSlugs();
+  const blogEntries: MetadataRoute.Sitemap = [
+    {
+      url: 'https://www.typee.app/blog',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    ...blogSlugs.map((slug) => ({
+      url: `https://www.typee.app/blog/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+  ];
+
   return [
     {
       url: 'https://www.typee.app',
@@ -62,5 +79,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.3,
     },
+    ...blogEntries,
   ];
 }

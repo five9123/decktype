@@ -55,6 +55,11 @@ export function GlobalFooter() {
                   {t.footerPricing}
                 </Link>
               </li>
+              <li>
+                <Link href="/blog" className="no-underline transition-colors hover:opacity-80" style={{ color: 'var(--muted)' }}>
+                  {t.footerBlog}
+                </Link>
+              </li>
             </ul>
           </div>
 

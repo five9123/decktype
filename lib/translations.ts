@@ -366,6 +366,17 @@ export type Translations = {
   privacySection6Desc: string;
   privacySection7Title: string;
   privacySection7Desc: string;
+
+  // Blog
+  blogTitle: string;
+  blogDescription: string;
+  blogReadMore: string;
+  blogMinRead: string;
+  blogNoPosts: string;
+  blogBackToList: string;
+  blogToc: string;
+  blogRelated: string;
+  footerBlog: string;
 };
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
@@ -714,6 +725,17 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     privacySection6Desc: 'You can delete your account and all associated data at any time. You can export your data by downloading your decks. You can opt out of optional analytics. Contact us for any data-related requests.',
     privacySection7Title: '7. Contact',
     privacySection7Desc: 'If you have questions about this Privacy Policy, please reach out through our Contact page.',
+
+    // Blog
+    blogTitle: 'Blog',
+    blogDescription: 'Explore the science and strategies behind typing-based language learning.',
+    blogReadMore: 'Read more',
+    blogMinRead: 'min',
+    blogNoPosts: 'No posts yet. Check back soon!',
+    blogBackToList: 'Back to Blog',
+    blogToc: 'Table of Contents',
+    blogRelated: 'Related Articles',
+    footerBlog: 'Blog',
   },
 
   ko: {
@@ -1058,6 +1080,17 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     privacySection6Desc: '언제든지 계정과 모든 관련 데이터를 삭제할 수 있습니다. 덱을 다운로드하여 데이터를 내보낼 수 있습니다. 선택적 분석을 거부할 수 있습니다. 데이터 관련 요청은 문의 페이지를 통해 연락해 주세요.',
     privacySection7Title: '7. 문의',
     privacySection7Desc: '개인정보처리방침에 대한 질문이 있으시면 문의 페이지를 통해 연락해 주세요.',
+
+    // Blog
+    blogTitle: '블로그',
+    blogDescription: '타이핑 기반 언어 학습의 과학과 전략을 알아보세요.',
+    blogReadMore: '더 읽기',
+    blogMinRead: '분',
+    blogNoPosts: '아직 글이 없습니다. 곧 업데이트됩니다!',
+    blogBackToList: '블로그 목록',
+    blogToc: '목차',
+    blogRelated: '관련 글',
+    footerBlog: '블로그',
   },
 
   ja: {
@@ -1402,6 +1435,17 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     privacySection6Desc: 'いつでもアカウントと関連するすべてのデータを削除できます。デッキをダウンロードしてデータをエクスポートできます。オプションの分析をオプトアウトできます。データに関するリクエストはお問い合わせページからご連絡ください。',
     privacySection7Title: '7. お問い合わせ',
     privacySection7Desc: 'プライバシーポリシーに関するご質問は、お問い合わせページからご連絡ください。',
+
+    // Blog
+    blogTitle: 'ブログ',
+    blogDescription: 'タイピングによる言語学習の科学と戦略を探求します。',
+    blogReadMore: '続きを読む',
+    blogMinRead: '分',
+    blogNoPosts: 'まだ記事がありません。もうすぐ更新されます！',
+    blogBackToList: 'ブログ一覧',
+    blogToc: '目次',
+    blogRelated: '関連記事',
+    footerBlog: 'ブログ',
   },
 
   es: {
@@ -1746,6 +1790,17 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     privacySection6Desc: 'Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento. Puedes exportar tus datos descargando tus mazos. Contáctanos para cualquier solicitud relacionada con datos.',
     privacySection7Title: '7. Contacto',
     privacySection7Desc: 'Si tienes preguntas sobre esta Política de privacidad, contáctanos a través de nuestra página de Contacto.',
+
+    // Blog
+    blogTitle: 'Blog',
+    blogDescription: 'Explora la ciencia y las estrategias del aprendizaje de idiomas basado en la escritura.',
+    blogReadMore: 'Leer más',
+    blogMinRead: 'min',
+    blogNoPosts: 'Aún no hay publicaciones. ¡Vuelve pronto!',
+    blogBackToList: 'Volver al Blog',
+    blogToc: 'Tabla de Contenidos',
+    blogRelated: 'Artículos Relacionados',
+    footerBlog: 'Blog',
   },
 
   zh: {
@@ -2090,6 +2145,17 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     privacySection6Desc: '您可以随时删除账户及所有相关数据。您可以通过下载牌组来导出数据。您可以选择退出可选分析。如有数据相关请求，请通过联系页面联系我们。',
     privacySection7Title: '7. 联系方式',
     privacySection7Desc: '如果您对本隐私政策有疑问，请通过我们的联系页面联系我们。',
+
+    // Blog
+    blogTitle: '博客',
+    blogDescription: '探索基于打字的语言学习背后的科学与策略。',
+    blogReadMore: '阅读更多',
+    blogMinRead: '分钟',
+    blogNoPosts: '暂无文章，请稍后再来！',
+    blogBackToList: '返回博客',
+    blogToc: '目录',
+    blogRelated: '相关文章',
+    footerBlog: '博客',
   },
 
   fr: {
@@ -2434,5 +2500,16 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     privacySection6Desc: "Vous pouvez supprimer votre compte et toutes les données associées à tout moment. Vous pouvez exporter vos données en téléchargeant vos paquets. Contactez-nous pour toute demande relative aux données.",
     privacySection7Title: '7. Contact',
     privacySection7Desc: "Si vous avez des questions sur cette Politique de confidentialité, contactez-nous via notre page de Contact.",
+
+    // Blog
+    blogTitle: 'Blog',
+    blogDescription: "Découvrez la science et les stratégies de l'apprentissage des langues par la frappe.",
+    blogReadMore: 'Lire la suite',
+    blogMinRead: 'min',
+    blogNoPosts: "Pas encore d'articles. Revenez bientôt !",
+    blogBackToList: 'Retour au Blog',
+    blogToc: 'Table des matières',
+    blogRelated: 'Articles connexes',
+    footerBlog: 'Blog',
   },
 };
