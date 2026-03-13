@@ -120,6 +120,13 @@ function GuestPracticePageInner() {
   const resultSavedRef = useRef(false);
   useEffect(() => { resultSavedRef.current = false; setWrongSubmit(false); }, [currentIdx]);
 
+  // Fallback: force-clear isComposing when word is complete in case compositionEnd doesn't fire
+  useEffect(() => {
+    if (!isComplete || !isComposing) return;
+    const id = setTimeout(() => setIsComposing(false), 150);
+    return () => clearTimeout(id);
+  }, [isComplete, isComposing]);
+
   // Advance to next card (or finish session)
   const advanceToNext = useCallback(() => {
     if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);

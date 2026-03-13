@@ -161,6 +161,14 @@ export default function PracticePage() {
     rawHandleInput(val);
   }, [rawHandleInput, playSound, input.length]);
 
+  // Fallback: force-clear isComposing when word is complete in case compositionEnd doesn't fire
+  // (Korean IME sometimes doesn't emit compositionEnd on the final syllable)
+  useEffect(() => {
+    if (!isComplete || !isComposing) return;
+    const id = setTimeout(() => setIsComposing(false), 150);
+    return () => clearTimeout(id);
+  }, [isComplete, isComposing]);
+
   // Re-focus input on card change (safety net — without key prop the element persists)
   useEffect(() => {
     const id = setTimeout(() => {
