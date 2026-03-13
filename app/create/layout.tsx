@@ -4,16 +4,16 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Create Deck',
   description:
-    'Create a typing practice deck from any URL or text. Paste a link or raw text to extract vocabulary with automatic language detection.',
+    'Create a language learning deck from song lyrics, SRT subtitle files, URLs, or any text. AI generates vocabulary and fill-in-the-blank cards instantly.',
   alternates: { canonical: 'https://www.typee.app/create' },
   openGraph: {
     title: 'Create Deck — typee',
-    description: 'Create flashcard decks from URLs or raw text for typing practice.',
+    description: 'Paste lyrics, drop subtitles, or share a URL — AI creates typing and fill-blank cards instantly.',
   },
   twitter: {
     card: 'summary',
     title: 'Create Deck — typee',
-    description: 'Create flashcard decks from URLs or raw text for typing practice.',
+    description: 'Paste lyrics, drop subtitles, or share a URL — AI creates typing and fill-blank cards instantly.',
   },
 };
 

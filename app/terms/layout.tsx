@@ -4,7 +4,7 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description:
-    'Terms of Service for typee, the Anki deck typing practice web application.',
+    'Terms of Service for typee, the AI-powered language learning app for music and movie fans.',
   alternates: { canonical: 'https://www.typee.app/terms' },
   openGraph: {
     title: 'Terms of Service — typee',

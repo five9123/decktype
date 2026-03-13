@@ -12,24 +12,25 @@ import { Analytics } from '@vercel/analytics/next';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'typee — Anki Deck Typing Practice',
+    default: 'typee — Learn Languages Through Music & Movies',
     template: '%s | typee',
   },
   description:
-    'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
+    'Learn any language through songs and movies you love. Paste lyrics, drop SRT subtitles, or share a URL — AI creates typing cards instantly.',
   keywords: [
-    'Anki',
-    'typing practice',
-    'flashcards',
-    'SRS',
-    'spaced repetition',
     'language learning',
+    'song lyrics learning',
+    'SRT subtitles',
+    'typing practice',
+    'fill in the blank',
+    'K-pop learning',
+    'anime vocabulary',
+    'Japanese learning',
+    'Korean learning',
+    'AI flashcards',
+    'Anki',
     'WPM',
-    'Anki typing',
-    'deck practice',
-    'typing speed',
     'memory training',
-    'study tool',
   ],
   alternates: {
     canonical: BASE_URL,
@@ -37,16 +38,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'typee',
-    title: 'typee — Anki Deck Typing Practice',
+    title: 'typee — Learn Languages Through Music & Movies',
     description:
-      'Upload your Anki deck and turn flashcards into typing practice.',
+      'Paste song lyrics or drop subtitle files — AI creates typing cards and games instantly.',
     url: BASE_URL,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'typee — Anki Deck Typing Practice',
+    title: 'typee — Learn Languages Through Music & Movies',
     description:
-      'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
+      'Learn any language through songs and movies you love. Paste lyrics, drop SRT subtitles, or share a URL — AI creates typing cards instantly.',
   },
 };
 
@@ -66,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 url: 'https://www.typee.app',
                 logo: 'https://www.typee.app/icon',
                 description:
-                  'typee transforms Anki flashcard decks into interactive typing practice with WPM tracking and spaced repetition.',
+                  'typee turns songs, movies, and any content you love into interactive language practice — typing, fill-in-the-blank, and word games powered by AI.',
                 sameAs: [
                   'https://github.com/a-type-web',
                 ],
@@ -77,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 name: 'typee',
                 url: 'https://www.typee.app',
                 description:
-                  'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
+                  'Learn any language through songs and movies you love. Paste lyrics, drop SRT subtitles, or share a URL — AI creates typing cards instantly.',
               },
             ]),
           }}

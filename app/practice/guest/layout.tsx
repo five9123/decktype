@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Practice Preview',
-  description: 'Try typing practice with your Anki deck before signing up.',
+  description: 'Try typee without signing up. Upload any text or subtitle file to generate typing practice cards.',
   robots: { index: false },
 };
 

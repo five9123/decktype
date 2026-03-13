@@ -4,37 +4,37 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Usage Guide',
   description:
-    'Learn how to use typee: upload Anki decks, practice typing flashcards, track WPM and accuracy. Step-by-step guide with FAQ.',
+    'Learn how to use typee: paste song lyrics, drop SRT subtitles, or import Anki decks to create typing practice cards. Play Fill Blank and Word Game modes.',
   alternates: { canonical: 'https://www.typee.app/guide' },
   openGraph: {
     title: 'Usage Guide — typee',
-    description: 'Step-by-step guide to typing practice with your Anki decks.',
+    description: 'Step-by-step guide: create cards from lyrics & subtitles, then practice with typing, Fill Blank, and Word Game modes.',
   },
   twitter: {
     card: 'summary',
     title: 'Usage Guide — typee',
-    description: 'Step-by-step guide to typing practice with your Anki decks.',
+    description: 'Step-by-step guide: create cards from lyrics & subtitles, then practice with typing, Fill Blank, and Word Game modes.',
   },
 };
 
 const howToSchema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  name: 'How to Practice Typing with Anki Decks on typee',
+  name: 'How to Learn Languages with Songs and Subtitles on typee',
   description:
-    'Learn how to upload your Anki deck and practice typing flashcards with WPM and accuracy tracking.',
+    'Learn how to create vocabulary cards from song lyrics, SRT subtitles, or URLs and practice with typing, Fill Blank, and Word Game modes.',
   step: [
     {
       '@type': 'HowToStep',
       position: 1,
-      name: 'Upload Your Deck',
-      text: 'Export an .apkg file from Anki, then drag and drop it into typee or click Browse to upload. You can also try the built-in demo decks.',
+      name: 'Create from Any Content',
+      text: 'Paste song lyrics or subtitles into the Media tab, drop an .srt file, or share a URL. You can also import an Anki .apkg file or create cards manually. AI extracts vocabulary and cloze cards automatically.',
     },
     {
       '@type': 'HowToStep',
       position: 2,
       name: 'Choose a Practice Mode',
-      text: 'Select a practice direction (front-to-back or back-to-front), card order (sequential, random, or difficult-first), and start your session.',
+      text: 'Select a practice mode: classic typing (back-to-front), Fill-in-the-blank for cloze cards, or Word Game (Typetris). Also set card order: sequential, random, or difficult-first.',
     },
     {
       '@type': 'HowToStep',
@@ -68,7 +68,7 @@ const faqSchema = {
       name: 'What languages are supported?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Any language that works in Anki works in typee — Japanese, Korean, Chinese, Spanish, French, German, and more.',
+        text: 'Any language — Japanese, Korean, Chinese, Spanish, French, German, and more. typee is especially popular for learning through K-pop, J-pop, K-drama, and anime content.',
       },
     },
     {

@@ -23,7 +23,7 @@ const pricingSchema = [
     '@type': 'Product',
     name: 'typee Free',
     description:
-      'Free Anki typing practice with 1 deck, 100 cards, all practice modes, WPM and accuracy tracking.',
+      'Free language learning with 1 deck, 100 cards, all practice modes (typing, fill blank, word game), WPM and accuracy tracking.',
     brand: { '@type': 'Organization', name: 'typee' },
     offers: {
       '@type': 'Offer',
@@ -38,7 +38,7 @@ const pricingSchema = [
     '@type': 'Product',
     name: 'typee Pro',
     description:
-      'Unlimited Anki decks and cards, activity heatmap, WPM trend chart, and priority support.',
+      'Unlimited decks and cards, AI media generation from lyrics & subtitles, activity heatmap, WPM trend chart, and priority support.',
     brand: { '@type': 'Organization', name: 'typee' },
     offers: [
       {

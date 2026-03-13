@@ -4,16 +4,16 @@ import { breadcrumbSchema } from '@/lib/schema';
 export const metadata: Metadata = {
   title: 'Try Demo',
   description:
-    'Try typee without signing up. Practice typing with a sample Anki deck and experience WPM tracking and smart review.',
+    'Try typee without signing up. Practice vocabulary from Japanese and Korean content with Fill Blank, Word Game, and typing modes.',
   alternates: { canonical: 'https://www.typee.app/demo' },
   openGraph: {
     title: 'Try Demo — typee',
-    description: 'No sign-up required. See how typee turns Anki flashcards into typing practice.',
+    description: 'No sign-up required. Learn Japanese and Korean through songs and games.',
   },
   twitter: {
     card: 'summary',
     title: 'Try Demo — typee',
-    description: 'No sign-up required. See how typee turns Anki flashcards into typing practice.',
+    description: 'No sign-up required. Learn Japanese and Korean through songs and games.',
   },
 };
 
