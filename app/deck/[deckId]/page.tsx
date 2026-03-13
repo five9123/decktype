@@ -21,7 +21,7 @@ export default function DeckDetailPage() {
   const [cards, setCards] = useState<Card[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
-  const [mode, setMode] = useState<PracticeMode>('back_to_front');
+  const [mode, setMode] = useState<PracticeMode>('front_to_back');
   const [order, setOrder] = useState<CardOrder>('sequential');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
@@ -185,10 +185,9 @@ export default function DeckDetailPage() {
             <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>MODE</p>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: 'back_to_front' as PracticeMode, label: t.backToFront },
                 { value: 'front_to_back' as PracticeMode, label: t.frontToBack },
-                { value: 'acid_rain' as PracticeMode, label: t.acidRain },
                 { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
+                { value: 'acid_rain' as PracticeMode, label: t.acidRain },
               ].map((opt) => (
                 <button
                   key={opt.value}
@@ -234,13 +233,20 @@ export default function DeckDetailPage() {
             </div>
           </div>
 
-          <Link
-            href={`/deck/${deckId}/practice?mode=${mode}&order=${order}`}
-            className="inline-block px-8 py-3 rounded-xl text-sm font-bold no-underline transition-opacity hover:opacity-90"
-            style={{ background: 'var(--accent)', color: '#fff' }}
-          >
-            {t.startPractice} &middot; {cards.length} {t.cards} &rarr;
-          </Link>
+          {(() => {
+            const practiceCards = mode === 'fill_blank'
+              ? cards.filter((c) => c.note_type === 'Cloze')
+              : cards.filter((c) => c.note_type !== 'Cloze');
+            return (
+              <Link
+                href={`/deck/${deckId}/practice?mode=${mode}&order=${order}`}
+                className="inline-block px-8 py-3 rounded-xl text-sm font-bold no-underline transition-opacity hover:opacity-90"
+                style={{ background: practiceCards.length > 0 ? 'var(--accent)' : 'var(--muted)', color: '#fff', pointerEvents: practiceCards.length > 0 ? 'auto' : 'none' }}
+              >
+                {t.startPractice} &middot; {practiceCards.length} {t.cards} &rarr;
+              </Link>
+            );
+          })()}
         </div>
 
         {/* Card List */}

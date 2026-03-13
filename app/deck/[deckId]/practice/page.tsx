@@ -128,6 +128,13 @@ export default function PracticePage() {
           }
         }
 
+        // Filter cards by mode: fill_blank needs Cloze cards; others need non-Cloze cards
+        if (mode === 'fill_blank') {
+          cardList = cardList.filter((c) => c.note_type === 'Cloze');
+        } else {
+          cardList = cardList.filter((c) => c.note_type !== 'Cloze');
+        }
+
         setCards(cardList);
         setLoading(false);
       });

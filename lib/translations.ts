@@ -786,7 +786,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lineCount: 'lines',
 
     // Game modes
-    acidRain: 'word games',
+    acidRain: 'Word Game: Typetris',
     fillBlank: 'Fill Blank',
     classicTyping: 'Classic Typing',
 
@@ -1172,7 +1172,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: '카드 유형',
     lineCount: '줄',
 
-    acidRain: '단어 게임',
+    acidRain: '단어 게임: Typetris',
     fillBlank: '빈칸 채우기',
     classicTyping: '클래식 타이핑',
 
@@ -1556,7 +1556,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'カードタイプ',
     lineCount: '行',
 
-    acidRain: 'ワードゲーム',
+    acidRain: 'ワードゲーム: Typetris',
     fillBlank: '穴埋め',
     classicTyping: 'クラシックタイピング',
 
@@ -1940,7 +1940,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'Tipo de tarjeta',
     lineCount: 'líneas',
 
-    acidRain: 'juegos de palabras',
+    acidRain: 'Juego: Typetris',
     fillBlank: 'Completar',
     classicTyping: 'Escritura Clásica',
 
@@ -2324,7 +2324,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: '卡片类型',
     lineCount: '行',
 
-    acidRain: '单词游戏',
+    acidRain: '单词游戏: Typetris',
     fillBlank: '填空',
     classicTyping: '经典打字',
 
@@ -2708,7 +2708,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'Type de carte',
     lineCount: 'lignes',
 
-    acidRain: 'jeux de mots',
+    acidRain: 'Jeu: Typetris',
     fillBlank: 'Texte à trous',
     classicTyping: 'Frappe Classique',
 
