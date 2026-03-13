@@ -10,10 +10,11 @@ import { FREE_CARDS_PER_DECK } from '@/lib/constants';
 import { extractWords } from '@/lib/text-parser';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 import { MediaTabContent, type MediaCardsResult } from '@/components/MediaTabContent';
+import { UploadTabContent } from '@/components/UploadTabContent';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
-type Tab = 'url' | 'text' | 'manual' | 'media';
+type Tab = 'url' | 'text' | 'media' | 'upload';
 type ExtractState = 'idle' | 'extracting' | 'words' | 'looking_up' | 'editing' | 'saving';
 
 interface WordEntry {
@@ -22,13 +23,6 @@ interface WordEntry {
   back: string;
   pronunciation: string;
   status: 'pending' | 'found' | 'not_found' | 'manual';
-}
-
-interface ManualRow {
-  id: number;
-  front: string;
-  back: string;
-  pronunciation: string;
 }
 
 const TARGET_LANGS = [
@@ -51,10 +45,8 @@ export default function CreateDeckPage() {
   // Stable ID counter (survives re-renders, safe with Strict Mode)
   const idRef = useRef(0);
   const nextId = () => ++idRef.current;
-  const makeManualRow = (): ManualRow => ({ id: nextId(), front: '', back: '', pronunciation: '' });
-
   // --- Shared ---
-  const [tab, setTab] = useState<Tab>('url');
+  const [tab, setTab] = useState<Tab>('media');
   const [deckName, setDeckName] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -74,15 +66,7 @@ export default function CreateDeckPage() {
   const [wordEntries, setWordEntries] = useState<WordEntry[]>([]);
   const [lookupProgress, setLookupProgress] = useState(0);
 
-  // --- Manual Tab ---
-  const [manualRows, setManualRows] = useState<ManualRow[]>(() =>
-    Array.from({ length: 5 }, makeManualRow)
-  );
-  const tableRef = useRef<HTMLDivElement>(null);
   const mediaCardsRef = useRef<MediaCardsResult[]>([]);
-
-  const filledManualRows = manualRows.filter((r) => r.front.trim() || r.back.trim());
-  const manualAtLimit = !isPro && manualRows.length >= FREE_CARDS_PER_DECK;
 
   // ─── URL Extraction ────────────────────────────────────────────────────
 
@@ -225,23 +209,6 @@ export default function CreateDeckPage() {
     ]);
   };
 
-  // ─── Manual Tab Editing ────────────────────────────────────────────────
-
-  const updateManualRow = (id: number, field: keyof Omit<ManualRow, 'id'>, value: string) => {
-    setManualRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
-  };
-
-  const deleteManualRow = (id: number) => {
-    setManualRows((prev) => (prev.length > 1 ? prev.filter((r) => r.id !== id) : prev));
-  };
-
-  const addManualRows = (n: number) => {
-    if (manualAtLimit) return;
-    const toAdd = isPro ? n : Math.min(n, FREE_CARDS_PER_DECK - manualRows.length);
-    setManualRows((prev) => [...prev, ...Array.from({ length: toAdd }, makeManualRow)]);
-    setTimeout(() => tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }), 50);
-  };
-
   // ─── Save Deck ─────────────────────────────────────────────────────────
 
   const getCardsToSave = (): { front: string; back: string; pronunciation: string; extra: string; noteType: string }[] => {
@@ -252,15 +219,6 @@ export default function CreateDeckPage() {
         pronunciation: c.pronunciation.trim(),
         extra: c.extra.trim(),
         noteType: c.noteType,
-      }));
-    }
-    if (tab === 'manual') {
-      return filledManualRows.map((r) => ({
-        front: r.front.trim(),
-        back: r.back.trim(),
-        pronunciation: r.pronunciation.trim(),
-        extra: '',
-        noteType: 'Basic',
       }));
     }
     return wordEntries
@@ -353,7 +311,7 @@ export default function CreateDeckPage() {
 
   // ─── Render ────────────────────────────────────────────────────────────
 
-  const cardCount = tab === 'manual' ? filledManualRows.length : wordEntries.filter((w) => w.front.trim()).length;
+  const cardCount = wordEntries.filter((w) => w.front.trim()).length;
 
   return (
     <>
@@ -369,7 +327,7 @@ export default function CreateDeckPage() {
               {t.createDeckSubtitle}
             </p>
           </div>
-          {(tab === 'manual' || extractState === 'editing') && (
+          {extractState === 'editing' && (
             <button
               onClick={handleSave}
               disabled={saving}
@@ -393,10 +351,10 @@ export default function CreateDeckPage() {
           style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
         >
           {([
-            { key: 'url' as const, label: '🔗 URL' },
-            { key: 'text' as const, label: '📝 Text' },
-            { key: 'manual' as const, label: '✏️ Manual' },
             { key: 'media' as const, label: '🎬 Media' },
+            { key: 'text' as const, label: '📝 Text' },
+            { key: 'url' as const, label: '🔗 URL' },
+            { key: 'upload' as const, label: '📦 Anki' },
           ]).map((tabItem) => (
             <button
               key={tabItem.key}
@@ -656,118 +614,6 @@ export default function CreateDeckPage() {
           </div>
         )}
 
-        {/* ═══ Manual Tab ═══ */}
-        {tab === 'manual' && (
-          <div>
-            {/* Table */}
-            <div ref={tableRef} className="rounded-xl overflow-hidden mb-4" style={{ border: '1px solid var(--border)' }}>
-              <div
-                className="grid text-xs font-medium px-3 py-2.5"
-                style={{
-                  gridTemplateColumns: '36px 1fr 1fr 1fr 32px',
-                  gap: '8px',
-                  background: 'var(--surface2)',
-                  color: 'var(--muted)',
-                  borderBottom: '1px solid var(--border)',
-                }}
-              >
-                <span>#</span>
-                <span>{t.columnFront}</span>
-                <span>{t.columnBack}</span>
-                <span>{t.columnPronunciation}</span>
-                <span />
-              </div>
-
-              <div style={{ background: 'var(--surface)' }}>
-                {manualRows.map((row, i) => (
-                  <div
-                    key={row.id}
-                    className="grid items-center px-3 py-1.5"
-                    style={{
-                      gridTemplateColumns: '36px 1fr 1fr 1fr 32px',
-                      gap: '8px',
-                      borderBottom: '1px solid var(--border)',
-                    }}
-                  >
-                    <span className="text-xs text-center" style={{ color: 'var(--muted)' }}>{i + 1}</span>
-                    <input
-                      type="text"
-                      value={row.front}
-                      onChange={(e) => updateManualRow(row.id, 'front', e.target.value)}
-                      placeholder="Word"
-                      className="w-full px-2.5 py-1.5 rounded-lg text-sm"
-                      style={{
-                        background: 'var(--bg)',
-                        border: '1px solid var(--border)',
-                        color: 'var(--text)',
-                        outline: 'none',
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Tab' && !e.shiftKey && i === manualRows.length - 1 && !manualAtLimit) {
-                          e.preventDefault();
-                          addManualRows(1);
-                        }
-                      }}
-                    />
-                    <input
-                      type="text"
-                      value={row.back}
-                      onChange={(e) => updateManualRow(row.id, 'back', e.target.value)}
-                      placeholder="Meaning"
-                      className="w-full px-2.5 py-1.5 rounded-lg text-sm"
-                      style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
-                    />
-                    <input
-                      type="text"
-                      value={row.pronunciation}
-                      onChange={(e) => updateManualRow(row.id, 'pronunciation', e.target.value)}
-                      placeholder="Pronunciation"
-                      className="w-full px-2.5 py-1.5 rounded-lg text-sm"
-                      style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
-                    />
-                    <button
-                      onClick={() => deleteManualRow(row.id)}
-                      className="flex items-center justify-center rounded-lg w-7 h-7 transition-opacity hover:opacity-80"
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
-                      aria-label="Delete row"
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Add Row Buttons */}
-            <div className="flex items-center gap-2 mb-8">
-              {!manualAtLimit && (
-                <>
-                  <button
-                    onClick={() => addManualRows(1)}
-                    className="px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
-                  >
-                    {t.addRow}
-                  </button>
-                  <button
-                    onClick={() => addManualRows(10)}
-                    className="px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
-                    style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
-                  >
-                    {t.addTenRows}
-                  </button>
-                </>
-              )}
-              <span className="text-xs ml-2" style={{ color: 'var(--muted)' }}>
-                {manualRows.length}{!isPro && ` / ${FREE_CARDS_PER_DECK}`}
-                {manualAtLimit && <span style={{ color: '#fbbf24' }}> {t.maxLabel}</span>}
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* ═══ Media Tab ═══ */}
         {tab === 'media' && (
           <MediaTabContent
@@ -777,6 +623,9 @@ export default function CreateDeckPage() {
             isPro={isPro}
           />
         )}
+
+        {/* ═══ Upload Tab ═══ */}
+        {tab === 'upload' && <UploadTabContent />}
 
         {/* Saving overlay */}
         {saving && (

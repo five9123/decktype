@@ -46,7 +46,7 @@ export function GlobalFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/upload" className="no-underline transition-colors hover:opacity-80" style={{ color: 'var(--muted)' }}>
+                <Link href="/create" className="no-underline transition-colors hover:opacity-80" style={{ color: 'var(--muted)' }}>
                   {t.footerUpload}
                 </Link>
               </li>

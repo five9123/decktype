@@ -164,7 +164,7 @@ export default function HomePage() {
               </Link>
             ) : (
               <Link
-                href="/upload"
+                href="/create"
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-base font-medium no-underline transition-opacity hover:opacity-80"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
               >

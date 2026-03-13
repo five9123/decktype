@@ -10,7 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         '/stats',
         '/billing',
         '/create',
-        '/upload',
         '/deck/',
         '/results',
         '/api/',

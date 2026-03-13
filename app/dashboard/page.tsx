@@ -87,24 +87,12 @@ export default function DashboardPage() {
               href={atLimit ? '#' : '/create'}
               className={`px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
               style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--text)',
-                pointerEvents: atLimit ? 'none' : 'auto',
-              }}
-            >
-              {t.createDeck}
-            </Link>
-            <Link
-              href={atLimit ? '#' : '/upload'}
-              className={`px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
-              style={{
                 background: 'var(--accent)',
                 color: '#FFFFFF',
                 pointerEvents: atLimit ? 'none' : 'auto',
               }}
             >
-              + {t.uploadDeck}
+              + {t.createDeck}
             </Link>
           </div>
         </div>
@@ -129,11 +117,11 @@ export default function DashboardPage() {
             <p className="text-4xl mb-4">📦</p>
             <p style={{ color: 'var(--muted)' }}>{t.noDeckYet}</p>
             <Link
-              href="/upload"
+              href="/create"
               className="inline-block mt-4 px-6 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity hover:opacity-90"
               style={{ background: 'var(--accent)', color: '#fff' }}
             >
-              {t.uploadDeck}
+              + {t.createDeck}
             </Link>
           </div>
         ) : (

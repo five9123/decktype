@@ -342,7 +342,7 @@ export default function GuestPracticePage() {
               {t.practiceAgain}
             </button>
             <Link
-              href="/upload"
+              href="/create"
               className="text-sm px-4 py-2 rounded-lg no-underline"
               style={{ color: 'var(--text)', background: 'var(--surface)', border: '1px solid var(--border)' }}
             >
@@ -371,7 +371,7 @@ export default function GuestPracticePage() {
             style={{ maxWidth: '700px' }}
           >
             <button
-              onClick={() => router.push('/upload')}
+              onClick={() => router.push('/create')}
               className="text-sm"
               style={{ color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}
             >
