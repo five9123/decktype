@@ -21,11 +21,11 @@ export default function ContactPage() {
           <h2 className="text-xl font-semibold mb-2">{t.contactEmailLabel}</h2>
           <p className="mb-3" style={{ color: 'var(--muted)' }}>{t.contactEmailDesc}</p>
           <a
-            href="mailto:support@typee.app"
+            href="mailto:contact@typee.app"
             className="inline-block text-lg font-semibold no-underline"
             style={{ color: 'var(--accent)' }}
           >
-            support@typee.app
+            contact@typee.app
           </a>
           <p className="mt-3 text-sm" style={{ color: 'var(--muted)' }}>
             {t.contactResponseTime}
