@@ -267,8 +267,9 @@ export default function DemoPracticePage() {
     const avgWpm = completed.length
       ? Math.round(completed.reduce((s, r) => s + r.wpm, 0) / completed.length)
       : 0;
-    const avgAcc = sessionResults.length
-      ? Math.round(sessionResults.reduce((s, r) => s + r.accuracy, 0) / sessionResults.length)
+    const attempted = sessionResults.filter((r) => r.wpm > 0 || r.accuracy > 0);
+    const avgAcc = attempted.length
+      ? Math.round(attempted.reduce((s, r) => s + r.accuracy, 0) / attempted.length)
       : 0;
 
     return (
@@ -475,7 +476,11 @@ export default function DemoPracticePage() {
             onKeyDown={(e) => {
               if (isComplete || wrongSubmit) return;
               if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                if (input.length > 0) {
+                const val = (e.currentTarget as HTMLInputElement).value;
+                if (val.length > 0) {
+                  // Check if input actually matches target (handles React state lag)
+                  const strip = (s: string) => s.normalize('NFC').replace(/[\s\u200B\u200C\u200D\uFEFF]/g, '');
+                  if (strip(val) === strip(target)) return; // correct — let useEffect handle it
                   setWrongSubmit(true);
                   if (!resultSavedRef.current) {
                     resultSavedRef.current = true;
@@ -528,7 +533,7 @@ export default function DemoPracticePage() {
               </button>
             </div>
           )}
-          {isComplete && (
+          {isComplete && !isComposing && (
             <button
               onClick={() => advanceToNext()}
               className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mt-2"

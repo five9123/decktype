@@ -377,6 +377,10 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
           onKeyDown={(e) => {
             if (isComplete || wrongSubmit) return;
             if (e.key === 'Enter' && !e.nativeEvent.isComposing && input.length > 0) {
+              // Check if input actually matches answer (handles React state lag / IME timing)
+              const strip = (s: string) => s.normalize('NFC').replace(/[\s\u200B\u200C\u200D\uFEFF]/g, '');
+              const val = (e.currentTarget as HTMLInputElement).value;
+              if (strip(val) === strip(answer)) return; // correct — let useEffect handle it
               if (!resultSavedRef.current) {
                 resultSavedRef.current = true;
                 setResults((prev) => [...prev, { correct: false, cardId: currentCard?.id ?? '' }]);

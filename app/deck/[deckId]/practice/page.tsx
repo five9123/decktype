@@ -517,7 +517,11 @@ export default function PracticePage() {
             onKeyDown={(e) => {
               if (isComplete || wrongSubmit) return;
               if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                if (input.length > 0) {
+                const val = (e.currentTarget as HTMLInputElement).value;
+                if (val.length > 0) {
+                  // Check if input actually matches target (handles React state lag)
+                  const strip = (s: string) => s.normalize('NFC').replace(/[\s\u200B\u200C\u200D\uFEFF]/g, '');
+                  if (strip(val) === strip(target)) return; // correct — let useEffect handle it
                   setWrongSubmit(true);
                   if (!resultSavedRef.current && currentCard) {
                     resultSavedRef.current = true;
@@ -594,7 +598,7 @@ export default function PracticePage() {
               </button>
             </div>
           )}
-          {isComplete && (
+          {isComplete && !isComposing && (
             <button
               onClick={() => advanceToNext()}
               className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mt-2"

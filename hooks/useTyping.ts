@@ -31,6 +31,7 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
   const startTimeRef = useRef<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const frozenWpmRef = useRef<number | null>(null);
 
   // Reset on target change (useEffect ensures clean lifecycle — no render-time bailouts
   // that can leave stale DOM values visible during IME transitions)
@@ -38,6 +39,7 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
     if (inputRef?.current) inputRef.current.value = '';
     setInput('');
     startTimeRef.current = null;
+    frozenWpmRef.current = null;
     setElapsedSeconds(0);
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
   }, [target, inputRef]);
@@ -126,12 +128,18 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
 
   // WPM: use correctly typed graphemes joined back to string
   const correctText = targetGraphemesNoSpaces.slice(0, correctCount).join('');
-  const wpm = startTimeRef.current !== null
+  const liveWpm = startTimeRef.current !== null
     ? (() => {
         const ms = performance.now() - startTimeRef.current;
         return ms > 0 ? Math.round(calculateMultiLangWpm(correctText, ms)) : 0;
       })()
     : null; // null = not started yet
+
+  // Freeze WPM at completion so it doesn't drift on subsequent renders
+  if (isComplete && frozenWpmRef.current === null && liveWpm !== null) {
+    frozenWpmRef.current = liveWpm;
+  }
+  const wpm = frozenWpmRef.current ?? liveWpm;
 
   const handleInput = useCallback((val: string) => {
     const graphemeLen = [...new Intl.Segmenter().segment(stripWS(val))].length;
@@ -142,6 +150,7 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
     if (inputRef?.current) inputRef.current.value = '';
     setInput('');
     startTimeRef.current = null;
+    frozenWpmRef.current = null;
     setElapsedSeconds(0);
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
   }, [inputRef]);
