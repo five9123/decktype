@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { rateLimit } from '@/lib/rate-limit';
+import { checkRateLimit } from '@/lib/api-middleware';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds (Vercel Pro)
@@ -199,14 +199,8 @@ async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cl
 export async function POST(req: Request) {
   try {
     // Rate limiting
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-    const { limited, resetMs } = rateLimit(`process-media:${ip}`, RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
-    if (limited) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429, headers: { 'Retry-After': String(Math.ceil(resetMs / 1000)) } },
-      );
-    }
+    const rateLimitRes = checkRateLimit(req, 'process-media', RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
+    if (rateLimitRes) return rateLimitRes;
 
     const body = (await req.json()) as ProcessMediaBody;
     const { text, sourceLang, targetLang, mode = 'both', maxWords = 30 } = body;

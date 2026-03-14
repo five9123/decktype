@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { createBrowserClient } from '@/lib/supabase/client';
+import { useAsyncData } from '@/hooks/useAsyncData';
 import type { Profile } from '@/types';
 
 interface UseProfileResult {
@@ -13,33 +13,24 @@ interface UseProfileResult {
 
 export function useProfile(): UseProfileResult {
   const { user } = useAuth();
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [tick, setTick] = useState(0);
 
-  useEffect(() => {
-    if (!user) {
-      setProfile(null);
-      setLoading(false);
-      return;
-    }
-
-    const supabase = createBrowserClient();
-    supabase
-      .from('profiles')
-      .select('id, email, plan, created_at')
-      .eq('id', user.id)
-      .single()
-      .then(({ data }: { data: Profile | null }) => {
-        setProfile(data);
-        setLoading(false);
-      });
-  }, [user, tick]);
-
-  const refresh = () => setTick((t) => t + 1);
+  const { data: profile, loading, refresh } = useAsyncData(
+    async () => {
+      if (!user) return null;
+      const supabase = createBrowserClient();
+      const { data } = await supabase
+        .from('profiles')
+        .select('id, email, plan, created_at')
+        .eq('id', user.id)
+        .single();
+      return (data as Profile | null) ?? null;
+    },
+    [user],
+    { enabled: !!user },
+  );
 
   return {
-    profile,
+    profile: profile ?? null,
     isPro: profile?.plan === 'pro',
     loading,
     refresh,

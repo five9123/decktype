@@ -6,7 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
-import { FREE_CARDS_PER_DECK } from '@/lib/constants';
+import { FREE_CARDS_PER_DECK, TARGET_LANGS } from '@/lib/constants';
 import { extractWords } from '@/lib/text-parser';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 import { MediaTabContent, type MediaCardsResult } from '@/components/MediaTabContent';
@@ -24,15 +24,6 @@ interface WordEntry {
   pronunciation: string;
   status: 'pending' | 'found' | 'not_found' | 'manual';
 }
-
-const TARGET_LANGS = [
-  { code: 'en', label: 'English' },
-  { code: 'ko', label: '한국어' },
-  { code: 'ja', label: '日本語' },
-  { code: 'zh', label: '中文' },
-  { code: 'es', label: 'Español' },
-  { code: 'fr', label: 'Français' },
-];
 
 // ─── Component ──────────────────────────────────────────────────────────
 

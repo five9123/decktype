@@ -1,5 +1,10 @@
 export type ScriptLang = 'ko' | 'ja' | 'zh' | 'en';
 
+/** Shared Unicode range regexes for script detection (also used by wpm.ts) */
+export const CJK_RANGE = /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u309F\u30A0-\u30FF]/g;
+export const HANGUL_RANGE = /[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]/g;
+export const LATIN_RANGE = /[A-Za-z\u00C0-\u024F\u0400-\u04FF]/g;
+
 /** Check if a Latin-script string looks like Chinese pinyin (vs Japanese romaji).
  *  Pinyin indicators: tone marks (āáǎà, ēéěè, ...) or tone numbers (ma1, shi4),
  *  and common pinyin-only consonant clusters (zh, ch, sh, x before i/u). */

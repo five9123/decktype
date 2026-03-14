@@ -1,7 +1,4 @@
-/** Unicode ranges for script detection */
-const CJK_RANGE = /[\u4E00-\u9FFF\u3400-\u4DBF\u3040-\u309F\u30A0-\u30FF]/g;
-const HANGUL_RANGE = /[\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F]/g;
-const LATIN_RANGE = /[A-Za-z\u00C0-\u024F\u0400-\u04FF]/g;
+import { CJK_RANGE, HANGUL_RANGE, LATIN_RANGE } from '@/lib/lang-detect';
 
 type Script = 'cjk' | 'hangul' | 'latin';
 

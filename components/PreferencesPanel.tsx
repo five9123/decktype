@@ -4,6 +4,7 @@ import { usePreferences } from '@/contexts/PreferencesContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { ThemePicker } from './ThemePicker';
+import { ToggleSwitch } from './ToggleSwitch';
 import type { FontSize } from '@/lib/themes';
 
 const FONT_SIZES: { key: FontSize; label: string }[] = [
@@ -154,31 +155,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.soundEffects}<InfoTooltip text={t.soundEffectsDesc} /></p>
-          <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            className="relative transition-colors"
-            style={{
-              width: 36,
-              height: 20,
-              borderRadius: 10,
-              border: 'none',
-              cursor: 'pointer',
-              background: soundEnabled ? 'var(--accent)' : 'var(--surface2)',
-            }}
-          >
-            <span
-              style={{
-                position: 'absolute',
-                top: 2,
-                left: soundEnabled ? 18 : 2,
-                width: 16,
-                height: 16,
-                borderRadius: '50%',
-                background: '#fff',
-                transition: 'left 0.2s ease',
-              }}
-            />
-          </button>
+          <ToggleSwitch checked={soundEnabled} onChange={setSoundEnabled} />
         </div>
         {soundEnabled && (
           <div className="flex gap-2">
@@ -204,61 +181,13 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
       {/* Word Pronunciation (TTS) */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.ttsLabel}<InfoTooltip text={t.ttsDesc} /></p>
-        <button
-          onClick={() => setTtsEnabled(!ttsEnabled)}
-          className="relative transition-colors"
-          style={{
-            width: 36,
-            height: 20,
-            borderRadius: 10,
-            border: 'none',
-            cursor: 'pointer',
-            background: ttsEnabled ? 'var(--accent)' : 'var(--surface2)',
-          }}
-        >
-          <span
-            style={{
-              position: 'absolute',
-              top: 2,
-              left: ttsEnabled ? 18 : 2,
-              width: 16,
-              height: 16,
-              borderRadius: '50%',
-              background: '#fff',
-              transition: 'left 0.2s ease',
-            }}
-          />
-        </button>
+        <ToggleSwitch checked={ttsEnabled} onChange={setTtsEnabled} />
       </div>
 
       {/* Confetti Effects */}
       <div className="flex items-center justify-between">
         <p className="text-xs flex items-center" style={{ color: 'var(--muted)' }}>{t.confettiLabel}<InfoTooltip text={t.confettiDesc} /></p>
-        <button
-          onClick={() => setConfettiEnabled(!confettiEnabled)}
-          className="relative transition-colors"
-          style={{
-            width: 36,
-            height: 20,
-            borderRadius: 10,
-            border: 'none',
-            cursor: 'pointer',
-            background: confettiEnabled ? 'var(--accent)' : 'var(--surface2)',
-          }}
-        >
-          <span
-            style={{
-              position: 'absolute',
-              top: 2,
-              left: confettiEnabled ? 18 : 2,
-              width: 16,
-              height: 16,
-              borderRadius: '50%',
-              background: '#fff',
-              transition: 'left 0.2s ease',
-            }}
-          />
-        </button>
+        <ToggleSwitch checked={confettiEnabled} onChange={setConfettiEnabled} />
       </div>
     </div>
   );

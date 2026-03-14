@@ -10,6 +10,7 @@ import { useTTS } from '@/hooks/useTTS';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
+import { shuffle } from '@/lib/utils';
 import type { Card } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
@@ -18,16 +19,6 @@ interface Props {
   deckId: string;
   deckLang?: ScriptLang;
   onExit: () => void;
-}
-
-/** Shuffle helper */
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
 }
 
 export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Props) {

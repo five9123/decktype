@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback } from 'react';
 import { detectAndParse, type ParsedMedia } from '@/lib/media-parser';
 import { detectLang } from '@/lib/lang-detect';
+import { TARGET_LANGS } from '@/lib/constants';
+import { ErrorAlert } from '@/components/ErrorAlert';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { NoteType } from '@/types';
 
@@ -35,15 +37,6 @@ interface Props {
   onSourceLangChange?: (lang: string) => void;
   isPro: boolean;
 }
-
-const TARGET_LANGS = [
-  { code: 'en', label: 'English' },
-  { code: 'ko', label: '한국어' },
-  { code: 'ja', label: '日本語' },
-  { code: 'zh', label: '中文' },
-  { code: 'es', label: 'Español' },
-  { code: 'fr', label: 'Français' },
-];
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const MAX_INPUT_CHARS = 8000;
@@ -268,25 +261,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
 
   return (
     <div>
-      {error && (
-        <div
-          className="px-4 py-3 rounded-xl text-sm mb-4 flex items-start gap-2"
-          style={{
-            background: 'rgba(248,113,113,0.1)',
-            border: '1px solid rgba(248,113,113,0.3)',
-            color: 'var(--incorrect)',
-          }}
-        >
-          <span className="flex-1">{error}</span>
-          <button
-            onClick={() => setError('')}
-            className="text-xs opacity-60 hover:opacity-100 shrink-0"
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--incorrect)' }}
-          >
-            ✕
-          </button>
-        </div>
-      )}
+      {error && <ErrorAlert message={error} onClose={() => setError('')} />}
 
       {/* ═══ Idle: Upload + Paste ═══ */}
       {state === 'idle' && (

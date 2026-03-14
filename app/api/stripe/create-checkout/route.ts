@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe, STRIPE_PRICES } from '@/lib/stripe';
-import { createSupabaseServer } from '@/lib/supabase/server';
+import { requireAuth } from '@/lib/api-middleware';
 
 export async function POST(request: NextRequest) {
   if (!stripe) {
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
   }
 
-  const supabase = await createSupabaseServer();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const { user, supabase, response: authError } = await requireAuth();
+  if (authError) return authError;
 
   const { priceId } = await request.json() as { priceId: 'monthly' | 'yearly' };
   const resolvedPriceId = STRIPE_PRICES[priceId];

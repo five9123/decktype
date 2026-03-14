@@ -1,8 +1,9 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { updateMasteryStats } from '@/lib/confidence';
+import { useAsyncData } from '@/hooks/useAsyncData';
 import type { CardMastery, MasteryLevel } from '@/types';
 
 interface DeckProgress {
@@ -20,59 +21,57 @@ interface UseMasteryReturn {
   userAvgWpm: number;
 }
 
+interface MasteryData {
+  masteryMap: Map<string, CardMastery>;
+  userAvgWpm: number;
+}
+
 /**
  * Hook to load and update card mastery data for a deck.
  */
 export function useMastery(deckId: string): UseMasteryReturn {
   const { user } = useAuth();
-  const [masteryMap, setMasteryMap] = useState<Map<string, CardMastery>>(new Map());
-  const [loading, setLoading] = useState(true);
-  const [userAvgWpm, setUserAvgWpm] = useState(30); // Default average
 
-  // Load mastery data for all cards in the deck
-  useEffect(() => {
-    if (!user || !deckId) return;
+  const { data, loading } = useAsyncData<MasteryData>(
+    async () => {
+      const supabase = createBrowserClient();
+      const [cardsRes, sessionsRes] = await Promise.all([
+        supabase.from('cards').select('id').eq('deck_id', deckId),
+        supabase
+          .from('typing_sessions')
+          .select('wpm')
+          .order('created_at', { ascending: false })
+          .limit(20),
+      ]);
 
-    const supabase = createBrowserClient();
-
-    Promise.all([
-      // Get card IDs for this deck
-      supabase.from('cards').select('id').eq('deck_id', deckId),
-      // Get user's average WPM from recent sessions
-      supabase
-        .from('typing_sessions')
-        .select('wpm')
-        .order('created_at', { ascending: false })
-        .limit(20),
-    ]).then(async ([cardsRes, sessionsRes]) => {
       const cardIds = (cardsRes.data ?? []).map((c: { id: string }) => c.id);
 
       // Calculate user average WPM
       const sessions = sessionsRes.data ?? [];
-      if (sessions.length > 0) {
-        const avg = sessions.reduce((s: number, r: { wpm: number }) => s + r.wpm, 0) / sessions.length;
-        setUserAvgWpm(Math.round(avg) || 30);
-      }
+      const avgWpm = sessions.length > 0
+        ? Math.round(sessions.reduce((s: number, r: { wpm: number }) => s + r.wpm, 0) / sessions.length) || 30
+        : 30;
 
       if (cardIds.length === 0) {
-        setLoading(false);
-        return;
+        return { masteryMap: new Map(), userAvgWpm: avgWpm };
       }
 
-      // Load mastery records
       const { data: masteryData } = await supabase
         .from('card_mastery')
         .select('*')
         .in('card_id', cardIds);
 
       const map = new Map<string, CardMastery>();
-      (masteryData ?? []).forEach((m: CardMastery) => {
-        map.set(m.card_id, m);
-      });
-      setMasteryMap(map);
-      setLoading(false);
-    });
-  }, [user, deckId]);
+      (masteryData ?? []).forEach((m: CardMastery) => map.set(m.card_id, m));
+
+      return { masteryMap: map, userAvgWpm: avgWpm };
+    },
+    [user, deckId],
+    { enabled: !!user && !!deckId },
+  );
+
+  const masteryMap = data?.masteryMap ?? new Map<string, CardMastery>();
+  const userAvgWpm = data?.userAvgWpm ?? 30;
 
   // Update mastery for a single card after practice
   const updateMastery = useCallback(async (
@@ -102,39 +101,22 @@ export function useMastery(deckId: string): UseMasteryReturn {
 
     const oldLevel = current?.mastery_level ?? 'learning';
 
-    // Upsert to database
     const supabase = createBrowserClient();
-    const { data } = await supabase
+    const { data: upserted } = await supabase
       .from('card_mastery')
-      .upsert({
-        user_id: user.id,
-        card_id: cardId,
-        ...updated,
-      }, { onConflict: 'user_id,card_id' })
+      .upsert({ user_id: user.id, card_id: cardId, ...updated }, { onConflict: 'user_id,card_id' })
       .select()
       .single();
 
-    if (data) {
-      setMasteryMap((prev) => {
-        const next = new Map(prev);
-        next.set(cardId, data as CardMastery);
-        return next;
-      });
-
-      // Return the level if it changed (for level-up notifications)
-      if (updated.mastery_level !== oldLevel) {
-        return updated.mastery_level;
-      }
+    if (upserted && updated.mastery_level !== oldLevel) {
+      return updated.mastery_level;
     }
 
     return null;
   }, [user, masteryMap, userAvgWpm]);
 
   const getDeckProgress = useCallback((): DeckProgress => {
-    let learning = 0;
-    let familiar = 0;
-    let mastered = 0;
-
+    let learning = 0, familiar = 0, mastered = 0;
     masteryMap.forEach((m) => {
       switch (m.mastery_level) {
         case 'learning': learning++; break;
@@ -142,7 +124,6 @@ export function useMastery(deckId: string): UseMasteryReturn {
         case 'mastered': mastered++; break;
       }
     });
-
     return { learning, familiar, mastered, total: masteryMap.size };
   }, [masteryMap]);
 

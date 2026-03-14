@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSound } from '@/hooks/useSound';
 import { createBrowserClient } from '@/lib/supabase/client';
+import { shuffle } from '@/lib/utils';
 import type { Card } from '@/types';
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -95,12 +96,7 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
 
   // Shuffle cards into pool
   useEffect(() => {
-    const shuffled = [...cards];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    cardPoolRef.current = shuffled;
+    cardPoolRef.current = shuffle(cards);
     cardIndexRef.current = 0;
   }, [cards]);
 

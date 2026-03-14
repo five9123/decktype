@@ -25,3 +25,13 @@ export const MAX_WPM_FOR_SCORE = 60;
 
 /** Auto-advance delay after correct input (ms) */
 export const AUTO_ADVANCE_DELAY = 1800;
+
+/** Language options for the target language selector in deck creation */
+export const TARGET_LANGS: { code: string; label: string }[] = [
+  { code: 'en', label: 'English' },
+  { code: 'ko', label: '한국어' },
+  { code: 'ja', label: '日本語' },
+  { code: 'zh', label: '中文' },
+  { code: 'es', label: 'Español' },
+  { code: 'fr', label: 'Français' },
+];

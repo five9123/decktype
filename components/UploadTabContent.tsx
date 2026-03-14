@@ -7,6 +7,7 @@ import { parseApkg } from '@/lib/apkg-parser';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { MAX_UPLOAD_SIZE, FREE_CARDS_PER_DECK } from '@/lib/constants';
+import { ErrorAlert } from '@/components/ErrorAlert';
 import { detectFieldMapping, applyMapping, type FieldMapping, type FieldRole } from '@/lib/field-mapping';
 import { cleanCardText } from '@/lib/card-cleaner';
 import type { ParsedDeck } from '@/types';
@@ -195,14 +196,7 @@ export function UploadTabContent() {
       )}
 
       {/* Error */}
-      {state === 'error' && errorMsg && (
-        <div
-          className="mt-4 px-4 py-3 rounded-xl text-sm"
-          style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', color: 'var(--incorrect)' }}
-        >
-          {errorMsg}
-        </div>
-      )}
+      {state === 'error' && errorMsg && <ErrorAlert message={errorMsg} className="mt-4" />}
 
       {/* Parsing Progress */}
       {state === 'parsing' && (

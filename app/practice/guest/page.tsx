@@ -14,6 +14,7 @@ import { PreferencesPanel } from '@/components/PreferencesPanel';
 import { AcidRainGame } from '@/components/AcidRainGame';
 import { FillBlankGame } from '@/components/FillBlankGame';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
+import { rawCardsToCards } from '@/lib/card-utils';
 import type { Card, PracticeMode } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
@@ -29,19 +30,6 @@ interface GuestDeck {
   name: string;
   cards: GuestCard[];
   sourceLang?: string;
-}
-
-function toCards(guestCards: GuestCard[]): Card[] {
-  return guestCards.map((c, i) => ({
-    id: `guest-${i}`,
-    deck_id: 'guest',
-    front: c.front,
-    back: c.back,
-    pronunciation: c.pronunciation || '',
-    extra: c.extra || '',
-    note_type: (c.noteType as Card['note_type']) || 'Basic',
-    sort_order: i,
-  }));
 }
 
 
@@ -336,10 +324,10 @@ function GuestPracticePageInner() {
 
   // Route to game-specific components
   if (selectedMode === 'acid_rain') {
-    return <AcidRainGame cards={toCards(filteredCards)} deckId="guest" onExit={handleBackToModes} />;
+    return <AcidRainGame cards={rawCardsToCards(filteredCards, 'guest', 'guest')} deckId="guest" onExit={handleBackToModes} />;
   }
   if (selectedMode === 'fill_blank') {
-    return <FillBlankGame cards={toCards(filteredCards)} deckId="guest" deckLang={(deck?.sourceLang as ScriptLang) ?? undefined} onExit={handleBackToModes} />;
+    return <FillBlankGame cards={rawCardsToCards(filteredCards, 'guest', 'guest')} deckId="guest" deckLang={(deck?.sourceLang as ScriptLang) ?? undefined} onExit={handleBackToModes} />;
   }
 
   // ── Results screen ──

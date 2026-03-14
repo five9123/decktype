@@ -16,30 +16,10 @@ import { FillBlankGame } from '@/components/FillBlankGame';
 import { DEMO_DECKS } from '@/lib/demo-decks';
 import type { DemoCard } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
+import { shuffle } from '@/lib/utils';
+import { rawCardsToCards } from '@/lib/card-utils';
 import type { Card, PracticeMode } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
-
-function toDemoCards(demoCards: DemoCard[]): Card[] {
-  return demoCards.map((c, i) => ({
-    id: c.id,
-    deck_id: 'demo',
-    front: c.front,
-    back: c.back,
-    pronunciation: c.pronunciation,
-    extra: c.extra ?? '',
-    note_type: (c.noteType as Card['note_type']) ?? 'Basic',
-    sort_order: i,
-  }));
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 
 export default function DemoPracticePage() {
@@ -253,11 +233,11 @@ export default function DemoPracticePage() {
   // Route to game-specific components (use deck.cards directly to access all card types)
   if (mode === 'acid_rain') {
     const basicCards = deck.cards.filter(c => !c.noteType || c.noteType === 'Basic');
-    return <AcidRainGame cards={toDemoCards(basicCards)} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
+    return <AcidRainGame cards={rawCardsToCards(basicCards, `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
   }
   if (mode === 'fill_blank') {
     const clozeCards = deck.cards.filter(c => c.noteType === 'Cloze');
-    return <FillBlankGame cards={toDemoCards(clozeCards)} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
+    return <FillBlankGame cards={rawCardsToCards(clozeCards, `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
   }
 
   // ── Results screen ──

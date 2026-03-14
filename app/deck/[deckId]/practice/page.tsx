@@ -17,20 +17,11 @@ import { smartOrder } from '@/lib/smart-order';
 import { useMastery } from '@/hooks/useMastery';
 import { usePersonalBest } from '@/hooks/usePersonalBest';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
+import { shuffle } from '@/lib/utils';
 import { AcidRainGame } from '@/components/AcidRainGame';
 import { FillBlankGame } from '@/components/FillBlankGame';
 import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
-
-/** Unbiased Fisher-Yates shuffle */
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 
 export default function PracticePage() {
