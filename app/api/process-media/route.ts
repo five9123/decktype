@@ -61,9 +61,17 @@ ${text}
 function buildClozePrompt(text: string, sourceLang: string, targetLang: string, maxCloze: number): string {
   return `You are a language learning assistant. Given the following text in ${LANG_NAMES[sourceLang] ?? sourceLang}, create ${maxCloze} fill-in-the-blank exercises for a ${LANG_NAMES[targetLang] ?? targetLang} speaker.
 
-Select sentences and blank out one key vocabulary word in each. Choose words that are useful for language learners. Provide:
-- sentence_with_blank: the sentence with _____ replacing the blanked word
-- answer: the blanked word
+Select sentences and blank out one key vocabulary word in each. Choose words that are useful for language learners.
+
+IMPORTANT: The blank _____ must replace the ENTIRE word, not part of it. Never split a word and leave partial characters outside the blank.
+- WRONG: "변함_____지." (answer: "없지") — "지" is left outside the blank
+- CORRECT: "변함_____." (answer: "없지") — the full word "없지" is blanked
+- WRONG: "하늘을 _____보면." (answer: "바라보면") — "보면" is left outside
+- CORRECT: "하늘을 _____." (answer: "바라보면") — the full word is blanked
+
+Provide:
+- sentence_with_blank: the sentence with _____ replacing the COMPLETE blanked word (no leftover characters)
+- answer: the blanked word (must be a complete word)
 - full_sentence: the complete original sentence
 - hint: a short hint in ${LANG_NAMES[targetLang] ?? targetLang} (translation or definition of the blanked word)
 
@@ -86,9 +94,12 @@ For each word provide:
 - context: a short example sentence from or inspired by the source text
 
 Task 2: Create ${maxCloze} fill-in-the-blank exercises.
+IMPORTANT: The blank _____ must replace the ENTIRE word, not part of it. Never split a word and leave partial characters outside the blank.
+- WRONG: "변함_____지." → CORRECT: "변함_____."
+- WRONG: "하늘을 _____보면." → CORRECT: "하늘을 _____."
 For each exercise provide:
-- sentence_with_blank: the sentence with _____ replacing one key word
-- answer: the blanked word
+- sentence_with_blank: the sentence with _____ replacing the COMPLETE blanked word (no leftover characters)
+- answer: the blanked word (must be a complete word)
 - full_sentence: the complete original sentence
 - hint: a short hint in ${LANG_NAMES[targetLang] ?? targetLang}
 

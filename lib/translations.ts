@@ -418,6 +418,7 @@ export type Translations = {
 
   // Fill Blank
   showHint: string;
+  hintTimerLabel: string;
   fillInMissing: string;
 };
 
@@ -818,7 +819,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     acidRainDesc: 'Words fall from above — type them to destroy!',
 
     // Fill Blank
-    showHint: 'Show hint',
+    showHint: 'Show meaning hint',
+    hintTimerLabel: 'Letter hint',
     fillInMissing: 'Type the missing word',
   },
 
@@ -1211,7 +1213,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     playAgain: '다시 하기',
     acidRainDesc: '단어가 위에서 떨어집니다 — 타이핑으로 파괴하세요!',
 
-    showHint: '힌트 보기',
+    showHint: '뜻 힌트 보기',
+    hintTimerLabel: '글자 힌트',
     fillInMissing: '빠진 단어를 입력하세요',
   },
 
@@ -1604,7 +1607,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     playAgain: 'もう一度',
     acidRainDesc: '上から単語が落ちてくる — タイピングで破壊！',
 
-    showHint: 'ヒントを表示',
+    showHint: '意味ヒントを表示',
+    hintTimerLabel: '文字ヒント',
     fillInMissing: '欠けている単語を入力',
   },
 
@@ -1997,7 +2001,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     playAgain: 'Jugar de nuevo',
     acidRainDesc: '¡Las palabras caen desde arriba — escríbelas para destruirlas!',
 
-    showHint: 'Mostrar pista',
+    showHint: 'Ver pista de significado',
+    hintTimerLabel: 'Pista de letra',
     fillInMissing: 'Escribe la palabra que falta',
   },
 
@@ -2390,7 +2395,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     playAgain: '再来一次',
     acidRainDesc: '单词从上方落下——打字消灭它们！',
 
-    showHint: '显示提示',
+    showHint: '查看释义提示',
+    hintTimerLabel: '字母提示',
     fillInMissing: '输入缺失的单词',
   },
 
@@ -2783,7 +2789,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     playAgain: 'Rejouer',
     acidRainDesc: 'Les mots tombent du ciel — tapez-les pour les détruire !',
 
-    showHint: 'Afficher l\'indice',
+    showHint: 'Voir indice de sens',
+    hintTimerLabel: 'Indice lettre',
     fillInMissing: 'Tapez le mot manquant',
   },
 };

@@ -15,10 +15,34 @@ import dynamic from 'next/dynamic';
 const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
 const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
 import { DEMO_DECKS } from '@/lib/demo-decks';
+import type { DemoCard, LocalizedText } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { rawCardsToCards } from '@/lib/card-utils';
 import type { PracticeMode } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
+
+/** Resolve a LocalizedText object to a string based on UI language */
+function resolveBack(back: LocalizedText, uiLang: string): string {
+  const key = uiLang as keyof LocalizedText;
+  return (key in back ? back[key] : back.en);
+}
+
+/** Convert DemoCards to RawCard-compatible objects with resolved back field */
+function resolveDemoCards(cards: DemoCard[], uiLang: string, deckLang?: string) {
+  return cards.map(c => {
+    if (c.noteType === 'Cloze') {
+      // Cloze: back = answer in deck language (what user types),
+      //        pronunciation = meaning in UI language (hint)
+      return {
+        ...c,
+        back: resolveBack(c.back, deckLang ?? uiLang),
+        pronunciation: resolveBack(c.back, uiLang),
+      };
+    }
+    // Basic: back = meaning in UI language
+    return { ...c, back: resolveBack(c.back, uiLang) };
+  });
+}
 
 
 export default function DemoPracticePage() {
@@ -26,7 +50,7 @@ export default function DemoPracticePage() {
   const searchParams = useSearchParams();
   const mode = (searchParams.get('mode') ?? 'back_to_front') as PracticeMode;
 
-  const { t } = useLanguage();
+  const { t, lang: uiLang } = useLanguage();
   const { confettiEnabled } = usePreferences();
   const { speak } = useTTS();
   const router = useRouter();
@@ -59,7 +83,7 @@ export default function DemoPracticePage() {
   const confettiTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentCard = cards[currentIdx];
-  const meaningHint = currentCard ? currentCard.back : null;
+  const meaningHint = currentCard ? resolveBack(currentCard.back, uiLang) : null;
   const target = currentCard?.front ?? '';
 
   const {
@@ -230,11 +254,11 @@ export default function DemoPracticePage() {
   // Route to game-specific components (use deck.cards directly to access all card types)
   if (mode === 'acid_rain') {
     const basicCards = deck.cards.filter(c => !c.noteType || c.noteType === 'Basic');
-    return <AcidRainGame cards={rawCardsToCards(basicCards, `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
+    return <AcidRainGame cards={rawCardsToCards(resolveDemoCards(basicCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
   }
   if (mode === 'fill_blank') {
     const clozeCards = deck.cards.filter(c => c.noteType === 'Cloze');
-    return <FillBlankGame cards={rawCardsToCards(clozeCards, `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
+    return <FillBlankGame cards={rawCardsToCards(resolveDemoCards(clozeCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
   }
 
   // ── Results screen ──

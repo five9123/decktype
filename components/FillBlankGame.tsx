@@ -37,6 +37,7 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
   const [wrongSubmit, setWrongSubmit] = useState(false);
   const [results, setResults] = useState<{ correct: boolean; cardId: string }[]>([]);
   const [autoAdvanceProgress, setAutoAdvanceProgress] = useState(0);
+  const [hintCountdown, setHintCountdown] = useState(5);
 
   const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoAdvanceRaf = useRef<number | null>(null);
@@ -72,9 +73,19 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
     setShowHint(false);
     setHintRevealed(false);
     setAutoAdvanceProgress(0);
-    // Auto-show first letter hint after 5 seconds
-    hintTimer.current = setTimeout(() => setHintRevealed(true), 5000);
-    return () => { if (hintTimer.current) clearTimeout(hintTimer.current); };
+    setHintCountdown(5);
+    // Countdown hint timer (1s intervals → reveal at 0)
+    let count = 5;
+    const interval = setInterval(() => {
+      count--;
+      setHintCountdown(count);
+      if (count <= 0) {
+        clearInterval(interval);
+        setHintRevealed(true);
+      }
+    }, 1000);
+    hintTimer.current = interval as unknown as ReturnType<typeof setTimeout>;
+    return () => clearInterval(interval);
   }, [currentIdx]);
 
   // Focus input on card change
@@ -174,10 +185,9 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
     }).then(() => {});
   }, [sessionComplete, user, deckId, results]);
 
-  // First letter hint text
-  const firstLetterHint = answer.length > 0
-    ? answer[0] + '_'.repeat(Math.max(0, answer.length - 1))
-    : '';
+  // Grapheme-aware splitting for character slots
+  const answerChars = answer.length > 0 ? [...new Intl.Segmenter().segment(answer)].map(s => s.segment) : [];
+  const inputChars = input.length > 0 ? [...new Intl.Segmenter().segment(input)].map(s => s.segment) : [];
 
   // Results screen
   if (sessionComplete) {
@@ -251,6 +261,13 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
             style={{ width: `${((currentIdx + 1) / cards.length) * 100}%`, background: 'var(--accent)' }}
           />
         </div>
+        {isCloze && !hintRevealed && !isComplete && !wrongSubmit && (
+          <div className="flex justify-end mt-1">
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: 'var(--surface)', color: 'var(--muted)' }}>
+              {t.hintTimerLabel} {hintCountdown}s
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Card area */}
@@ -264,13 +281,32 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
                   {part}
                   {i < arr.length - 1 && (
                     <span
-                      className="inline-block min-w-[80px] border-b-2 mx-1 text-center font-bold"
+                      className="inline-flex mx-1 gap-[2px] items-end border-b-2"
                       style={{
                         borderColor: isComplete ? 'var(--correct)' : wrongSubmit ? 'var(--incorrect)' : 'var(--accent)',
-                        color: isComplete ? 'var(--correct)' : wrongSubmit ? 'var(--incorrect)' : 'var(--accent)',
+                        paddingBottom: '2px',
                       }}
                     >
-                      {isComplete ? answer : wrongSubmit ? answer : (hintRevealed ? firstLetterHint : '_____')}
+                      {answerChars.map((char, idx) => {
+                        const display = isComplete ? char
+                          : wrongSubmit ? char
+                          : idx < inputChars.length ? inputChars[idx]
+                          : idx === 0 && hintRevealed ? answerChars[0]
+                          : '_';
+                        const slotColor = isComplete ? 'var(--correct)'
+                          : wrongSubmit ? 'var(--incorrect)'
+                          : idx < inputChars.length || (idx === 0 && hintRevealed) ? 'var(--accent)'
+                          : 'var(--muted)';
+                        return (
+                          <span
+                            key={idx}
+                            className="inline-block min-w-[1.1ch] text-center font-bold"
+                            style={{ color: slotColor }}
+                          >
+                            {display}
+                          </span>
+                        );
+                      })}
                     </span>
                   )}
                 </span>
@@ -298,8 +334,8 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
           </div>
         )}
 
-        {/* Per-character feedback */}
-        {input.length > 0 && (
+        {/* Per-character feedback (hide for Cloze — feedback shown inline in the blank) */}
+        {!isCloze && input.length > 0 && (
           <div className="flex flex-wrap justify-center gap-0.5 text-2xl font-bold">
             {charStates.map((cs, i) => (
               <span key={i} className={`char-${cs.status}`}

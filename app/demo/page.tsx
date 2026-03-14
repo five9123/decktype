@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
@@ -7,15 +7,35 @@ import { DEMO_DECKS } from '@/lib/demo-decks';
 import type { DemoLang } from '@/lib/demo-decks';
 import type { PracticeMode } from '@/types';
 
-const LANG_TABS: { value: DemoLang; label: string; flag: string }[] = [
-  { value: 'ja', label: '日本語', flag: '🇯🇵' },
+const ALL_TABS: { value: DemoLang; label: string; flag: string }[] = [
   { value: 'ko', label: '한국어', flag: '🇰🇷' },
+  { value: 'ja', label: '日本語', flag: '🇯🇵' },
+  { value: 'en', label: 'English', flag: '🇺🇸' },
 ];
 
+function getDemoTabs(uiLang: string) {
+  // Hide the user's own language; for other UI langs show all
+  if (uiLang === 'ko') return ALL_TABS.filter(t => t.value !== 'ko');
+  if (uiLang === 'ja') return ALL_TABS.filter(t => t.value !== 'ja');
+  return ALL_TABS;
+}
+
+function getDefaultDemoLang(uiLang: string): DemoLang {
+  if (uiLang === 'ko') return 'ja';
+  if (uiLang === 'ja') return 'ko';
+  return 'ko';
+}
+
 export default function DemoPage() {
-  const { t } = useLanguage();
+  const { t, lang: uiLang } = useLanguage();
+  const tabs = getDemoTabs(uiLang);
   const [mode, setMode] = useState<PracticeMode>('back_to_front');
-  const [lang, setLang] = useState<DemoLang>('ja');
+  const [lang, setLang] = useState<DemoLang>(() => getDefaultDemoLang(uiLang));
+
+  // Reset selected tab when UI language changes (hidden tab may match current selection)
+  useEffect(() => {
+    setLang(getDefaultDemoLang(uiLang));
+  }, [uiLang]);
 
   const filteredDecks = DEMO_DECKS.filter((d) => d.lang === lang);
 
@@ -41,7 +61,7 @@ export default function DemoPage() {
 
         {/* Language tabs */}
         <div className="flex gap-2 mb-6 justify-center">
-          {LANG_TABS.map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setLang(tab.value)}
