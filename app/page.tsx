@@ -129,10 +129,10 @@ export default function HomePage() {
 
           {/* Headline */}
           <h1 className="font-bold leading-tight mb-6">
-            <span className="block" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: 'var(--text)', whiteSpace: 'nowrap' }}>
+            <span className="block" style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', color: 'var(--text)' }}>
               {t.landingHero1}
             </span>
-            <span className="block" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', color: 'var(--accent)', whiteSpace: 'nowrap' }}>
+            <span className="block" style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', color: 'var(--accent)' }}>
               {t.landingHero2}
             </span>
           </h1>

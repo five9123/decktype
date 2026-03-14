@@ -27,7 +27,7 @@ export function TopToolbar() {
       <nav className="flex items-center gap-2 sm:gap-3">
         <Link
           href="/blog"
-          className="px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+          className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
           style={{ color: 'var(--text)' }}
         >
           {t.footerBlog}
@@ -43,14 +43,14 @@ export function TopToolbar() {
             </Link>
             <Link
               href="/stats"
-              className="px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
             >
               {t.statsTitle}
             </Link>
             <Link
               href="/create"
-              className="px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
             >
               {t.createDeck}

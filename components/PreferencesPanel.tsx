@@ -113,7 +113,7 @@ export function PreferencesPanel({ onClose }: PreferencesPanelProps) {
   return (
     <div
       ref={ref}
-      className="absolute right-0 top-full mt-2 w-80 rounded-xl shadow-lg z-50 p-4"
+      className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-80 rounded-xl shadow-lg z-50 p-4"
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',

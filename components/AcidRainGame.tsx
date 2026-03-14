@@ -38,7 +38,7 @@ const SPAWN_INTERVAL_DECREASE = 200; // ms faster per level
 const MIN_SPAWN_INTERVAL = 800;
 const WORDS_PER_LEVEL = 10;
 const MAX_LIVES = 5;
-const CONTAINER_HEIGHT = 500;       // px — game area height
+const DEFAULT_CONTAINER_HEIGHT = 500; // px — fallback game area height
 const DESTROY_ANIMATION_MS = 400;
 
 // ── Component ──────────────────────────────────────────────────────────
@@ -60,6 +60,18 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
   const [destroyed, setDestroyed] = useState(0);
   const [missed, setMissed] = useState(0);
   const [isComposing, setIsComposing] = useState(false);
+  const [containerHeight, setContainerHeight] = useState(DEFAULT_CONTAINER_HEIGHT);
+
+  // Dynamically track game container height
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const h = entry.contentRect.height;
+      if (h > 0) setContainerHeight(h);
+    });
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, []);
 
   // Refs for game loop
   const wordsRef = useRef(words);
@@ -70,6 +82,8 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
   levelRef.current = level;
   const destroyedRef = useRef(destroyed);
   destroyedRef.current = destroyed;
+  const containerHeightRef = useRef(containerHeight);
+  containerHeightRef.current = containerHeight;
   const gameStatusRef = useRef(gameStatus);
   gameStatusRef.current = gameStatus;
   const cardPoolRef = useRef<Card[]>([]);
@@ -136,7 +150,7 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
           continue;
         }
         const newY = w.y + w.speed;
-        if (newY >= CONTAINER_HEIGHT) {
+        if (newY >= containerHeightRef.current) {
           livesLost++;
           continue; // Remove the word
         }
@@ -380,8 +394,8 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
         ref={containerRef}
         className="relative flex-1 overflow-hidden mx-4 my-2 rounded-xl"
         style={{
-          height: CONTAINER_HEIGHT,
-          maxHeight: CONTAINER_HEIGHT,
+          minHeight: 200,
+          maxHeight: DEFAULT_CONTAINER_HEIGHT,
           background: 'var(--surface)',
           border: '1px solid var(--border)',
         }}
