@@ -810,7 +810,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
 
   ko: {
     appName: 'typee',
-    subtitle: 'Anki 덱을 업로드하세요.\n타이핑으로 연습하세요.\n기억력을 높이세요.',
+    subtitle: '노래 가사, 자막 파일, 또는 텍스트만 붙여넣으면 AI로 30초만에 단어 카드 생성.\n타이핑, 단어 게임, 빈칸채우기로 연습해보세요.',
     description: 'Anki 플래시카드를 타이핑 연습으로 변환합니다. WPM, 정확도를 추적하고 카드를 더 빠르게 마스터하세요.',
     footer: '타이핑으로 공부하기',
 
@@ -962,9 +962,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     savingLabel: '저장 중...',
 
     landingBadge: 'AI 탑재 · 무료로 시작',
-    landingHero1: '좋아하는 노래와',
-    landingHero2: '영화로 언어를 배우세요.',
-    landingSubtext: '가사, 자막 파일, URL 어디서든 붙여넣기하세요. AI가 어휘 카드를 만들어 드립니다 — 타이핑, 단어 게임, 빈칸채우기로 연습하세요.',
+    landingHero1: '좋아하는 노래나',
+    landingHero2: '영화로 언어를 배워보세요',
+    landingSubtext: '노래 가사, 자막 파일, 또는 텍스트만 붙여넣으면 AI로 30초만에 단어 카드 생성. 타이핑, 단어 게임, 빈칸채우기로 연습해보세요.',
     startForFree: '무료로 시작',
     tryWithoutDeck: '덱 없이 체험하기',
     seeHowItWorks: '작동 방식 보기',
