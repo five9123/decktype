@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: '%s | typee',
   },
   description:
-    'Learn any language through songs and movies you love. Paste lyrics, drop SRT subtitles, or share a URL — AI creates typing cards instantly.',
+    'Learn any language through songs and movies you love. Paste lyrics or drop SRT subtitles — AI creates typing cards instantly.',
   keywords: [
     'language learning',
     'song lyrics learning',
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'typee — Learn Languages Through Music & Movies',
     description:
-      'Learn any language through songs and movies you love. Paste lyrics, drop SRT subtitles, or share a URL — AI creates typing cards instantly.',
+      'Learn any language through songs and movies you love. Paste lyrics or drop SRT subtitles — AI creates typing cards instantly.',
   },
 };
 
@@ -92,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 name: 'typee',
                 url: 'https://www.typee.app',
                 description:
-                  'Learn any language through songs and movies you love. Paste lyrics, drop SRT subtitles, or share a URL — AI creates typing cards instantly.',
+                  'Learn any language through songs and movies you love. Paste lyrics or drop SRT subtitles — AI creates typing cards instantly.',
               },
             ]),
           }}

@@ -22,13 +22,13 @@ const howToSchema = {
   '@type': 'HowTo',
   name: 'How to Learn Languages with Songs and Subtitles on typee',
   description:
-    'Learn how to create vocabulary cards from song lyrics, SRT subtitles, or URLs and practice with typing, Fill Blank, and Word Game modes.',
+    'Learn how to create vocabulary cards from song lyrics or SRT subtitles and practice with typing, Fill Blank, and Word Game modes.',
   step: [
     {
       '@type': 'HowToStep',
       position: 1,
       name: 'Create from Any Content',
-      text: 'Paste song lyrics or subtitles into the Media tab, drop an .srt file, or share a URL. You can also import an Anki .apkg file or create cards manually. AI extracts vocabulary and cloze cards automatically.',
+      text: 'Paste song lyrics or subtitles into the Media tab, or drop an .srt file. You can also import an Anki .apkg file or create cards manually. AI extracts vocabulary and cloze cards automatically.',
     },
     {
       '@type': 'HowToStep',

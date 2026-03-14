@@ -15,8 +15,8 @@ import { UploadTabContent } from '@/components/UploadTabContent';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
-type Tab = 'url' | 'text' | 'media' | 'upload';
-type ExtractState = 'idle' | 'extracting' | 'words' | 'looking_up' | 'editing' | 'saving';
+type Tab = 'text' | 'media' | 'upload';
+type ExtractState = 'idle' | 'looking_up' | 'editing' | 'saving';
 
 interface WordEntry {
   id: number;
@@ -43,11 +43,7 @@ export default function CreateDeckPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  // --- URL Tab ---
-  const [url, setUrl] = useState('');
   const [extractState, setExtractState] = useState<ExtractState>('idle');
-  const [extractedText, setExtractedText] = useState('');
-  const [extractedTitle, setExtractedTitle] = useState('');
 
   // --- Text Tab ---
   const [rawText, setRawText] = useState('');
@@ -61,38 +57,7 @@ export default function CreateDeckPage() {
   const mediaCardsRef = useRef<MediaCardsResult[]>([]);
   const [mediaSourceLang, setMediaSourceLang] = useState<string | null>(null);
 
-  // ─── URL Extraction ────────────────────────────────────────────────────
-
-  const handleExtractUrl = useCallback(async () => {
-    if (!url.trim()) return;
-    setError('');
-    setExtractState('extracting');
-    try {
-      const res = await fetch('/api/extract-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: url.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Failed to extract text');
-        setExtractState('idle');
-        return;
-      }
-      setExtractedText(data.text);
-      setExtractedTitle(data.title || '');
-      setDetectedLang(data.lang);
-      // Auto-set target language: if detected lang is not English, target is English; otherwise Korean
-      setTargetLang(data.lang === 'en' ? 'ko' : 'en');
-      if (!deckName && data.title) setDeckName(data.title);
-      setExtractState('words');
-    } catch {
-      setError('Failed to connect to server');
-      setExtractState('idle');
-    }
-  }, [url, deckName]);
-
-  // ─── Extract Words (shared between URL and Text tabs) ──────────────────
+  // ─── Extract Words ─────────────────────────────────────────────────────
 
   const handleExtractWords = useCallback((text: string, lang?: ScriptLang) => {
     const { words, lang: detected } = extractWords(text, lang);
@@ -119,11 +84,6 @@ export default function CreateDeckPage() {
     setTargetLang(detected === 'en' ? 'ko' : 'en');
     handleExtractWords(rawText, detected);
   }, [rawText, handleExtractWords]);
-
-  const handleExtractFromExtracted = useCallback(() => {
-    if (!extractedText.trim()) return;
-    handleExtractWords(extractedText, detectedLang);
-  }, [extractedText, detectedLang, handleExtractWords]);
 
   // ─── Lookup Meanings ───────────────────────────────────────────────────
 
@@ -247,7 +207,7 @@ export default function CreateDeckPage() {
     const supabase = createBrowserClient();
     const cardsToSave = isPro ? cards : cards.slice(0, FREE_CARDS_PER_DECK);
 
-    // Determine source language: Media tab uses its own state; URL/Text tabs use detectedLang
+    // Determine source language: Media tab uses its own state; Text tab uses detectedLang
     const sourceLangToSave = tab === 'media' ? mediaSourceLang : detectedLang || null;
 
     const { data: deck, error: deckErr } = await supabase
@@ -350,7 +310,6 @@ export default function CreateDeckPage() {
           {([
             { key: 'media' as const, label: '🎬 Media' },
             { key: 'text' as const, label: '📝 Text' },
-            { key: 'url' as const, label: '🔗 URL' },
             { key: 'upload' as const, label: '📦 Anki' },
           ]).map((tabItem) => (
             <button
@@ -412,138 +371,10 @@ export default function CreateDeckPage() {
           </div>
         )}
 
-        {/* ═══ URL Tab ═══ */}
-        {tab === 'url' && (
-          <div>
-            {/* URL Input */}
-            {(extractState === 'idle' || extractState === 'extracting') && (
-              <div
-                className="rounded-xl p-6"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-              >
-                <label className="text-xs font-medium block mb-2" style={{ color: 'var(--muted)' }}>
-                  Paste a URL to extract vocabulary
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://en.wikipedia.org/wiki/..."
-                    className="flex-1 px-4 py-2.5 rounded-xl text-sm"
-                    style={{
-                      background: 'var(--bg)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                      outline: 'none',
-                    }}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleExtractUrl(); }}
-                    disabled={extractState === 'extracting'}
-                  />
-                  <button
-                    onClick={handleExtractUrl}
-                    disabled={extractState === 'extracting' || !url.trim()}
-                    className="px-5 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90 whitespace-nowrap"
-                    style={{
-                      background: 'var(--accent)',
-                      color: '#fff',
-                      border: 'none',
-                      cursor: extractState === 'extracting' ? 'not-allowed' : 'pointer',
-                      opacity: extractState === 'extracting' || !url.trim() ? 0.6 : 1,
-                    }}
-                  >
-                    {extractState === 'extracting' ? 'Extracting...' : 'Extract'}
-                  </button>
-                </div>
-                {extractState === 'extracting' && (
-                  <div className="flex items-center gap-2 mt-3">
-                    <div
-                      className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin"
-                      style={{ borderColor: 'var(--border)', borderTopColor: 'transparent' }}
-                    />
-                    <span className="text-xs" style={{ color: 'var(--muted)' }}>
-                      Fetching page content...
-                    </span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Extracted Text Preview */}
-            {extractState === 'words' && (
-              <div
-                className="rounded-xl p-6 mb-4"
-                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
-                      {extractedTitle || 'Extracted Text'}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
-                      Language: {detectedLang.toUpperCase()} &middot; {extractedText.length.toLocaleString()} chars
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => { setExtractState('idle'); setExtractedText(''); }}
-                    className="text-xs px-3 py-1 rounded-lg"
-                    style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--muted)', cursor: 'pointer' }}
-                  >
-                    ← Back
-                  </button>
-                </div>
-                <textarea
-                  value={extractedText}
-                  onChange={(e) => setExtractedText(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg text-sm"
-                  rows={8}
-                  style={{
-                    background: 'var(--bg)',
-                    border: '1px solid var(--border)',
-                    color: 'var(--text)',
-                    outline: 'none',
-                    resize: 'vertical',
-                    fontFamily: 'inherit',
-                  }}
-                />
-                <div className="flex items-center gap-3 mt-3">
-                  <button
-                    onClick={handleExtractFromExtracted}
-                    className="px-5 py-2 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
-                    style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer' }}
-                  >
-                    Extract Words →
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Word Editing UI (shared) */}
-            {(extractState === 'editing' || extractState === 'looking_up') && (
-              <WordEditingUI
-                entries={wordEntries}
-                detectedLang={detectedLang}
-                targetLang={targetLang}
-                setTargetLang={setTargetLang}
-                extractState={extractState}
-                lookupProgress={lookupProgress}
-                onUpdate={updateWord}
-                onDelete={deleteWord}
-                onAdd={addWord}
-                onLookup={handleLookup}
-                onBack={() => {
-                  setExtractState('words');
-                  setWordEntries([]);
-                }}
-              />
-            )}
-          </div>
-        )}
-
         {/* ═══ Text Tab ═══ */}
         {tab === 'text' && (
           <div>
-            {(extractState === 'idle' || extractState === 'extracting') && (
+            {extractState === 'idle' && (
               <div
                 className="rounded-xl p-6"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
