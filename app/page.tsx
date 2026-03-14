@@ -143,7 +143,9 @@ export default function HomePage() {
             className="text-lg mb-10 leading-relaxed"
             style={{ maxWidth: 520, color: 'var(--muted)', wordBreak: 'keep-all' }}
           >
-            {t.landingSubtext}
+            {t.landingSubtext.split(/(?<=\. |。)/).map((s, i, a) => (
+              <span key={i}>{s}{i < a.length - 1 && <br />}</span>
+            ))}
           </p>
 
           {/* CTAs */}
