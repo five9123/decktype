@@ -419,7 +419,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     appName: 'typee',
     subtitle: 'Upload your Anki deck.\nPractice typing.\nImprove memory.',
     description: 'Turn your Anki flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
-    footer: 'Learn with joy',
+    footer: 'Learn with typing',
 
     signIn: 'Sign In',
     signOut: 'Sign Out',
@@ -812,7 +812,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     appName: 'typee',
     subtitle: 'Anki 덱을 업로드하세요.\n타이핑으로 연습하세요.\n기억력을 높이세요.',
     description: 'Anki 플래시카드를 타이핑 연습으로 변환합니다. WPM, 정확도를 추적하고 카드를 더 빠르게 마스터하세요.',
-    footer: 'Learn with joy',
+    footer: '타이핑으로 공부하기',
 
     signIn: '로그인',
     signOut: '로그아웃',
@@ -1198,7 +1198,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     appName: 'typee',
     subtitle: 'Ankiデッキをアップロード。\nタイピングで練習。\n記憶力を向上。',
     description: 'Ankiフラッシュカードをタイピング練習に変換。WPM・精度を追跡してカードをマスターしよう。',
-    footer: 'Learn with joy',
+    footer: 'タイピングで学ぶ',
 
     signIn: 'ログイン',
     signOut: 'ログアウト',
@@ -1584,7 +1584,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     appName: 'typee',
     subtitle: 'Sube tu mazo Anki.\nPractica escribiendo.\nMejora tu memoria.',
     description: 'Convierte tus tarjetas Anki en práctica de escritura. Mide tu WPM, precisión y domina tus tarjetas más rápido.',
-    footer: 'Learn with joy',
+    footer: 'Aprende escribiendo',
 
     signIn: 'Iniciar sesión',
     signOut: 'Cerrar sesión',
@@ -1970,7 +1970,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     appName: 'typee',
     subtitle: '上传你的Anki牌组。\n打字练习。\n提升记忆力。',
     description: '将Anki闪卡转换为打字练习。追踪WPM、准确率，更快掌握卡片内容。',
-    footer: 'Learn with joy',
+    footer: '打字中学习',
 
     signIn: '登录',
     signOut: '退出',
@@ -2356,7 +2356,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     appName: 'typee',
     subtitle: 'Importez votre deck Anki.\nPratiquez la frappe.\nAméliorez votre mémoire.',
     description: 'Transformez vos cartes Anki en exercices de frappe. Suivez votre WPM, précision et maîtrisez vos cartes plus vite.',
-    footer: 'Learn with joy',
+    footer: 'Apprendre en tapant',
 
     signIn: 'Se connecter',
     signOut: 'Se déconnecter',
