@@ -595,7 +595,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: 'Japanese, Korean, Spanish, French and more. Works with lyrics, movie subtitles (.srt), URLs, and Anki decks. If you can paste it, you can study it.',
     getStartedLabel: 'GET STARTED',
     getStartedTitle: 'Start learning in seconds.',
-    getStartedDesc: 'Paste any content, let AI create the cards, and start practicing. No setup. No Anki needed.',
+    getStartedDesc: 'Paste song lyrics, subtitle files, or any text. AI creates the cards instantly.',
 
     whatIsTitle: 'What is typee?',
     whatIsDesc: 'typee is an AI-powered language learning tool. Paste song lyrics, drop subtitle files, or share any URL — AI extracts vocabulary and creates practice cards. Then choose your game: classic typing practice, word games (words fall from the sky — type to destroy them), or fill-in-the-blank sentences. You build real memory through active recall, not passive flashcard review.',
@@ -1374,7 +1374,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: '日本語、韓国語、スペイン語、フランス語など。歌詞、映画字幕(.srt)、URL、Ankiデッキに対応。貼り付けられるものはすべて学習できます。',
     getStartedLabel: '今すぐ始める',
     getStartedTitle: '数秒で学習開始。',
-    getStartedDesc: 'コンテンツを貼り付けるだけでAIがカードを作成。Ankiなしでも始められます。',
+    getStartedDesc: '歌詞や字幕ファイルを貼り付けるだけでAIがカードを自動作成。',
 
     whatIsTitle: 'typeeとは？',
     whatIsDesc: 'typeeはAI搭載の言語学習ツールです。好きな曲の歌詞、映画の字幕、またはどんなURLでも貼り付けると、AIが語彙を抽出して練習カードを作成します。クラシックタイピング、ワードゲーム（単語が空から降ってきます — タイピングで撃破）、または穴埋め問題でゲーム感覚で練習しましょう。',
@@ -1760,7 +1760,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: 'Japonés, coreano, español, francés y más. Compatible con letras, subtítulos de películas (.srt), URLs y mazos Anki.',
     getStartedLabel: 'COMENZAR',
     getStartedTitle: 'Empieza a aprender en segundos.',
-    getStartedDesc: 'Pega cualquier contenido, deja que la IA cree las tarjetas y empieza a practicar. Sin Anki necesario.',
+    getStartedDesc: 'Pega letras, subtítulos o cualquier texto. La IA crea las tarjetas al instante.',
 
     whatIsTitle: '¿Qué es typee?',
     whatIsDesc: 'typee es una herramienta de aprendizaje de idiomas con IA. Pega letras de canciones, sube subtítulos o comparte una URL — la IA extrae vocabulario y crea tarjetas de práctica. Luego elige tu juego: escritura clásica, juegos de palabras (palabras que caen del cielo) o completar espacios en blanco.',
@@ -2146,7 +2146,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: '日语、韩语、西班牙语、法语等。支持歌词、电影字幕(.srt)、URL和Anki牌组。能粘贴的都能学。',
     getStartedLabel: '立即开始',
     getStartedTitle: '几秒内开始学习。',
-    getStartedDesc: '粘贴任意内容，让AI创建卡片，然后开始练习。无需Anki。',
+    getStartedDesc: '粘贴歌词、字幕或任意文本，AI即刻创建卡片。',
 
     whatIsTitle: '什么是typee？',
     whatIsDesc: 'typee是AI驱动的语言学习工具。粘贴歌词、上传字幕或分享URL——AI提取词汇并创建练习卡片。然后选择你的游戏：经典打字练习、单词游戏（单词从天而降）或填空句子练习。',
@@ -2532,7 +2532,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: 'Japonais, coréen, espagnol, français et plus. Fonctionne avec paroles, sous-titres (.srt), URLs et decks Anki. Si vous pouvez le coller, vous pouvez l\'étudier.',
     getStartedLabel: 'COMMENCER',
     getStartedTitle: 'Commencez à apprendre en quelques secondes.',
-    getStartedDesc: 'Collez n\'importe quel contenu, laissez l\'IA créer les cartes et commencez à pratiquer. Sans configuration. Sans Anki.',
+    getStartedDesc: 'Collez des paroles, des sous-titres ou n\'importe quel texte. L\'IA crée les cartes instantanément.',
 
     whatIsTitle: "Qu'est-ce que typee ?",
     whatIsDesc: "typee est un outil d'apprentissage des langues propulsé par l'IA. Collez des paroles, déposez des sous-titres ou partagez une URL — l'IA extrait le vocabulaire et crée des cartes. Choisissez ensuite votre jeu : frappe classique, jeux de mots (les mots tombent du ciel) ou exercices à trous. Vous construisez une vraie mémoire par le rappel actif, pas la révision passive.",
