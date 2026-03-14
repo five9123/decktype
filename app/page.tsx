@@ -128,7 +128,7 @@ export default function HomePage() {
           </div>
 
           {/* Headline */}
-          <h1 className="font-bold leading-tight mb-6">
+          <h1 className="font-bold leading-tight mb-6" style={{ wordBreak: 'keep-all' }}>
             <span className="block" style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', color: 'var(--text)' }}>
               {t.landingHero1}
             </span>
@@ -140,7 +140,7 @@ export default function HomePage() {
           {/* Subtext */}
           <p
             className="text-lg mb-10 leading-relaxed"
-            style={{ maxWidth: 520, color: 'var(--muted)' }}
+            style={{ maxWidth: 520, color: 'var(--muted)', wordBreak: 'keep-all' }}
           >
             {t.landingSubtext}
           </p>
