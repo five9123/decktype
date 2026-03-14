@@ -280,7 +280,7 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
         <div className="text-center max-w-sm">
           <p className="text-5xl mb-4">🌧️</p>
           <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--text)' }}>
-            {t.acidRain ?? 'Acid Rain'}
+            {t.acidRain ?? 'Word Rain'}
           </h1>
           <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>
             {t.acidRainDesc ?? 'Words fall from above — type them to destroy!'}

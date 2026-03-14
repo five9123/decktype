@@ -452,7 +452,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: 'Last practiced',
     deckLimitReached: 'Free plan limit reached (1 deck). Upgrade to Pro for unlimited decks.',
     shareDeck: 'Share Deck',
-    shareTypetris: 'Share Typetris',
+    shareTypetris: 'Share Word Rain',
     linkCopied: 'Link copied!',
 
     uploadTitle: 'Upload Anki Deck',
@@ -679,7 +679,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     aboutStory: 'The Story',
     aboutStoryP1: 'typee was born from a simple idea: the best way to learn a language is to engage with content you actually love. Songs you play on repeat, shows you binge, lyrics that stick in your head — that\'s where real vocabulary lives.',
     aboutStoryP2: 'But passive listening isn\'t enough. What if you had to type every word? Typing forces active recall — you can\'t cheat. Whether it\'s Fill-in-the-blank from K-pop lyrics or a Word Game with anime vocabulary, every keystroke builds real memory.',
-    aboutStoryP3: 'typee launched in 2026 as a free web tool. Paste any song lyrics, drop an SRT subtitle file, or share a URL — AI extracts vocabulary and generates typing cards in seconds. Play typing practice, Fill-in-the-blank, or the Word Game (Typetris). No downloads, no complicated setup — just paste and play.',
+    aboutStoryP3: 'typee launched in 2026 as a free web tool. Paste any song lyrics, drop an SRT subtitle file, or share a URL — AI extracts vocabulary and generates typing cards in seconds. Play typing practice, Fill-in-the-blank, or Word Rain. No downloads, no complicated setup — just paste and play.',
     aboutWhyTitle: 'Why Typing?',
     aboutWhy1: 'Active recall — physically producing the answer strengthens memory more than recognition alone.',
     aboutWhy2: 'Context matters — learning words in sentences you\'ve actually heard (from songs or shows) makes them stick in a way isolated study can\'t.',
@@ -701,7 +701,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
 
     // Guide page
     guideTitle: 'Usage Guide',
-    guideIntro: 'typee turns content you love into language practice. Paste song lyrics, drop subtitle files, or import an Anki deck — then practice with typing, Fill-in-the-blank, or Word Game (Typetris) modes.',
+    guideIntro: 'typee turns content you love into language practice. Paste song lyrics, drop subtitle files, or import an Anki deck — then practice with typing, Fill-in-the-blank, or Word Rain modes.',
     guideStep1Title: '1. Create from Any Content',
     guideStep1Desc: 'Paste song lyrics or subtitles into the Media tab, drop an .srt file, or share a URL. You can also import an Anki .apkg file or create cards manually. AI extracts vocabulary and cloze cards automatically.',
     guideStep2Title: '2. Choose a Practice Mode',
@@ -800,7 +800,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lineCount: 'lines',
 
     // Game modes
-    acidRain: 'Word Game: Typetris',
+    acidRain: 'Word Rain',
     fillBlank: 'Fill Blank',
     classicTyping: 'Classic Typing',
 
@@ -850,7 +850,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: '최근 연습',
     deckLimitReached: '무료 플랜 한도 도달 (1개 덱). Pro로 업그레이드하면 무제한입니다.',
     shareDeck: '덱 공유',
-    shareTypetris: 'Typetris 공유',
+    shareTypetris: '워드 레인 공유',
     linkCopied: '링크 복사됨!',
 
     uploadTitle: 'Anki 덱 업로드',
@@ -1077,7 +1077,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     aboutStory: '이야기',
     aboutStoryP1: 'typee는 단순한 아이디어에서 탄생했습니다. 언어를 배우는 가장 좋은 방법은 자신이 진정으로 좋아하는 콘텐츠를 활용하는 것입니다. 반복해서 듣는 노래, 정주행하는 드라마, 머릿속에 맴도는 가사 — 그곳에 진짜 어휘가 살아있습니다.',
     aboutStoryP2: '하지만 수동적으로 듣는 것만으로는 부족합니다. 모든 단어를 직접 타이핑해야 한다면 어떨까요? 타이핑은 능동적 회상을 강제합니다 — 속일 수 없습니다. K-pop 가사의 빈칸채우기이든 애니 어휘로 하는 단어게임이든, 모든 키 입력이 진짜 기억을 만들어냅니다.',
-    aboutStoryP3: 'typee는 2026년 무료 웹 도구로 출시되었습니다. 노래 가사를 붙여넣거나, SRT 자막 파일을 올리거나, URL을 공유하면 AI가 어휘를 추출하고 몇 초 만에 타이핑 카드를 생성합니다. 타이핑 연습, 빈칸채우기, 단어게임(Typetris) 세 가지 모드로 즐길 수 있습니다. 다운로드나 복잡한 설정 없이 — 그냥 붙여넣고 플레이하세요.',
+    aboutStoryP3: 'typee는 2026년 무료 웹 도구로 출시되었습니다. 노래 가사를 붙여넣거나, SRT 자막 파일을 올리거나, URL을 공유하면 AI가 어휘를 추출하고 몇 초 만에 타이핑 카드를 생성합니다. 타이핑 연습, 빈칸채우기, 워드 레인 세 가지 모드로 즐길 수 있습니다. 다운로드나 복잡한 설정 없이 — 그냥 붙여넣고 플레이하세요.',
     aboutWhyTitle: '왜 타이핑인가?',
     aboutWhy1: '능동적 회상 — 답을 직접 생산하면 인식만 하는 것보다 기억이 강화됩니다.',
     aboutWhy2: '맥락이 중요합니다 — 실제로 들어본 문장(노래나 드라마)으로 단어를 배우면 독립적인 학습으로는 불가능한 방식으로 기억에 남습니다.',
@@ -1098,7 +1098,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     contactTopic4: '일반 질문 및 피드백',
 
     guideTitle: '사용 가이드',
-    guideIntro: 'typee는 좋아하는 콘텐츠를 언어 연습으로 바꿔줍니다. 노래 가사를 붙여넣거나, 자막 파일을 올리거나, Anki 덱을 가져오면 타이핑·빈칸채우기·단어게임(Typetris) 모드로 연습할 수 있습니다.',
+    guideIntro: 'typee는 좋아하는 콘텐츠를 언어 연습으로 바꿔줍니다. 노래 가사를 붙여넣거나, 자막 파일을 올리거나, Anki 덱을 가져오면 타이핑·빈칸채우기·워드 레인 모드로 연습할 수 있습니다.',
     guideStep1Title: '1. 콘텐츠로 덱 만들기',
     guideStep1Desc: 'Media 탭에 노래 가사나 자막을 붙여넣거나 .srt 파일을 올리거나 URL을 공유하세요. Anki .apkg 파일을 가져오거나 직접 카드를 만들 수도 있습니다. AI가 어휘와 빈칸채우기 카드를 자동으로 추출합니다.',
     guideStep2Title: '2. 연습 모드 선택',
@@ -1193,7 +1193,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: '카드 유형',
     lineCount: '줄',
 
-    acidRain: '단어 게임: Typetris',
+    acidRain: '게임: 워드 레인',
     fillBlank: '빈칸 채우기',
     classicTyping: '클래식 타이핑',
 
@@ -1241,7 +1241,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: '最終練習',
     deckLimitReached: '無料プランの上限です（1デッキ）。Proにアップグレードで無制限。',
     shareDeck: 'デッキをシェア',
-    shareTypetris: 'Typetrisをシェア',
+    shareTypetris: 'ワードレインをシェア',
     linkCopied: 'リンクをコピー!',
 
     uploadTitle: 'Ankiデッキをアップロード',
@@ -1468,7 +1468,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     aboutStory: 'ストーリー',
     aboutStoryP1: 'typeeはシンプルなアイデアから生まれました。語学学習の最良の方法は、自分が本当に好きなコンテンツを使うことです。何度も聴く曲、一気見するドラマ、頭に残る歌詞 — そこに本物の語彙があります。',
     aboutStoryP2: 'しかし、受動的に聴くだけでは十分ではありません。すべての単語をタイピングしなければならないとしたら？タイピングは能動的想起を強制します — ごまかせません。K-POPの歌詞の穴埋めでも、アニメの語彙でのワードゲームでも、すべてのキー入力が本物の記憶を作ります。',
-    aboutStoryP3: 'typeeは2026年に無料ウェブツールとしてリリースされました。歌詞を貼り付けたり、SRT字幕ファイルをドロップしたり、URLを共有するだけで、AIが語彙を抽出し、数秒でタイピングカードを生成します。タイピング練習・穴埋め・ワードゲーム(Typetris)の3つのモードで楽しめます。ダウンロード不要、面倒な設定なし — 貼り付けてすぐプレイ。',
+    aboutStoryP3: 'typeeは2026年に無料ウェブツールとしてリリースされました。歌詞を貼り付けたり、SRT字幕ファイルをドロップしたり、URLを共有するだけで、AIが語彙を抽出し、数秒でタイピングカードを生成します。タイピング練習・穴埋め・ワードレインの3つのモードで楽しめます。ダウンロード不要、面倒な設定なし — 貼り付けてすぐプレイ。',
     aboutWhyTitle: 'なぜタイピング？',
     aboutWhy1: '能動的想起 — 答えを自分で生産することで、認識だけよりも記憶が強化されます。',
     aboutWhy2: '文脈が大切 — 実際に聞いたことのある文章（曲やドラマ）で単語を学ぶと、孤立した学習ではできない形で記憶に定着します。',
@@ -1489,7 +1489,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     contactTopic4: '一般的な質問とフィードバック',
 
     guideTitle: '使い方ガイド',
-    guideIntro: 'typeeは好きなコンテンツを語学練習に変えます。歌詞を貼り付けたり、字幕ファイルをドロップしたり、Ankiデッキをインポートして、タイピング・穴埋め・ワードゲーム(Typetris)のモードで練習できます。',
+    guideIntro: 'typeeは好きなコンテンツを語学練習に変えます。歌詞を貼り付けたり、字幕ファイルをドロップしたり、Ankiデッキをインポートして、タイピング・穴埋め・ワードレインのモードで練習できます。',
     guideStep1Title: '1. コンテンツからデッキを作成',
     guideStep1Desc: 'MediaタブにSRTファイルをドロップするか、歌詞を貼り付けるか、URLを共有してください。Anki .apkgファイルのインポートや手動でのカード作成も可能です。AIが語彙と穴埋めカードを自動的に抽出します。',
     guideStep2Title: '2. 練習モードを選択',
@@ -1584,7 +1584,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'カードタイプ',
     lineCount: '行',
 
-    acidRain: 'ワードゲーム: Typetris',
+    acidRain: 'ゲーム: ワードレイン',
     fillBlank: '穴埋め',
     classicTyping: 'クラシックタイピング',
 
@@ -1632,7 +1632,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: 'Última práctica',
     deckLimitReached: 'Límite del plan gratuito (1 mazo). Mejora a Pro para mazos ilimitados.',
     shareDeck: 'Compartir mazo',
-    shareTypetris: 'Compartir Typetris',
+    shareTypetris: 'Compartir Word Rain',
     linkCopied: '¡Enlace copiado!',
 
     uploadTitle: 'Subir Mazo Anki',
@@ -1859,7 +1859,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     aboutStory: 'La historia',
     aboutStoryP1: 'typee nació de una idea simple: la mejor manera de aprender un idioma es con contenido que realmente amas. Canciones que pones en repeat, series que maratoneas, letras que no salen de tu cabeza — ahí vive el vocabulario real.',
     aboutStoryP2: 'Pero escuchar pasivamente no es suficiente. ¿Y si tuvieras que escribir cada palabra? Escribir fuerza el recuerdo activo — no puedes hacer trampa. Ya sea rellenando espacios de letras de K-pop o un juego de palabras con vocabulario de anime, cada tecla construye memoria real.',
-    aboutStoryP3: 'typee se lanzó en 2026 como herramienta web gratuita. Pega letras de canciones, sube un archivo SRT o comparte una URL — la IA extrae vocabulario y genera tarjetas en segundos. Practica con escritura, Rellena espacios o el Juego de palabras (Typetris). Sin descargas ni configuración complicada.',
+    aboutStoryP3: 'typee se lanzó en 2026 como herramienta web gratuita. Pega letras de canciones, sube un archivo SRT o comparte una URL — la IA extrae vocabulario y genera tarjetas en segundos. Practica con escritura, Rellena espacios o Word Rain. Sin descargas ni configuración complicada.',
     aboutWhyTitle: '¿Por qué escribir?',
     aboutWhy1: 'Recuerdo activo — producir la respuesta fortalece la memoria más que el reconocimiento.',
     aboutWhy2: 'El contexto importa — aprender palabras en frases que has escuchado (de canciones o series) las fija de una manera que el estudio aislado no puede.',
@@ -1880,7 +1880,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     contactTopic4: 'Preguntas generales y comentarios',
 
     guideTitle: 'Guía de uso',
-    guideIntro: 'typee convierte el contenido que amas en práctica de idiomas. Pega letras de canciones, sube archivos de subtítulos o importa un mazo de Anki — luego practica con escritura, Rellena espacios o Juego de palabras (Typetris).',
+    guideIntro: 'typee convierte el contenido que amas en práctica de idiomas. Pega letras de canciones, sube archivos de subtítulos o importa un mazo de Anki — luego practica con escritura, Rellena espacios o Word Rain.',
     guideStep1Title: '1. Crea desde cualquier contenido',
     guideStep1Desc: 'Pega letras de canciones o subtítulos en la pestaña Media, sube un archivo .srt o comparte una URL. También puedes importar un archivo Anki .apkg o crear tarjetas manualmente. La IA extrae vocabulario y tarjetas de relleno automáticamente.',
     guideStep2Title: '2. Elige un modo de práctica',
@@ -1975,7 +1975,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'Tipo de tarjeta',
     lineCount: 'líneas',
 
-    acidRain: 'Juego: Typetris',
+    acidRain: 'Word Rain',
     fillBlank: 'Completar',
     classicTyping: 'Escritura Clásica',
 
@@ -2023,7 +2023,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: '最近练习',
     deckLimitReached: '已达免费计划上限（1个牌组）。升级至Pro享无限牌组。',
     shareDeck: '分享牌组',
-    shareTypetris: '分享Typetris',
+    shareTypetris: '分享Word Rain',
     linkCopied: '链接已复制！',
 
     uploadTitle: '上传Anki牌组',
@@ -2250,7 +2250,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     aboutStory: '故事',
     aboutStoryP1: 'typee 源于一个简单的想法：学语言最好的方式是接触你真正热爱的内容。反复播放的歌曲、追的剧、脑海中萦绕的歌词——真正的词汇就在那里。',
     aboutStoryP2: '但被动收听是不够的。如果你必须打出每一个单词呢？打字迫使主动回忆——你无法作弊。无论是填写K-pop歌词的空白，还是用动漫词汇玩单词游戏，每次按键都在构建真实的记忆。',
-    aboutStoryP3: 'typee 于 2026 年作为免费网络工具推出。粘贴歌词、上传 SRT 字幕文件或分享链接——AI 在几秒内提取词汇并生成打字卡片。可以用打字练习、填空或单词游戏 (Typetris) 三种模式练习。无需下载，无需复杂设置——直接粘贴即可玩。',
+    aboutStoryP3: 'typee 于 2026 年作为免费网络工具推出。粘贴歌词、上传 SRT 字幕文件或分享链接——AI 在几秒内提取词汇并生成打字卡片。可以用打字练习、填空或 Word Rain 三种模式练习。无需下载，无需复杂设置——直接粘贴即可玩。',
     aboutWhyTitle: '为什么是打字？',
     aboutWhy1: '主动回忆——亲自产出答案比仅仅识别能更好地增强记忆。',
     aboutWhy2: '语境很重要——在你真正听过的句子（来自歌曲或剧集）中学习单词，比孤立的学习更能让单词牢记于心。',
@@ -2271,7 +2271,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     contactTopic4: '一般问题和反馈',
 
     guideTitle: '使用指南',
-    guideIntro: 'typee 将你喜爱的内容转化为语言练习。粘贴歌词、上传字幕文件或导入 Anki 牌组——然后通过打字、填空或单词游戏 (Typetris) 模式练习。',
+    guideIntro: 'typee 将你喜爱的内容转化为语言练习。粘贴歌词、上传字幕文件或导入 Anki 牌组——然后通过打字、填空或 Word Rain 模式练习。',
     guideStep1Title: '1. 从任意内容创建',
     guideStep1Desc: '在 Media 标签中粘贴歌词或字幕、上传 .srt 文件或分享链接。也可以导入 Anki .apkg 文件或手动创建卡片。AI 会自动提取词汇和填空卡片。',
     guideStep2Title: '2. 选择练习模式',
@@ -2366,7 +2366,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: '卡片类型',
     lineCount: '行',
 
-    acidRain: '单词游戏: Typetris',
+    acidRain: 'Word Rain',
     fillBlank: '填空',
     classicTyping: '经典打字',
 
@@ -2414,7 +2414,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: 'Dernière pratique',
     deckLimitReached: 'Limite du plan gratuit atteinte (1 deck). Passez à Pro pour des decks illimités.',
     shareDeck: 'Partager le deck',
-    shareTypetris: 'Partager Typetris',
+    shareTypetris: 'Partager Word Rain',
     linkCopied: 'Lien copié !',
 
     uploadTitle: 'Importer un Deck Anki',
@@ -2641,7 +2641,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     aboutStory: "L'histoire",
     aboutStoryP1: "typee est né d'une idée simple : la meilleure façon d'apprendre une langue est de s'immerger dans le contenu qu'on aime vraiment. Les chansons qu'on écoute en boucle, les séries qu'on regarde d'une traite, les paroles qui restent en tête — c'est là que vit le vrai vocabulaire.",
     aboutStoryP2: "Mais écouter passivement ne suffit pas. Et si vous deviez taper chaque mot ? La frappe force le rappel actif — impossible de tricher. Qu'il s'agisse de compléter des lacunes dans des paroles de K-pop ou d'un jeu de mots avec du vocabulaire d'anime, chaque touche construit une vraie mémoire.",
-    aboutStoryP3: "typee a été lancé en 2026 comme outil web gratuit. Collez des paroles de chanson, déposez un fichier de sous-titres SRT ou partagez une URL — l'IA extrait le vocabulaire et génère des cartes en quelques secondes. Pratiquez avec la frappe, les textes à trous ou le Jeu de mots (Typetris). Sans téléchargement ni configuration complexe.",
+    aboutStoryP3: "typee a été lancé en 2026 comme outil web gratuit. Collez des paroles de chanson, déposez un fichier de sous-titres SRT ou partagez une URL — l'IA extrait le vocabulaire et génère des cartes en quelques secondes. Pratiquez avec la frappe, les textes à trous ou Word Rain. Sans téléchargement ni configuration complexe.",
     aboutWhyTitle: 'Pourquoi la frappe ?',
     aboutWhy1: 'Rappel actif — produire la réponse renforce la mémoire plus que la reconnaissance seule.',
     aboutWhy2: "Le contexte compte — apprendre des mots dans des phrases qu'on a vraiment entendues (de chansons ou de séries) les fixe d'une façon que l'étude isolée ne permet pas.",
@@ -2662,7 +2662,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     contactTopic4: 'Questions générales et commentaires',
 
     guideTitle: "Guide d'utilisation",
-    guideIntro: "typee transforme le contenu que vous aimez en pratique de langues. Collez des paroles de chanson, déposez des fichiers de sous-titres ou importez un paquet Anki — puis pratiquez avec la frappe, les textes à trous ou le Jeu de mots (Typetris).",
+    guideIntro: "typee transforme le contenu que vous aimez en pratique de langues. Collez des paroles de chanson, déposez des fichiers de sous-titres ou importez un paquet Anki — puis pratiquez avec la frappe, les textes à trous ou Word Rain.",
     guideStep1Title: '1. Créez depuis n\'importe quel contenu',
     guideStep1Desc: "Collez des paroles ou sous-titres dans l'onglet Media, déposez un fichier .srt ou partagez une URL. Vous pouvez aussi importer un fichier Anki .apkg ou créer des cartes manuellement. L'IA extrait automatiquement le vocabulaire et les cartes à trous.",
     guideStep2Title: '2. Choisissez un mode de pratique',
@@ -2757,7 +2757,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'Type de carte',
     lineCount: 'lignes',
 
-    acidRain: 'Jeu: Typetris',
+    acidRain: 'Word Rain',
     fillBlank: 'Texte à trous',
     classicTyping: 'Frappe Classique',
 

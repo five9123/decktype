@@ -34,7 +34,7 @@ const howToSchema = {
       '@type': 'HowToStep',
       position: 2,
       name: 'Choose a Practice Mode',
-      text: 'Select a practice mode: classic typing (back-to-front), Fill-in-the-blank for cloze cards, or Word Game (Typetris). Also set card order: sequential, random, or difficult-first.',
+      text: 'Select a practice mode: classic typing (back-to-front), Fill-in-the-blank for cloze cards, or Word Rain. Also set card order: sequential, random, or difficult-first.',
     },
     {
       '@type': 'HowToStep',
