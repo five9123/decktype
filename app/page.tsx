@@ -141,7 +141,7 @@ export default function HomePage() {
           {/* Subtext */}
           <p
             className="text-lg mb-10 leading-relaxed"
-            style={{ maxWidth: 520, color: 'var(--muted)', wordBreak: 'keep-all' }}
+            style={{ maxWidth: 520, color: 'var(--muted)', wordBreak: 'keep-all', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
           >
             {t.landingSubtext.split(/(?<=\. |。)/).map((s, i, a) => (
               <span key={i}>{s}{i < a.length - 1 && <br />}</span>
