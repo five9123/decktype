@@ -988,7 +988,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: '한국어, 일본어, 스페인어, 프랑스어 등. 가사, 영화 자막(.srt), URL, Anki 덱 모두 지원합니다. 붙여넣을 수 있으면 공부할 수 있습니다.',
     getStartedLabel: '시작하기',
     getStartedTitle: '몇 초 만에 학습 시작.',
-    getStartedDesc: '콘텐츠를 붙여넣으면 AI가 카드를 만들어 드립니다. Anki 없이도 가능합니다.',
+    getStartedDesc: '노래 가사나 자막 파일을 붙여넣으면 AI가 카드를 만들어 드립니다.',
 
     whatIsTitle: 'typee란?',
     whatIsDesc: 'typee는 AI 기반 언어 학습 도구입니다. 좋아하는 노래 가사, 영화 자막, 또는 어떤 URL이든 붙여넣기하면 AI가 어휘를 추출하고 연습 카드를 생성합니다. 그런 다음 클래식 타이핑, 단어 게임(하늘에서 단어가 내려옵니다 — 타이핑으로 격추), 또는 빈칸채우기로 연습하세요.',
@@ -1002,8 +1002,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     homeFaq2A: '네. 무료 플랜에는 1개 덱(최대 100장), 모든 연습 모드, 모든 테마, 기본 통계가 포함됩니다. Pro 플랜(월 $5 또는 연 $48)은 무제한 덱, 고급 진행 추적, 우선 지원을 제공합니다.',
     homeFaq3Q: '어떤 콘텐츠로 카드를 만들 수 있나요?',
     homeFaq3A: '가사 붙여넣기, 자막 파일(.srt) 업로드, 텍스트 붙여넣기, URL 공유, Anki 덱(.apkg) 임포트가 가능합니다. AI가 내용을 분석해 어휘 카드와 빈칸채우기 문제를 자동 생성합니다.',
-    homeFaq4Q: 'Anki 덱이 없어도 사용할 수 있나요?',
-    homeFaq4A: '네. 어떤 텍스트 콘텐츠에서든 AI로 바로 덱을 만들 수 있습니다 — 가사, 자막, URL을 붙여넣으면 카드가 자동 생성됩니다. Anki 덱(.apkg) 임포트도 지원합니다.',
+    homeFaq4Q: '',
+    homeFaq4A: '',
     homeFaq5Q: '어떤 게임 모드가 있나요?',
     homeFaq5A: 'typee는 3가지 연습 모드를 제공합니다: 클래식 타이핑(앞면 보고 답 입력), 단어 게임(위에서 단어가 떨어지면 타이핑으로 격추), 빈칸채우기(문장의 빈칸에 단어 입력). 모든 모드에서 WPM과 정확도를 추적합니다.',
 

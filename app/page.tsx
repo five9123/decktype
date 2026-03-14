@@ -406,7 +406,7 @@ export default function HomePage() {
                 { q: t.homeFaq3Q, a: t.homeFaq3A },
                 { q: t.homeFaq4Q, a: t.homeFaq4A },
                 { q: t.homeFaq5Q, a: t.homeFaq5A },
-              ].map((faq, i, arr) => (
+              ].filter(faq => faq.q).map((faq, i, arr) => (
                 <div
                   key={i}
                   style={i < arr.length - 1 ? { borderBottom: '1px solid var(--border)' } : undefined}
