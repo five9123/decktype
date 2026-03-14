@@ -173,6 +173,15 @@ export default function HomePage() {
             )}
           </div>
 
+          {/* K-pop CTA nudge */}
+          <Link
+            href="/create"
+            className="text-sm no-underline transition-opacity hover:opacity-70"
+            style={{ color: 'var(--muted)' }}
+          >
+            🎤 {t.landingKpopCta} →
+          </Link>
+
           {/* Product mockup */}
           <div
             className="w-full rounded-2xl overflow-hidden"

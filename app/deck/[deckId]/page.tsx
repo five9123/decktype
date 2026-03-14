@@ -119,18 +119,36 @@ export default function DeckDetailPage() {
               {deck.card_count} {t.cards} &middot; {deck.note_type}
             </p>
           </div>
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
-            style={{
-              background: 'rgba(248,113,113,0.1)',
-              border: '1px solid rgba(248,113,113,0.3)',
-              color: 'var(--incorrect)',
-              cursor: 'pointer',
-            }}
-          >
-            {t.delete}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                const text = `🎤 ${deck.name} (${deck.card_count} cards)\n\ntypee — learn languages through music & movies\nhttps://www.typee.app`;
+                const url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+                window.open(url, '_blank', 'noopener,noreferrer,width=550,height=420');
+              }}
+              className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                cursor: 'pointer',
+              }}
+            >
+              𝕏 {t.shareDeck}
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+              style={{
+                background: 'rgba(248,113,113,0.1)',
+                border: '1px solid rgba(248,113,113,0.3)',
+                color: 'var(--incorrect)',
+                cursor: 'pointer',
+              }}
+            >
+              {t.delete}
+            </button>
+          </div>
         </div>
 
         {/* Mastery Progress */}

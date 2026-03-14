@@ -31,9 +31,23 @@ export const metadata: Metadata = {
     'Anki',
     'WPM',
     'memory training',
+    'K-POP 歌詞 韓国語学習',
+    '推し活 韓国語',
+    '韓国語 タイピング 練習',
+    'K-POP 가사 한국어 공부',
+    '타이핑 연습',
   ],
   alternates: {
     canonical: BASE_URL,
+    languages: {
+      'en': BASE_URL,
+      'ja': BASE_URL,
+      'ko': BASE_URL,
+      'es': BASE_URL,
+      'zh': BASE_URL,
+      'fr': BASE_URL,
+      'x-default': BASE_URL,
+    },
   },
   openGraph: {
     type: 'website',

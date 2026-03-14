@@ -35,6 +35,7 @@ export type Translations = {
   cards: string;
   lastPracticed: string;
   deckLimitReached: string;
+  shareDeck: string;
 
   // Upload
   uploadTitle: string;
@@ -72,6 +73,7 @@ export type Translations = {
   correctLabel: string;
   timeLabel: string;
   practiceAgain: string;
+  shareResult: string;
   backToDeck: string;
 
   // Stats
@@ -173,6 +175,7 @@ export type Translations = {
   landingSubtext: string;
   startForFree: string;
   tryWithoutDeck: string;
+  landingKpopCta: string;
   seeHowItWorks: string;
   howItWorksLabel: string;
   howItWorksTitle: string;
@@ -446,6 +449,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cards: 'cards',
     lastPracticed: 'Last practiced',
     deckLimitReached: 'Free plan limit reached (1 deck). Upgrade to Pro for unlimited decks.',
+    shareDeck: 'Share Deck',
 
     uploadTitle: 'Upload Anki Deck',
     uploadSubtitle: 'Drag & drop your .apkg file or click to browse',
@@ -480,6 +484,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     correctLabel: 'Correct',
     timeLabel: 'Time',
     practiceAgain: 'Practice Again',
+    shareResult: 'Share Result',
     backToDeck: 'Back to Deck',
 
     statsTitle: 'My Stats',
@@ -574,6 +579,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingSubtext: 'Paste lyrics, drop subtitle files, or share any URL. AI creates vocabulary cards — then practice with typing, word games, or fill-in-the-blank.',
     startForFree: 'Start for Free',
     tryWithoutDeck: 'Try without a Deck',
+    landingKpopCta: 'Paste your favorite K-pop lyrics to start',
     seeHowItWorks: 'See how it works',
     howItWorksLabel: 'HOW IT WORKS',
     howItWorksTitle: 'Three steps. Zero friction.',
@@ -839,6 +845,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cards: '카드',
     lastPracticed: '최근 연습',
     deckLimitReached: '무료 플랜 한도 도달 (1개 덱). Pro로 업그레이드하면 무제한입니다.',
+    shareDeck: '덱 공유',
 
     uploadTitle: 'Anki 덱 업로드',
     uploadSubtitle: '.apkg 파일을 드래그 앤 드롭하거나 클릭하여 선택하세요',
@@ -873,6 +880,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     correctLabel: '맞은 수',
     timeLabel: '시간',
     practiceAgain: '다시 연습',
+    shareResult: '결과 공유',
     backToDeck: '덱으로 돌아가기',
 
     statsTitle: '내 통계',
@@ -962,11 +970,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     savingLabel: '저장 중...',
 
     landingBadge: 'AI 탑재 · 무료로 시작',
-    landingHero1: '좋아하는 노래나',
-    landingHero2: '영화로 언어를 배워보세요',
+    landingHero1: '좋아하는 노래, 영화,',
+    landingHero2: '아니메로 언어를 배워보세요',
     landingSubtext: '노래 가사, 자막 파일, 또는 텍스트만 붙여넣으면 AI로 30초만에 단어 카드 생성. 타이핑, 단어 게임, 빈칸채우기로 연습해보세요.',
     startForFree: '무료로 시작',
     tryWithoutDeck: '덱 없이 체험하기',
+    landingKpopCta: '좋아하는 K-pop 가사를 붙여넣어 시작하세요',
     seeHowItWorks: '작동 방식 보기',
     howItWorksLabel: '작동 방식',
     howItWorksTitle: '3단계. 간편하게.',
@@ -1225,6 +1234,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cards: 'カード',
     lastPracticed: '最終練習',
     deckLimitReached: '無料プランの上限です（1デッキ）。Proにアップグレードで無制限。',
+    shareDeck: 'デッキをシェア',
 
     uploadTitle: 'Ankiデッキをアップロード',
     uploadSubtitle: '.apkgファイルをドラッグ＆ドロップまたはクリックして選択',
@@ -1259,6 +1269,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     correctLabel: '正解数',
     timeLabel: '時間',
     practiceAgain: 'もう一度練習',
+    shareResult: '結果をシェア',
     backToDeck: 'デッキに戻る',
 
     statsTitle: '統計',
@@ -1348,11 +1359,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     savingLabel: '保存中...',
 
     landingBadge: 'AI搭載 · 無料で始める',
-    landingHero1: '好きな曲や映画で',
-    landingHero2: '言語を学ぼう。',
-    landingSubtext: '歌詞を貼り付け、字幕ファイルをドロップ、URLを共有するだけ。AIが語彙カードを作成 — タイピング、ワードゲーム、穴埋め問題で練習。',
+    landingHero1: '推しの歌詞・ドラマで',
+    landingHero2: '韓国語をマスターしよう。',
+    landingSubtext: 'K-POPの歌詞やドラマの字幕を貼り付けるだけ。AIが30秒で単語カードを自動生成 — タイピング、ワードゲーム、穴埋め問題で楽しく練習。',
     startForFree: '無料で始める',
     tryWithoutDeck: 'デッキなしで試す',
+    landingKpopCta: '好きなK-POPの歌詞を貼り付けて始めよう',
     seeHowItWorks: '使い方を見る',
     howItWorksLabel: '使い方',
     howItWorksTitle: '3ステップ。簡単シンプル。',
@@ -1374,7 +1386,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     feature4Desc: '日本語、韓国語、スペイン語、フランス語など。歌詞、映画字幕(.srt)、URL、Ankiデッキに対応。貼り付けられるものはすべて学習できます。',
     getStartedLabel: '今すぐ始める',
     getStartedTitle: '数秒で学習開始。',
-    getStartedDesc: '歌詞や字幕ファイルを貼り付けるだけでAIがカードを自動作成。',
+    getStartedDesc: '推しの歌詞や字幕を貼り付けるだけ。AIがカードを自動作成。',
 
     whatIsTitle: 'typeeとは？',
     whatIsDesc: 'typeeはAI搭載の言語学習ツールです。好きな曲の歌詞、映画の字幕、またはどんなURLでも貼り付けると、AIが語彙を抽出して練習カードを作成します。クラシックタイピング、ワードゲーム（単語が空から降ってきます — タイピングで撃破）、または穴埋め問題でゲーム感覚で練習しましょう。',
@@ -1611,6 +1623,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cards: 'tarjetas',
     lastPracticed: 'Última práctica',
     deckLimitReached: 'Límite del plan gratuito (1 mazo). Mejora a Pro para mazos ilimitados.',
+    shareDeck: 'Compartir mazo',
 
     uploadTitle: 'Subir Mazo Anki',
     uploadSubtitle: 'Arrastra y suelta tu archivo .apkg o haz clic para buscar',
@@ -1645,6 +1658,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     correctLabel: 'Correctas',
     timeLabel: 'Tiempo',
     practiceAgain: 'Practicar de nuevo',
+    shareResult: 'Compartir resultado',
     backToDeck: 'Volver al Mazo',
 
     statsTitle: 'Mis estadísticas',
@@ -1739,6 +1753,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingSubtext: 'Pega letras, sube archivos de subtítulos o comparte una URL. La IA crea tarjetas de vocabulario — practica con escritura, juegos de palabras o completa los espacios.',
     startForFree: 'Empezar gratis',
     tryWithoutDeck: 'Probar sin mazo',
+    landingKpopCta: 'Pega la letra de tu canción K-pop favorita para empezar',
     seeHowItWorks: 'Cómo funciona',
     howItWorksLabel: 'CÓMO FUNCIONA',
     howItWorksTitle: 'Tres pasos. Sin fricción.',
@@ -1997,6 +2012,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cards: '张',
     lastPracticed: '最近练习',
     deckLimitReached: '已达免费计划上限（1个牌组）。升级至Pro享无限牌组。',
+    shareDeck: '分享牌组',
 
     uploadTitle: '上传Anki牌组',
     uploadSubtitle: '拖放.apkg文件或点击浏览',
@@ -2031,6 +2047,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     correctLabel: '正确数',
     timeLabel: '时间',
     practiceAgain: '再次练习',
+    shareResult: '分享结果',
     backToDeck: '返回牌组',
 
     statsTitle: '我的统计',
@@ -2125,6 +2142,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingSubtext: '粘贴歌词、上传字幕文件或分享任意URL。AI自动生成词汇卡片 — 用打字练习、单词游戏或填空题来学习。',
     startForFree: '免费开始',
     tryWithoutDeck: '无需卡组即可体验',
+    landingKpopCta: '粘贴你喜欢的K-POP歌词开始学习',
     seeHowItWorks: '了解如何使用',
     howItWorksLabel: '使用方式',
     howItWorksTitle: '三步搞定。零阻力。',
@@ -2383,6 +2401,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cards: 'cartes',
     lastPracticed: 'Dernière pratique',
     deckLimitReached: 'Limite du plan gratuit atteinte (1 deck). Passez à Pro pour des decks illimités.',
+    shareDeck: 'Partager le deck',
 
     uploadTitle: 'Importer un Deck Anki',
     uploadSubtitle: 'Glissez-déposez votre fichier .apkg ou cliquez pour parcourir',
@@ -2417,6 +2436,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     correctLabel: 'Corrects',
     timeLabel: 'Temps',
     practiceAgain: 'Pratiquer à nouveau',
+    shareResult: 'Partager le résultat',
     backToDeck: 'Retour au Deck',
 
     statsTitle: 'Mes Statistiques',
@@ -2511,6 +2531,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingSubtext: 'Collez des paroles, déposez un fichier de sous-titres ou partagez une URL. L\'IA crée des cartes de vocabulaire — puis pratiquez avec la frappe, les jeux de mots ou des exercices à trous.',
     startForFree: 'Commencer gratuitement',
     tryWithoutDeck: 'Essayer sans paquet',
+    landingKpopCta: 'Collez les paroles de votre chanson K-pop préférée pour commencer',
     seeHowItWorks: 'Voir comment ça marche',
     howItWorksLabel: 'COMMENT ÇA MARCHE',
     howItWorksTitle: 'Trois étapes. Zéro friction.',

@@ -300,6 +300,18 @@ function ResultsContent() {
         >
           {t.practiceAgain}
         </Link>
+        <button
+          type="button"
+          onClick={() => {
+            const text = `🎤 Score ${session.composite_score} | ${session.accuracy}% accuracy | ${session.wpm} WPM\n\ntypee — learn languages through music & movies\nhttps://www.typee.app`;
+            const url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank', 'noopener,noreferrer,width=550,height=420');
+          }}
+          className="px-6 py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-80 cursor-pointer"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
+        >
+          𝕏 {t.shareResult}
+        </button>
         <Link
           href={`/deck/${deckId}`}
           className="px-6 py-3 rounded-xl text-sm font-medium no-underline transition-opacity hover:opacity-80"
