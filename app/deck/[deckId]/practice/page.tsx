@@ -626,7 +626,7 @@ export default function PracticePage() {
               />
             </button>
           )}
-          <VirtualKeyboard target={target} input={input} />
+          <VirtualKeyboard target={target} input={input} pronunciation={currentCard?.pronunciation} />
         </div>
       </main>
     </>

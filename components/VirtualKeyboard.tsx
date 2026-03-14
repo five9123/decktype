@@ -52,6 +52,148 @@ function expandJamo(jamo: string): string[] {
   return COMPOUND_JAMO[jamo] ?? [jamo];
 }
 
+// ── Japanese Romaji mapping (for keyboard hints) ─────────────────────────────
+
+const KANA_ROMAJI: Record<string, string> = {
+  // Digraphs (checked before singles)
+  'きゃ': 'kya', 'きゅ': 'kyu', 'きょ': 'kyo',
+  'しゃ': 'sha', 'しゅ': 'shu', 'しょ': 'sho',
+  'ちゃ': 'cha', 'ちゅ': 'chu', 'ちょ': 'cho',
+  'にゃ': 'nya', 'にゅ': 'nyu', 'にょ': 'nyo',
+  'ひゃ': 'hya', 'ひゅ': 'hyu', 'ひょ': 'hyo',
+  'みゃ': 'mya', 'みゅ': 'myu', 'みょ': 'myo',
+  'りゃ': 'rya', 'りゅ': 'ryu', 'りょ': 'ryo',
+  'ぎゃ': 'gya', 'ぎゅ': 'gyu', 'ぎょ': 'gyo',
+  'じゃ': 'ja',  'じゅ': 'ju',  'じょ': 'jo',
+  'びゃ': 'bya', 'びゅ': 'byu', 'びょ': 'byo',
+  'ぴゃ': 'pya', 'ぴゅ': 'pyu', 'ぴょ': 'pyo',
+  'でゃ': 'dha', 'でゅ': 'dhu', 'でょ': 'dho',
+  'てゃ': 'tha', 'てゅ': 'thu', 'てょ': 'tho',
+  // Basic kana
+  'あ': 'a', 'い': 'i', 'う': 'u', 'え': 'e', 'お': 'o',
+  'か': 'ka', 'き': 'ki', 'く': 'ku', 'け': 'ke', 'こ': 'ko',
+  'さ': 'sa', 'し': 'shi', 'す': 'su', 'せ': 'se', 'そ': 'so',
+  'た': 'ta', 'ち': 'chi', 'つ': 'tsu', 'て': 'te', 'と': 'to',
+  'な': 'na', 'に': 'ni', 'ぬ': 'nu', 'ね': 'ne', 'の': 'no',
+  'は': 'ha', 'ひ': 'hi', 'ふ': 'fu', 'へ': 'he', 'ほ': 'ho',
+  'ま': 'ma', 'み': 'mi', 'む': 'mu', 'め': 'me', 'も': 'mo',
+  'や': 'ya', 'ゆ': 'yu', 'よ': 'yo',
+  'ら': 'ra', 'り': 'ri', 'る': 'ru', 'れ': 're', 'ろ': 'ro',
+  'わ': 'wa', 'を': 'wo',
+  // Voiced
+  'が': 'ga', 'ぎ': 'gi', 'ぐ': 'gu', 'げ': 'ge', 'ご': 'go',
+  'ざ': 'za', 'じ': 'ji', 'ず': 'zu', 'ぜ': 'ze', 'ぞ': 'zo',
+  'だ': 'da', 'ぢ': 'di', 'づ': 'du', 'で': 'de', 'ど': 'do',
+  'ば': 'ba', 'び': 'bi', 'ぶ': 'bu', 'べ': 'be', 'ぼ': 'bo',
+  'ぱ': 'pa', 'ぴ': 'pi', 'ぷ': 'pu', 'ぺ': 'pe', 'ぽ': 'po',
+  // Small kana
+  'ぁ': 'xa', 'ぃ': 'xi', 'ぅ': 'xu', 'ぇ': 'xe', 'ぉ': 'xo',
+  'ゃ': 'xya', 'ゅ': 'xyu', 'ょ': 'xyo',
+  // Long vowel mark
+  'ー': '-',
+};
+
+interface RomajiSegment {
+  kana: string;   // original kana character(s) (e.g., 'さ', 'きゃ')
+  romaji: string; // romaji key sequence to type (e.g., 'sa', 'kya')
+}
+
+/** Convert Japanese text to romaji segments for keyboard hints.
+ *  Uses pronunciation (furigana) for kanji targets. */
+function buildRomajiSegments(text: string, pronunciation?: string): RomajiSegment[] {
+  const hasKanji = /[\u4E00-\u9FFF]/.test(text);
+  const source = hasKanji && pronunciation ? pronunciation : text;
+
+  // Convert katakana to hiragana
+  const hiragana = source
+    .replace(/[\u30A1-\u30F6]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60))
+    .replace(/\u30FC/g, 'ー')
+    .replace(/ /g, '')
+    .normalize('NFC');
+
+  const segments: RomajiSegment[] = [];
+  let i = 0;
+
+  while (i < hiragana.length) {
+    const ch = hiragana[i];
+
+    // Small tsu (っ) — double the next consonant
+    if (ch === 'っ') {
+      let doubled = '';
+      if (i + 1 < hiragana.length) {
+        let nextRomaji = '';
+        if (i + 2 < hiragana.length) {
+          const pair = hiragana[i + 1] + hiragana[i + 2];
+          if (KANA_ROMAJI[pair]) nextRomaji = KANA_ROMAJI[pair];
+        }
+        if (!nextRomaji) nextRomaji = KANA_ROMAJI[hiragana[i + 1]] ?? '';
+        doubled = nextRomaji[0] ?? '';
+      }
+      segments.push({ kana: 'っ', romaji: doubled });
+      i++;
+      continue;
+    }
+
+    // ん — context-dependent: 'nn' before vowels/y/n, 'n' before other consonants
+    if (ch === 'ん') {
+      let romaji = 'nn'; // default (end of string or before vowel/y/n)
+      if (i + 1 < hiragana.length) {
+        let nextRomaji = '';
+        const nextCh = hiragana[i + 1];
+        if (i + 2 < hiragana.length) {
+          const pair = nextCh + hiragana[i + 2];
+          if (KANA_ROMAJI[pair]) nextRomaji = KANA_ROMAJI[pair];
+        }
+        if (!nextRomaji) nextRomaji = KANA_ROMAJI[nextCh] ?? nextCh;
+        const first = nextRomaji[0]?.toLowerCase() ?? '';
+        // Before consonant (not n, y, or vowel) → single 'n' auto-confirms
+        if (first && !'aiueony'.includes(first)) {
+          romaji = 'n';
+        }
+      }
+      segments.push({ kana: 'ん', romaji });
+      i++;
+      continue;
+    }
+
+    // Try digraph (2 chars)
+    if (i + 1 < hiragana.length) {
+      const pair = ch + hiragana[i + 1];
+      const romaji = KANA_ROMAJI[pair];
+      if (romaji) {
+        segments.push({ kana: pair, romaji });
+        i += 2;
+        continue;
+      }
+    }
+
+    // Single kana
+    const romaji = KANA_ROMAJI[ch];
+    if (romaji) {
+      segments.push({ kana: ch, romaji });
+      i++;
+      continue;
+    }
+
+    // Non-kana (punctuation, kanji without pronunciation, etc.) — pass through
+    segments.push({ kana: ch, romaji: ch });
+    i++;
+  }
+
+  return segments;
+}
+
+// ── English shift-character mapping ──────────────────────────────────────────
+
+const SHIFT_CHAR_MAP: Record<string, string> = {
+  '!': 'Digit1', '@': 'Digit2', '#': 'Digit3', '$': 'Digit4',
+  '%': 'Digit5', '^': 'Digit6', '&': 'Digit7', '*': 'Digit8',
+  '(': 'Digit9', ')': 'Digit0', '_': 'Minus',  '+': 'Equal',
+  '{': 'BracketLeft', '}': 'BracketRight', '|': 'Backslash',
+  ':': 'Semicolon', '"': 'Quote', '<': 'Comma', '>': 'Period',
+  '?': 'Slash', '~': 'Backquote',
+};
+
 /** Decompose a composed Hangul syllable into keystroke jamo sequence */
 function decomposeHangul(ch: string): string[] {
   const code = ch.charCodeAt(0);
@@ -82,10 +224,13 @@ function getHintKeys(ch: string, lang: Lang): { code: string; shift: boolean }[]
     });
   }
 
-  // English / Latin
+  // Shift + special character (!, @, #, etc.)
+  const shiftCode = SHIFT_CHAR_MAP[ch];
+  if (shiftCode) return [{ code: shiftCode, shift: true }];
+
+  // English / Latin — match by lowercase label in ROWS
   const lower = ch.toLowerCase();
-  const isUpper = ch !== lower;
-  // Match by lowercase label in ROWS
+  const isUpper = ch !== lower && /[A-Z]/.test(ch);
   for (const row of ROWS) {
     for (const def of row) {
       if (def.label.toLowerCase() === lower) {
@@ -100,10 +245,67 @@ function getHintKeys(ch: string, lang: Lang): { code: string; shift: boolean }[]
  * Compute hint keys taking partial IME composition into account.
  * For Korean: finds the current target grapheme being composed and returns
  * only the remaining keystrokes (already-typed jamo are sliced off).
+ * For Japanese: converts target to romaji key sequence, tracks position via
+ * matched kana + trailing romaji in composition.
  */
-function computeHintKeys(target: string, input: string, lang: Lang): { code: string; shift: boolean }[] {
+function computeHintKeys(
+  target: string, input: string, lang: Lang, pronunciation?: string,
+): { code: string; shift: boolean }[] {
+  // Japanese: romaji-based keyboard hints
+  if (lang === 'ja') {
+    const segments = buildRomajiSegments(target, pronunciation);
+    const fullRomaji = segments.map((s) => s.romaji).join('');
+
+    // Split input into confirmed kana and trailing romaji (mid-IME composition)
+    const inputClean = input.replace(/ /g, '').normalize('NFC');
+    // Trailing ASCII or full-width Latin = romaji still being composed
+    const trailMatch = inputClean.match(/([a-zA-Z\uFF41-\uFF5A\uFF21-\uFF3A]+)$/);
+    const confirmedKana = trailMatch
+      ? inputClean.slice(0, -trailMatch[0].length)
+      : inputClean;
+    const trailingRomaji = trailMatch
+      ? trailMatch[0]
+          .replace(/[\uFF41-\uFF5A]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+          .replace(/[\uFF21-\uFF3A]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
+          .toLowerCase()
+      : '';
+
+    // Convert confirmed kana to hiragana for matching
+    const confirmedHira = confirmedKana
+      .replace(/[\u30A1-\u30F6]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0x60))
+      .normalize('NFC');
+
+    // Match confirmed kana against target segments
+    let matchedRomajiLen = 0;
+    let kanaPos = 0;
+    for (const seg of segments) {
+      if (kanaPos + seg.kana.length <= confirmedHira.length) {
+        const inputSeg = confirmedHira.substring(kanaPos, kanaPos + seg.kana.length);
+        if (inputSeg === seg.kana) {
+          matchedRomajiLen += seg.romaji.length;
+          kanaPos += seg.kana.length;
+        } else {
+          break; // mismatch — show hints for this position
+        }
+      } else {
+        break; // input exhausted
+      }
+    }
+
+    // Account for trailing romaji (mid-composition keystrokes)
+    const totalMatched = matchedRomajiLen + trailingRomaji.length;
+
+    // Return remaining romaji keys as hints
+    const remaining = fullRomaji.substring(totalMatched);
+    const hints: { code: string; shift: boolean }[] = [];
+    for (let i = 0; i < remaining.length && hints.length < 3; i++) {
+      hints.push(...getHintKeys(remaining[i], 'en'));
+    }
+    return hints;
+  }
+
   if (lang !== 'ko') {
-    // Non-Korean: simple character index
+    // English / other Latin: simple character index
     const targetNoSpaces = target.replace(/ /g, '');
     const inputNoSpaces  = input.replace(/ /g, '');
     const nextChar = targetNoSpaces[inputNoSpaces.length] ?? '';
@@ -350,8 +552,15 @@ function Key({ def, isPressed, hintPriority, primary, secondary }: KeyProps) {
   );
 }
 
-export function VirtualKeyboard({ target, input }: { target: string; input: string }) {
-  const lang = detectLang(target);
+export function VirtualKeyboard({
+  target, input, pronunciation,
+}: {
+  target: string;
+  input: string;
+  /** Optional reading (furigana) for Japanese kanji targets */
+  pronunciation?: string;
+}) {
+  const lang = detectLang(target, pronunciation);
   const [pressed, setPressed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -372,7 +581,7 @@ export function VirtualKeyboard({ target, input }: { target: string; input: stri
 
   // Compute next-key hints with priority (1 = immediate, 2 = upcoming)
   // Uses grapheme-aware partial-composition logic for Korean
-  const hintKeys = computeHintKeys(target, input, lang);
+  const hintKeys = computeHintKeys(target, input, lang, pronunciation);
   const hintMap  = buildHintMap(hintKeys);
 
   return (
