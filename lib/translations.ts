@@ -165,6 +165,8 @@ export type Translations = {
   columnFront: string;
   columnBack: string;
   columnPronunciation: string;
+  columnStatus: string;
+  fillInBlankSection: string;
   addRow: string;
   addTenRows: string;
   maxLabel: string;
@@ -572,6 +574,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     columnFront: 'Word (Front)',
     columnBack: 'Meaning (Back)',
     columnPronunciation: 'Pronunciation',
+    columnStatus: 'Status',
+    fillInBlankSection: 'Fill in the Blank',
     addRow: '+ Add Row',
     addTenRows: '+ Add 10 Rows',
     maxLabel: '(max)',
@@ -970,6 +974,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     columnFront: '단어 (앞면)',
     columnBack: '뜻 (뒷면)',
     columnPronunciation: '발음기호',
+    columnStatus: '상태',
+    fillInBlankSection: '빈칸 채우기',
     addRow: '+ 행 추가',
     addTenRows: '+ 10행 추가',
     maxLabel: '(최대)',
@@ -1361,6 +1367,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     columnFront: '単語（表）',
     columnBack: '意味（裏）',
     columnPronunciation: '読み方',
+    columnStatus: 'ステータス',
+    fillInBlankSection: '穴埋め問題',
     addRow: '+ 行を追加',
     addTenRows: '+ 10行を追加',
     maxLabel: '（上限）',
@@ -1752,6 +1760,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     columnFront: 'Palabra (Frente)',
     columnBack: 'Significado (Reverso)',
     columnPronunciation: 'Pronunciación',
+    columnStatus: 'Estado',
+    fillInBlankSection: 'Completar espacios',
     addRow: '+ Añadir fila',
     addTenRows: '+ Añadir 10 filas',
     maxLabel: '(máx)',
@@ -2143,6 +2153,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     columnFront: '单词（正面）',
     columnBack: '含义（背面）',
     columnPronunciation: '发音',
+    columnStatus: '状态',
+    fillInBlankSection: '填空题',
     addRow: '+ 添加行',
     addTenRows: '+ 添加10行',
     maxLabel: '（上限）',
@@ -2534,6 +2546,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     columnFront: 'Mot (Recto)',
     columnBack: 'Signification (Verso)',
     columnPronunciation: 'Prononciation',
+    columnStatus: 'Statut',
+    fillInBlankSection: 'Texte à trous',
     addRow: '+ Ajouter une ligne',
     addTenRows: '+ Ajouter 10 lignes',
     maxLabel: '(max)',

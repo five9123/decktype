@@ -344,6 +344,7 @@ export default function CreateDeckPage() {
           <input
             type="text"
             value={deckName}
+            maxLength={20}
             onChange={(e) => setDeckName(e.target.value)}
             placeholder={t.deckNamePlaceholder}
             className="w-full px-4 py-2.5 rounded-xl text-sm"

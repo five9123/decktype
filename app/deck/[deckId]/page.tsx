@@ -133,7 +133,7 @@ export default function DeckDetailPage() {
             >
               &larr; {t.myDecks}
             </Link>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{deck.name}</h1>
+            <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{deck.name.length > 15 ? deck.name.slice(0, 15) + '...' : deck.name}</h1>
             <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
               {deck.card_count} {t.cards} &middot; {deck.note_type === 'Cloze' ? (t.clozeCards ?? 'Fill in Blank') : (t.vocabularyCards ?? 'Vocabulary')}
             </p>
@@ -313,111 +313,204 @@ export default function DeckDetailPage() {
 
         {/* Card List */}
         <h2 className="font-bold mb-4" style={{ color: 'var(--text)' }}>{t.cardPreview}</h2>
-        <div className="space-y-2">
-          {cards.map((card, i) => {
-            const mastery = masteryMap.get(card.id);
-            const isEditing = editingCardId === card.id;
-            return (
-              <div
-                key={card.id}
-                className="px-4 py-3 rounded-xl text-sm"
-                style={{ background: 'var(--surface)', border: `1px solid ${isEditing ? 'var(--accent)' : 'var(--border)'}` }}
-              >
-                {isEditing ? (
-                  <div className="space-y-2">
-                    <div className="flex gap-2">
-                      <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnFront}</p>
-                        <textarea
-                          value={editValues.front}
-                          onChange={(e) => setEditValues((v) => ({ ...v, front: e.target.value }))}
-                          rows={2}
-                          className="w-full px-3 py-2 rounded-lg text-sm resize-none"
-                          style={{
-                            background: 'var(--bg)',
-                            border: '1px solid var(--border)',
-                            color: 'var(--text)',
-                            outline: 'none',
-                          }}
-                        />
+
+        {/* Vocabulary Cards */}
+        {cards.filter((c) => c.note_type !== 'Cloze').length > 0 && (
+          <div className="space-y-2 mb-8">
+            {/* Column Headers */}
+            <div className="flex items-center gap-4 px-4 py-2 text-xs font-medium" style={{ color: 'var(--muted)' }}>
+              <span style={{ minWidth: 24 }}>#</span>
+              <span className="flex-1">{t.columnFront}</span>
+              <span className="flex-1">{t.columnBack}</span>
+              <span style={{ minWidth: 80, textAlign: 'center' }}>{t.columnPronunciation}</span>
+              <span style={{ minWidth: 80, textAlign: 'center' }}>{t.columnStatus}</span>
+              <span style={{ minWidth: 30 }} />
+            </div>
+            {cards.filter((c) => c.note_type !== 'Cloze').map((card, i) => {
+              const mastery = masteryMap.get(card.id);
+              const isEditing = editingCardId === card.id;
+              return (
+                <div
+                  key={card.id}
+                  className="px-4 py-3 rounded-xl text-sm"
+                  style={{ background: 'var(--surface)', border: `1px solid ${isEditing ? 'var(--accent)' : 'var(--border)'}` }}
+                >
+                  {isEditing ? (
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnFront}</p>
+                          <textarea
+                            value={editValues.front}
+                            onChange={(e) => setEditValues((v) => ({ ...v, front: e.target.value }))}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                            style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnBack}</p>
+                          <textarea
+                            value={editValues.back}
+                            onChange={(e) => setEditValues((v) => ({ ...v, back: e.target.value }))}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                            style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnPronunciation}</p>
+                          <textarea
+                            value={editValues.pronunciation}
+                            onChange={(e) => setEditValues((v) => ({ ...v, pronunciation: e.target.value }))}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                            style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+                          />
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnBack}</p>
-                        <textarea
-                          value={editValues.back}
-                          onChange={(e) => setEditValues((v) => ({ ...v, back: e.target.value }))}
-                          rows={2}
-                          className="w-full px-3 py-2 rounded-lg text-sm resize-none"
-                          style={{
-                            background: 'var(--bg)',
-                            border: '1px solid var(--border)',
-                            color: 'var(--text)',
-                            outline: 'none',
-                          }}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnPronunciation}</p>
-                        <textarea
-                          value={editValues.pronunciation}
-                          onChange={(e) => setEditValues((v) => ({ ...v, pronunciation: e.target.value }))}
-                          rows={2}
-                          className="w-full px-3 py-2 rounded-lg text-sm resize-none"
-                          style={{
-                            background: 'var(--bg)',
-                            border: '1px solid var(--border)',
-                            color: 'var(--text)',
-                            outline: 'none',
-                          }}
-                        />
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={cancelEdit}
+                          className="px-3 py-1 rounded-lg text-xs"
+                          style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
+                        >
+                          {t.cancel}
+                        </button>
+                        <button
+                          onClick={() => saveEdit(card.id)}
+                          disabled={savingCard}
+                          className="px-3 py-1 rounded-lg text-xs font-medium"
+                          style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', opacity: savingCard ? 0.6 : 1 }}
+                        >
+                          {savingCard ? t.loading : t.confirm}
+                        </button>
                       </div>
                     </div>
-                    <div className="flex gap-2 justify-end">
+                  ) : (
+                    <div className="flex items-center gap-4">
+                      <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
+                      <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
+                      <span className="flex-1" style={{ color: 'var(--muted)' }}>{card.back}</span>
+                      <span style={{ minWidth: 80, textAlign: 'center' }}>
+                        {card.pronunciation && (
+                          <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface2)', color: 'var(--muted)' }}>{card.pronunciation}</span>
+                        )}
+                      </span>
+                      <span style={{ minWidth: 80, textAlign: 'center' }}>
+                        {mastery && (
+                          <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
+                        )}
+                      </span>
                       <button
-                        onClick={cancelEdit}
-                        className="px-3 py-1 rounded-lg text-xs"
-                        style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
+                        onClick={() => startEdit(card)}
+                        className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+                        aria-label="Edit card"
                       >
-                        {t.cancel}
-                      </button>
-                      <button
-                        onClick={() => saveEdit(card.id)}
-                        disabled={savingCard}
-                        className="px-3 py-1 rounded-lg text-xs font-medium"
-                        style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', opacity: savingCard ? 0.6 : 1 }}
-                      >
-                        {savingCard ? t.loading : t.confirm}
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
                       </button>
                     </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-4">
-                    <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
-                    <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
-                    <span className="flex-1" style={{ color: 'var(--muted)' }}>{card.back}</span>
-                    {card.pronunciation && (
-                      <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface2)', color: 'var(--muted)' }}>{card.pronunciation}</span>
-                    )}
-                    {mastery && (
-                      <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
-                    )}
-                    <button
-                      onClick={() => startEdit(card)}
-                      className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
-                      aria-label="Edit card"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                      </svg>
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Fill in the Blank Cards */}
+        {cards.filter((c) => c.note_type === 'Cloze').length > 0 && (
+          <div className="space-y-2">
+            <h3 className="font-bold mb-2" style={{ color: 'var(--text)' }}>{t.fillInBlankSection}</h3>
+            {cards.filter((c) => c.note_type === 'Cloze').map((card, i) => {
+              const isEditing = editingCardId === card.id;
+              return (
+                <div
+                  key={card.id}
+                  className="px-4 py-3 rounded-xl text-sm"
+                  style={{ background: 'var(--surface)', border: `1px solid ${isEditing ? 'var(--accent)' : 'var(--border)'}` }}
+                >
+                  {isEditing ? (
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <div className="flex-1">
+                          <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnFront}</p>
+                          <textarea
+                            value={editValues.front}
+                            onChange={(e) => setEditValues((v) => ({ ...v, front: e.target.value }))}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                            style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnBack}</p>
+                          <textarea
+                            value={editValues.back}
+                            onChange={(e) => setEditValues((v) => ({ ...v, back: e.target.value }))}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                            style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnPronunciation}</p>
+                          <textarea
+                            value={editValues.pronunciation}
+                            onChange={(e) => setEditValues((v) => ({ ...v, pronunciation: e.target.value }))}
+                            rows={2}
+                            className="w-full px-3 py-2 rounded-lg text-sm resize-none"
+                            style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex gap-2 justify-end">
+                        <button
+                          onClick={cancelEdit}
+                          className="px-3 py-1 rounded-lg text-xs"
+                          style={{ background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
+                        >
+                          {t.cancel}
+                        </button>
+                        <button
+                          onClick={() => saveEdit(card.id)}
+                          disabled={savingCard}
+                          className="px-3 py-1 rounded-lg text-xs font-medium"
+                          style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', opacity: savingCard ? 0.6 : 1 }}
+                        >
+                          {savingCard ? t.loading : t.confirm}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-4">
+                      <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
+                      <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
+                      <span style={{ color: 'var(--muted)' }}>{card.back}</span>
+                      {card.extra && (
+                        <span className="text-xs px-2 py-1 rounded-lg flex-1" style={{ background: 'var(--surface2)', color: 'var(--muted)' }}>{card.extra}</span>
+                      )}
+                      <button
+                        onClick={() => startEdit(card)}
+                        className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+                        aria-label="Edit card"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </main>
     </>
   );
