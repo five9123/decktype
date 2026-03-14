@@ -580,7 +580,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     landingBadge: 'AI-powered · Free to start',
     landingHero1: 'Paste what you love.',
     landingHero2: 'Master the language within.',
-    landingSubtext: 'Paste lyrics, drop subtitle files, or share any URL. AI creates vocabulary cards — then practice with typing, word games, or fill-in-the-blank.',
+    landingSubtext: 'Upload lyrics, drop subtitle files, or share any URL. AI creates vocabulary cards — then practice with typing, word games, or fill-in-the-blank.',
     startForFree: 'Start for Free',
     tryWithoutDeck: 'Try without a Deck',
     landingKpopCta: 'Paste your favorite K-pop lyrics to start',
