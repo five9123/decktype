@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { requireAuth } from '@/lib/api-middleware';
+import { checkRateLimit, requireAuth } from '@/lib/api-middleware';
 
 export async function POST(request: NextRequest) {
+  const limited = checkRateLimit(request, 'stripe-portal', 5, 60_000);
+  if (limited) return limited;
+
   if (!stripe) {
     return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
   }

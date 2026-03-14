@@ -71,7 +71,7 @@ export function useProgress(): UseProgressReturn {
       const [sessionsRes, pbRes] = await Promise.all([
         supabase
           .from('typing_sessions')
-          .select('*')
+          .select('id, deck_id, wpm, accuracy, composite_score, card_count, duration_ms, mode, created_at')
           .order('created_at', { ascending: false })
           .limit(500),
         supabase.from('personal_bests').select('*'),

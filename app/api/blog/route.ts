@@ -3,13 +3,17 @@ import { getAllPosts, getAllTags } from '@/lib/blog';
 
 export const runtime = 'nodejs';
 
+const VALID_LANGS = ['en', 'ko', 'ja', 'es', 'zh', 'fr'];
+const TAG_RE = /^[a-z0-9-]+$/i;
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
-  const lang = searchParams.get('lang') ?? 'en';
+  const rawLang = searchParams.get('lang') ?? 'en';
+  const lang = VALID_LANGS.includes(rawLang) ? rawLang : 'en';
   const tag = searchParams.get('tag');
 
   let posts = getAllPosts(lang);
-  if (tag) {
+  if (tag && TAG_RE.test(tag)) {
     posts = posts.filter((p) => p.frontmatter.tags.includes(tag));
   }
 

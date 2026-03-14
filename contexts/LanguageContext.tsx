@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { Lang, Translations, TRANSLATIONS } from '@/lib/translations';
 import { STORAGE_KEY_LANG } from '@/lib/storage-keys';
 
@@ -51,7 +51,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY_LANG, l);
   }, []);
 
-  const t = new Proxy(TRANSLATIONS[lang], {
+  const t = useMemo(() => new Proxy(TRANSLATIONS[lang], {
     get(target, prop: string) {
       const value = target[prop as keyof Translations];
       if (value !== undefined && value !== '') return value;
@@ -59,10 +59,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       if (enValue !== undefined) return enValue;
       return prop;
     },
-  });
+  }), [lang]);
+
+  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

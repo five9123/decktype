@@ -8,6 +8,19 @@ export const runtime = 'nodejs';
 const MAX_WORDS = 50;
 const BATCH_CONCURRENCY = 5;
 const DELAY_MS = 200;
+
+// Simple LRU translation cache (module-level, survives across requests)
+const MAX_CACHE = 2000;
+const translationCache = new Map<string, { meaning: string }>();
+function getCached(key: string) { return translationCache.get(key); }
+function setCache(key: string, value: { meaning: string }) {
+  if (translationCache.size >= MAX_CACHE) {
+    // Delete oldest entry (first key)
+    const first = translationCache.keys().next().value;
+    if (first !== undefined) translationCache.delete(first);
+  }
+  translationCache.set(key, value);
+}
 // Rate limit: 20 requests per minute per IP
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW = 60_000;
@@ -86,6 +99,9 @@ async function lookupWord(
   scriptLang: ScriptLang,
 ): Promise<LookupResult> {
   const pronunciation = romanize(word, scriptLang);
+  const cacheKey = `${word}:${src}:${tgt}`;
+  const cached = getCached(cacheKey);
+  if (cached) return { word, meaning: cached.meaning, pronunciation };
 
   try {
     const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=${src}|${tgt}`;
@@ -108,6 +124,7 @@ async function lookupWord(
       return { word, meaning: '', pronunciation };
     }
 
+    setCache(cacheKey, { meaning: translation });
     return { word, meaning: translation, pronunciation };
   } catch {
     return { word, meaning: '', pronunciation };

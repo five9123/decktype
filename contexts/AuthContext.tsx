@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { createBrowserClient } from '@/lib/supabase/client';
 import type { User } from '@supabase/supabase-js';
 
@@ -44,37 +44,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, [supabase]);
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = useCallback(async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-  };
+  }, [supabase]);
 
-  const signInWithTwitter = async () => {
+  const signInWithTwitter = useCallback(async () => {
     await supabase.auth.signInWithOAuth({
       provider: 'x',
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-  };
+  }, [supabase]);
 
-  const signInWithEmail = async (email: string, password: string) => {
+  const signInWithEmail = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error: error?.message ?? null };
-  };
+  }, [supabase]);
 
-  const signUpWithEmail = async (email: string, password: string) => {
+  const signUpWithEmail = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signUp({ email, password });
     return { error: error?.message ?? null };
-  };
+  }, [supabase]);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setUser(null);
-  };
+  }, [supabase]);
+
+  const value = useMemo(() => ({
+    user, loading, signInWithGoogle, signInWithTwitter, signInWithEmail, signUpWithEmail, signOut,
+  }), [user, loading, signInWithGoogle, signInWithTwitter, signInWithEmail, signUpWithEmail, signOut]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signInWithTwitter, signInWithEmail, signUpWithEmail, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

@@ -96,6 +96,19 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     document.documentElement.style.setProperty('--typing-font-size', FONT_SIZE_MAP[prefs.fontSize]);
   }, [prefs.fontSize]);
 
+  // Sync preferences across tabs
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== STORAGE_KEY || !e.newValue) return;
+      try {
+        const synced = { ...DEFAULTS, ...JSON.parse(e.newValue) };
+        setPrefs(synced);
+      } catch { /* ignore */ }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   // Follow system preference when no saved preference
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
