@@ -9,6 +9,8 @@ import { MasteryProgress } from '@/components/MasteryProgress';
 import { MasteryBadge } from '@/components/MasteryBadge';
 import { useMastery } from '@/hooks/useMastery';
 import { createBrowserClient } from '@/lib/supabase/client';
+import { encodeDeckForShare } from '@/lib/share-codec';
+import { BASE_URL } from '@/lib/constants';
 import type { Deck, Card, PracticeMode, CardOrder } from '@/types';
 
 export default function DeckDetailPage() {
@@ -27,6 +29,8 @@ export default function DeckDetailPage() {
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
   const [editValues, setEditValues] = useState<{ front: string; back: string; pronunciation: string }>({ front: '', back: '', pronunciation: '' });
   const [savingCard, setSavingCard] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [shareError, setShareError] = useState('');
 
   const { masteryMap, getDeckProgress } = useMastery(deckId);
   const progress = getDeckProgress();
@@ -78,6 +82,21 @@ export default function DeckDetailPage() {
     router.push('/dashboard');
   };
 
+  const handleShareTypetris = async () => {
+    if (!deck) return;
+    try {
+      setShareError('');
+      const encoded = await encodeDeckForShare(deck.name, cards);
+      const url = `${BASE_URL}/play/typetris#${encoded}`;
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    } catch (e) {
+      setShareError(e instanceof Error ? e.message : 'Failed to generate link');
+      setTimeout(() => setShareError(''), 3000);
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -120,22 +139,30 @@ export default function DeckDetailPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => {
-                const text = `🎤 ${deck.name} (${deck.card_count} cards)\n\ntypee — learn languages through music & movies\nhttps://www.typee.app`;
-                const url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
-                window.open(url, '_blank', 'noopener,noreferrer,width=550,height=420');
-              }}
-              className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
-              style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                color: 'var(--text)',
-                cursor: 'pointer',
-              }}
-            >
-              𝕏 {t.shareDeck}
-            </button>
+            <div className="relative">
+              <button
+                onClick={handleShareTypetris}
+                disabled={cards.filter((c) => c.note_type !== 'Cloze').length === 0}
+                className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+                style={{
+                  background: shareCopied ? 'var(--correct)' : 'var(--surface)',
+                  border: `1px solid ${shareCopied ? 'var(--correct)' : 'var(--border)'}`,
+                  color: shareCopied ? '#fff' : 'var(--text)',
+                  cursor: cards.filter((c) => c.note_type !== 'Cloze').length > 0 ? 'pointer' : 'not-allowed',
+                  opacity: cards.filter((c) => c.note_type !== 'Cloze').length > 0 ? 1 : 0.5,
+                }}
+              >
+                {shareCopied ? `✓ ${t.linkCopied}` : `🌧️ ${t.shareTypetris}`}
+              </button>
+              {shareError && (
+                <div
+                  className="absolute top-full left-0 mt-1 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap z-10"
+                  style={{ background: 'var(--incorrect)', color: '#fff' }}
+                >
+                  {shareError}
+                </div>
+              )}
+            </div>
             <button
               onClick={() => setShowDeleteConfirm(true)}
               className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"

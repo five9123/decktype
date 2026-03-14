@@ -36,6 +36,8 @@ export type Translations = {
   lastPracticed: string;
   deckLimitReached: string;
   shareDeck: string;
+  shareTypetris: string;
+  linkCopied: string;
 
   // Upload
   uploadTitle: string;
@@ -450,6 +452,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: 'Last practiced',
     deckLimitReached: 'Free plan limit reached (1 deck). Upgrade to Pro for unlimited decks.',
     shareDeck: 'Share Deck',
+    shareTypetris: 'Share Typetris',
+    linkCopied: 'Link copied!',
 
     uploadTitle: 'Upload Anki Deck',
     uploadSubtitle: 'Drag & drop your .apkg file or click to browse',
@@ -846,6 +850,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: '최근 연습',
     deckLimitReached: '무료 플랜 한도 도달 (1개 덱). Pro로 업그레이드하면 무제한입니다.',
     shareDeck: '덱 공유',
+    shareTypetris: 'Typetris 공유',
+    linkCopied: '링크 복사됨!',
 
     uploadTitle: 'Anki 덱 업로드',
     uploadSubtitle: '.apkg 파일을 드래그 앤 드롭하거나 클릭하여 선택하세요',
@@ -1235,6 +1241,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: '最終練習',
     deckLimitReached: '無料プランの上限です（1デッキ）。Proにアップグレードで無制限。',
     shareDeck: 'デッキをシェア',
+    shareTypetris: 'Typetrisをシェア',
+    linkCopied: 'リンクをコピー!',
 
     uploadTitle: 'Ankiデッキをアップロード',
     uploadSubtitle: '.apkgファイルをドラッグ＆ドロップまたはクリックして選択',
@@ -1624,6 +1632,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: 'Última práctica',
     deckLimitReached: 'Límite del plan gratuito (1 mazo). Mejora a Pro para mazos ilimitados.',
     shareDeck: 'Compartir mazo',
+    shareTypetris: 'Compartir Typetris',
+    linkCopied: '¡Enlace copiado!',
 
     uploadTitle: 'Subir Mazo Anki',
     uploadSubtitle: 'Arrastra y suelta tu archivo .apkg o haz clic para buscar',
@@ -2013,6 +2023,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: '最近练习',
     deckLimitReached: '已达免费计划上限（1个牌组）。升级至Pro享无限牌组。',
     shareDeck: '分享牌组',
+    shareTypetris: '分享Typetris',
+    linkCopied: '链接已复制！',
 
     uploadTitle: '上传Anki牌组',
     uploadSubtitle: '拖放.apkg文件或点击浏览',
@@ -2402,6 +2414,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lastPracticed: 'Dernière pratique',
     deckLimitReached: 'Limite du plan gratuit atteinte (1 deck). Passez à Pro pour des decks illimités.',
     shareDeck: 'Partager le deck',
+    shareTypetris: 'Partager Typetris',
+    linkCopied: 'Lien copié !',
 
     uploadTitle: 'Importer un Deck Anki',
     uploadSubtitle: 'Glissez-déposez votre fichier .apkg ou cliquez pour parcourir',
