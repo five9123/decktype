@@ -151,7 +151,7 @@ export default function PracticePage() {
   const {
     input, charStates, isComplete, wpm, accuracy, elapsedSeconds,
     handleInput: rawHandleInput, reset,
-  } = useTyping(target);
+  } = useTyping(target, inputRef);
 
   // Wrap handleInput to play sound on each keystroke
   const handleInput = useCallback((val: string) => {
@@ -193,8 +193,6 @@ export default function PracticePage() {
     } else {
       // Guard: ignore any IME events fired during advance transition
       isAdvancingRef.current = true;
-      // Clear DOM value directly — prevents stale IME text from flashing
-      if (inputRef.current) inputRef.current.value = '';
       reset();
       setCurrentIdx((i) => i + 1);
       requestAnimationFrame(() => { isAdvancingRef.current = false; });
@@ -376,7 +374,6 @@ export default function PracticePage() {
       setSessionComplete(true);
     } else {
       isAdvancingRef.current = true;
-      if (inputRef.current) inputRef.current.value = '';
       reset();
       setCurrentIdx((i) => i + 1);
       requestAnimationFrame(() => { isAdvancingRef.current = false; });
@@ -509,6 +506,7 @@ export default function PracticePage() {
         {/* Input area */}
         <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
           <input
+            key={currentIdx}
             ref={inputRef}
             type="text"
             value={input}

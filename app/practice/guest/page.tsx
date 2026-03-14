@@ -97,7 +97,7 @@ function GuestPracticePageInner() {
   const {
     input, charStates, isComplete, wpm, accuracy, elapsedSeconds,
     handleInput: rawHandleInput, reset,
-  } = useTyping(target);
+  } = useTyping(target, inputRef);
 
   const handleInput = useCallback((val: string) => {
     if (val.length > input.length) playSound();
@@ -138,7 +138,6 @@ function GuestPracticePageInner() {
       setSessionComplete(true);
     } else {
       isAdvancingRef.current = true;
-      if (inputRef.current) inputRef.current.value = '';
       reset();
       setCurrentIdx((i) => i + 1);
       requestAnimationFrame(() => { isAdvancingRef.current = false; });
@@ -235,7 +234,6 @@ function GuestPracticePageInner() {
       setSessionComplete(true);
     } else {
       isAdvancingRef.current = true;
-      if (inputRef.current) inputRef.current.value = '';
       reset();
       setCurrentIdx((i) => i + 1);
       requestAnimationFrame(() => { isAdvancingRef.current = false; });
@@ -537,6 +535,7 @@ function GuestPracticePageInner() {
         {/* Input area */}
         <div className="px-4 pb-4 w-full mx-auto" style={{ maxWidth: '700px' }}>
           <input
+            key={currentIdx}
             ref={inputRef}
             type="text"
             value={input}

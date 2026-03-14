@@ -26,7 +26,7 @@ function stripBatchim(char: string): string | null {
   return null;
 }
 
-export function useTyping(target: string): UseTypingReturn {
+export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputElement | null>): UseTypingReturn {
   const [input, setInput] = useState('');
   const startTimeRef = useRef<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -35,11 +35,12 @@ export function useTyping(target: string): UseTypingReturn {
   // Reset on target change (useEffect ensures clean lifecycle — no render-time bailouts
   // that can leave stale DOM values visible during IME transitions)
   useEffect(() => {
+    if (inputRef?.current) inputRef.current.value = '';
     setInput('');
     startTimeRef.current = null;
     setElapsedSeconds(0);
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
-  }, [target]);
+  }, [target, inputRef]);
 
   // NFC normalize for consistent Unicode comparison (works for any language)
   const normalizedTarget = target.normalize('NFC');
@@ -135,11 +136,12 @@ export function useTyping(target: string): UseTypingReturn {
   }, [targetGraphemesNoSpaces.length]);
 
   const reset = useCallback(() => {
+    if (inputRef?.current) inputRef.current.value = '';
     setInput('');
     startTimeRef.current = null;
     setElapsedSeconds(0);
     if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
-  }, []);
+  }, [inputRef]);
 
   return {
     input, charStates,
