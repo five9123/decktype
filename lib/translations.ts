@@ -1368,7 +1368,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
 
     landingBadge: 'AI搭載 · 無料で始める',
     landingHero1: '推しの歌詞・ドラマで',
-    landingHero2: '韓国語をマスターしよう。',
+    landingHero2: '韓国語をマスターしよう',
     landingSubtext: 'K-POPの歌詞やドラマの字幕を貼り付けるだけ。AIが30秒で単語カードを自動生成 — タイピング、ワードゲーム、穴埋め問題で楽しく練習。',
     startForFree: '無料で始める',
     tryWithoutDeck: 'デッキなしで試す',
