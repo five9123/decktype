@@ -51,7 +51,7 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
   // For Cloze cards: front = sentence_with_blank, back = answer, extra = full_sentence, pronunciation = hint
   // For Basic cards: front = word, back = meaning — fill blank is "type the word given the meaning"
   const isCloze = currentCard?.note_type === 'Cloze';
-  const answer = currentCard?.back ?? '';
+  const answer = (currentCard?.back ?? '').trim();
   const sentence = isCloze ? currentCard.front : '';
   const fullSentence = isCloze ? (currentCard.extra || '') : '';
   const hintText = isCloze ? (currentCard.pronunciation || '') : (currentCard?.back || '');

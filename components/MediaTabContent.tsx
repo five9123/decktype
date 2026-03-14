@@ -196,10 +196,10 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
         for (const c of data.cloze) {
           generated.push({
             id: ++idCounter.current,
-            front: c.sentence_with_blank ?? '',
-            back: c.answer ?? '',
-            pronunciation: c.hint ?? '',
-            extra: c.full_sentence ?? '',
+            front: (c.sentence_with_blank ?? '').trim(),
+            back: (c.answer ?? '').trim(),
+            pronunciation: (c.hint ?? '').trim(),
+            extra: (c.full_sentence ?? '').trim(),
             noteType: 'Cloze',
           });
         }

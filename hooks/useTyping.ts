@@ -43,8 +43,10 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
   }, [target, inputRef]);
 
   // NFC normalize for consistent Unicode comparison (works for any language)
+  // Strip ALL whitespace (including non-breaking space, full-width space, zero-width chars)
+  const stripWS = (s: string) => s.replace(/[\s\u200B\u200C\u200D\uFEFF]/g, '');
   const normalizedTarget = target.normalize('NFC');
-  const targetNoSpaces = normalizedTarget.replace(/ /g, '');
+  const targetNoSpaces = stripWS(normalizedTarget);
 
   // Start timer on first non-empty input (robust for IME / multi-char first event)
   useEffect(() => {
@@ -57,7 +59,7 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
     }
   }, [input]);
 
-  const inputNoSpaces = input.normalize('NFC').replace(/ /g, '');
+  const inputNoSpaces = stripWS(input.normalize('NFC'));
   const isComplete = inputNoSpaces.length > 0 && inputNoSpaces === targetNoSpaces;
 
   // Stop timer on completion
@@ -76,13 +78,14 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
   const segmenter = new Intl.Segmenter();
   const targetGraphemes = [...segmenter.segment(normalizedTarget)].map((s) => s.segment);
   const inputGraphemes = [...segmenter.segment(inputNoSpaces)].map((s) => s.segment);
-  const targetGraphemesNoSpaces = targetGraphemes.filter((g) => g !== ' ');
+  const isWS = (g: string) => /^[\s\u200B\u200C\u200D\uFEFF]+$/.test(g);
+  const targetGraphemesNoSpaces = targetGraphemes.filter((g) => !isWS(g));
 
   // Per-grapheme status — spaces in target are always auto-correct
   let nonSpaceIdx = 0;
   const lastInputIdx = inputGraphemes.length - 1;
   const charStates: CharState[] = targetGraphemes.map((char) => {
-    if (char === ' ') return { char, status: 'correct' as CharStatus };
+    if (isWS(char)) return { char, status: 'correct' as CharStatus };
     const idx = nonSpaceIdx;
     nonSpaceIdx++;
     if (idx >= inputGraphemes.length) return { char, status: 'idle' as CharStatus };
@@ -131,7 +134,7 @@ export function useTyping(target: string, inputRef?: React.RefObject<HTMLInputEl
     : null; // null = not started yet
 
   const handleInput = useCallback((val: string) => {
-    const graphemeLen = [...new Intl.Segmenter().segment(val.replace(/ /g, ''))].length;
+    const graphemeLen = [...new Intl.Segmenter().segment(stripWS(val))].length;
     if (graphemeLen <= targetGraphemesNoSpaces.length + 5) setInput(val);
   }, [targetGraphemesNoSpaces.length]);
 
