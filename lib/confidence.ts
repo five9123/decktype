@@ -73,7 +73,7 @@ export function getMasteryLevel(confidence: number): MasteryLevel {
  * Calculate next review time using SM-2 inspired algorithm.
  * Uses ease_factor for per-card difficulty adaptation.
  */
-export function calculateNextReview(confidence: number, streak: number, easeFactor: number = 2.5): Date {
+export function calculateNextReview(_confidence: number, streak: number, easeFactor: number = 2.5): Date {
   const now = new Date();
   const MAX_INTERVAL_DAYS = 30;
 

@@ -11,6 +11,7 @@ import { MasteryBadge } from '@/components/MasteryBadge';
 import { WrongCardsReview } from '@/components/WrongCardsReview';
 import { analyzeErrorPatterns } from '@/lib/error-patterns';
 import { createBrowserClient } from '@/lib/supabase/client';
+import { STORAGE_KEY_SESSION } from '@/lib/storage-keys';
 import type { MasteryLevel } from '@/types';
 
 interface CardResult {
@@ -97,7 +98,7 @@ function ResultsContent() {
 
   useEffect(() => {
     try {
-      const raw = sessionStorage.getItem('atype__session');
+      const raw = sessionStorage.getItem(STORAGE_KEY_SESSION);
       if (raw) setSession(JSON.parse(raw));
     } catch { /* ignore */ }
   }, []);

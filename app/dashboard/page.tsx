@@ -56,6 +56,9 @@ export default function DashboardPage() {
           }
         });
         setDueCounts(counts);
+      })
+      .catch(() => {
+        // Due counts are non-critical; silently ignore on failure
       });
   }, [user, decks]);
 

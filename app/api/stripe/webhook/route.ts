@@ -25,23 +25,18 @@ export async function POST(request: NextRequest) {
 
   const supabase = createSupabaseAdmin();
 
-  console.log('[webhook] received event:', event.type);
-
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.user_id;
-      console.log('[webhook] checkout completed, userId:', userId ?? 'MISSING');
       if (!userId) break;
 
-      const { error: updateError } = await supabase.from('profiles').update({
+      await supabase.from('profiles').update({
         plan: 'pro',
         stripe_customer_id: session.customer as string,
         stripe_subscription_id: session.subscription as string,
         subscription_status: 'active',
       }).eq('id', userId);
-      if (updateError) console.error('[webhook] profiles update error:', updateError);
-      else console.log('[webhook] plan set to pro for user:', userId);
       break;
     }
 

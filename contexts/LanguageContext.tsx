@@ -1,6 +1,7 @@
 'use client';
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { Lang, Translations, TRANSLATIONS } from '@/lib/translations';
+import { STORAGE_KEY_LANG } from '@/lib/storage-keys';
 
 interface LanguageContextValue {
   lang: Lang;
@@ -36,7 +37,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('en');
 
   useEffect(() => {
-    const saved = localStorage.getItem('atype-lang') as Lang | null;
+    const saved = localStorage.getItem(STORAGE_KEY_LANG) as Lang | null;
     if (saved && saved in TRANSLATIONS) {
       setLangState(saved);
     } else {
@@ -47,7 +48,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);
-    localStorage.setItem('atype-lang', l);
+    localStorage.setItem(STORAGE_KEY_LANG, l);
   }, []);
 
   const t = new Proxy(TRANSLATIONS[lang], {

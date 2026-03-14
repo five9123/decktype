@@ -414,6 +414,7 @@ export default function HomePage() {
                     type="button"
                     className="w-full flex items-center justify-between gap-4 p-6 text-left cursor-pointer"
                     style={{ background: 'transparent', color: 'var(--text)' }}
+                    aria-expanded={openFaq === i}
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   >
                     <h3 className="font-semibold text-base">{faq.q}</h3>

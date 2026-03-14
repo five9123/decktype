@@ -7,6 +7,7 @@ import { TopToolbar } from '@/components/TopToolbar';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { FREE_CARDS_PER_DECK, TARGET_LANGS } from '@/lib/constants';
+import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
 import { extractWords } from '@/lib/text-parser';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 import { MediaTabContent, type MediaCardsResult } from '@/components/MediaTabContent';
@@ -235,7 +236,7 @@ export default function CreateDeckPage() {
       // Guest: save to sessionStorage and go to practice
       try {
         sessionStorage.setItem(
-          'atype-guest-deck',
+          STORAGE_KEY_GUEST_DECK,
           JSON.stringify({ name: deckName.trim(), cards, sourceLang: tab === 'media' ? mediaSourceLang : detectedLang || null })
         );
       } catch { /* ignore */ }

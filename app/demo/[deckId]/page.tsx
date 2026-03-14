@@ -11,14 +11,13 @@ import { useTTS } from '@/hooks/useTTS';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { PreferencesPanel } from '@/components/PreferencesPanel';
-import { AcidRainGame } from '@/components/AcidRainGame';
-import { FillBlankGame } from '@/components/FillBlankGame';
+import dynamic from 'next/dynamic';
+const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
+const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
 import { DEMO_DECKS } from '@/lib/demo-decks';
-import type { DemoCard } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
-import { shuffle } from '@/lib/utils';
 import { rawCardsToCards } from '@/lib/card-utils';
-import type { Card, PracticeMode } from '@/types';
+import type { PracticeMode } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
 

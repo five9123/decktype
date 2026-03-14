@@ -2,8 +2,9 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { type ThemeId, type FontSize, applyTheme, FONT_SIZE_MAP } from '@/lib/themes';
+import { STORAGE_KEY_PREFS } from '@/lib/storage-keys';
 
-const STORAGE_KEY = 'atype-prefs';
+const STORAGE_KEY = STORAGE_KEY_PREFS;
 const OLD_THEME_KEY = 'atype-theme';
 
 interface Preferences {

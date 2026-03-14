@@ -32,6 +32,7 @@ export default function BlogListPage() {
   const [tags, setTags] = useState<string[]>([]);
   const [activeTag, setActiveTag] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     fetch(`/api/blog?lang=${lang}`)
@@ -41,7 +42,7 @@ export default function BlogListPage() {
         setTags(data.tags ?? []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => { setLoading(false); setFetchError(true); });
   }, [lang]);
 
   const filteredPosts = activeTag === 'all'
@@ -108,6 +109,16 @@ export default function BlogListPage() {
                 {TAG_LABELS[tag] ?? tag}
               </button>
             ))}
+          </div>
+        )}
+
+        {/* Error */}
+        {fetchError && !loading && (
+          <div
+            className="px-4 py-3 rounded-xl text-sm mb-6"
+            style={{ background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', color: 'var(--incorrect)' }}
+          >
+            Failed to load posts. Please refresh the page.
           </div>
         )}
 

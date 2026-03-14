@@ -11,11 +11,13 @@ import { useTTS } from '@/hooks/useTTS';
 import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import { PreferencesPanel } from '@/components/PreferencesPanel';
-import { AcidRainGame } from '@/components/AcidRainGame';
-import { FillBlankGame } from '@/components/FillBlankGame';
+import dynamic from 'next/dynamic';
+const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
+const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { rawCardsToCards } from '@/lib/card-utils';
-import type { Card, PracticeMode } from '@/types';
+import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
+import type { PracticeMode } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
 interface GuestCard {
@@ -66,7 +68,7 @@ function GuestPracticePageInner() {
   // Load from sessionStorage on mount
   useEffect(() => {
     try {
-      const raw = sessionStorage.getItem('atype-guest-deck');
+      const raw = sessionStorage.getItem(STORAGE_KEY_GUEST_DECK);
       if (!raw) {
         router.replace('/demo');
         return;

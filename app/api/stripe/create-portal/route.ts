@@ -20,7 +20,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'No subscription found' }, { status: 400 });
   }
 
-  const origin = request.headers.get('origin') ?? 'https://typee.app';
+  const rawOrigin = request.headers.get('origin') ?? '';
+  const allowedOrigins = [
+    'https://typee.app',
+    'https://www.typee.app',
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []),
+  ];
+  const origin = allowedOrigins.includes(rawOrigin) ? rawOrigin : 'https://typee.app';
 
   const portalSession = await stripe.billingPortal.sessions.create({
     customer: profile.stripe_customer_id,

@@ -17,7 +17,7 @@ const PADDING = { top: 20, right: 20, bottom: 30, left: 40 };
 export function WpmTrendChart({ sessions }: WpmTrendChartProps) {
   const [hovered, setHovered] = useState<number | null>(null);
 
-  const { points, minWpm, maxWpm, yTicks } = useMemo(() => {
+  const { points, yTicks } = useMemo(() => {
     if (sessions.length === 0) return { points: [], minWpm: 0, maxWpm: 100, yTicks: [] };
 
     const wpms = sessions.map((s) => s.wpm);

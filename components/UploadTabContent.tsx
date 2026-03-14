@@ -7,6 +7,7 @@ import { parseApkg } from '@/lib/apkg-parser';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { MAX_UPLOAD_SIZE, FREE_CARDS_PER_DECK } from '@/lib/constants';
+import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { detectFieldMapping, applyMapping, type FieldMapping, type FieldRole } from '@/lib/field-mapping';
 import { cleanCardText } from '@/lib/card-cleaner';
@@ -83,7 +84,7 @@ export function UploadTabContent() {
       };
     });
     try {
-      sessionStorage.setItem('atype-guest-deck', JSON.stringify({ name: parsed.name, cards: mappedCards }));
+      sessionStorage.setItem(STORAGE_KEY_GUEST_DECK, JSON.stringify({ name: parsed.name, cards: mappedCards }));
     } catch {}
     router.push('/practice/guest');
   }, [parsed, fieldMapping, router]);

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTyping } from '@/hooks/useTyping';
@@ -24,7 +23,6 @@ interface Props {
 export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
-  const router = useRouter();
   const { play: playSound } = useSound();
   const { speak } = useTTS();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -58,7 +56,7 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
   const hintText = isCloze ? (currentCard.pronunciation || '') : (currentCard?.back || '');
 
   const {
-    input, charStates, isComplete, wpm, accuracy,
+    input, charStates, isComplete,
     handleInput: rawHandleInput, reset,
   } = useTyping(answer);
 

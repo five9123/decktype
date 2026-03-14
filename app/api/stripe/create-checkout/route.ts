@@ -23,7 +23,13 @@ export async function POST(request: NextRequest) {
     .eq('id', user.id)
     .single();
 
-  const origin = request.headers.get('origin') ?? 'https://typee.app';
+  const rawOrigin = request.headers.get('origin') ?? '';
+  const allowedOrigins = [
+    'https://typee.app',
+    'https://www.typee.app',
+    ...(process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : []),
+  ];
+  const origin = allowedOrigins.includes(rawOrigin) ? rawOrigin : 'https://typee.app';
 
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',

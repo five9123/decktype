@@ -18,8 +18,10 @@ import { useMastery } from '@/hooks/useMastery';
 import { usePersonalBest } from '@/hooks/usePersonalBest';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { shuffle } from '@/lib/utils';
-import { AcidRainGame } from '@/components/AcidRainGame';
-import { FillBlankGame } from '@/components/FillBlankGame';
+import { STORAGE_KEY_SESSION } from '@/lib/storage-keys';
+import dynamic from 'next/dynamic';
+const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
+const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
 import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
@@ -335,7 +337,7 @@ export default function PracticePage() {
         // Check for personal bests
         const pbRecords = await checkPB(deckId, mode, avgWpm, avgAcc, compositeScore);
 
-        sessionStorage.setItem('atype__session', JSON.stringify({
+        sessionStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify({
           ...session,
           cardResults: sessionResults,
           levelUps: levelUpsRef.current,

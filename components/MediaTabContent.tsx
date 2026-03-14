@@ -68,7 +68,7 @@ function friendlyError(msg: string): string {
 
 // ── Component ──────────────────────────────────────────────────────────
 
-export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceLangChange, isPro }: Props) {
+export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceLangChange, isPro: _isPro }: Props) {
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
