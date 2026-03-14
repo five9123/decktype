@@ -535,7 +535,7 @@ export default function DemoPracticePage() {
               />
             </button>
           )}
-          <VirtualKeyboard target={target} input={input} pronunciation={currentCard?.pronunciation} />
+          <VirtualKeyboard target={target} input={input} pronunciation={currentCard?.pronunciation} deckLang={deck?.lang} />
         </div>
       </main>
     </>

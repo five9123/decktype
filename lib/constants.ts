@@ -34,4 +34,7 @@ export const TARGET_LANGS: { code: string; label: string }[] = [
   { code: 'zh', label: '中文' },
   { code: 'es', label: 'Español' },
   { code: 'fr', label: 'Français' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'it', label: 'Italiano' },
+  { code: 'pt', label: 'Português' },
 ];

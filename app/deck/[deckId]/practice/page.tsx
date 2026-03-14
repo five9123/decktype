@@ -49,7 +49,7 @@ export default function PracticePage() {
   useEffect(() => { updateMasteryRef.current = updateMastery; });
 
   const [cards, setCards] = useState<Card[]>([]);
-  const [deckSourceLang, setDeckSourceLang] = useState<ScriptLang | null>(null);
+  const [deckSourceLang, setDeckSourceLang] = useState<string | null>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -90,7 +90,7 @@ export default function PracticePage() {
 
     // Load deck metadata for source_lang (TTS language hint)
     supabase.from('decks').select('source_lang').eq('id', deckId).single().then(({ data: deckRow }: { data: { source_lang: string | null } | null }) => {
-      if (deckRow?.source_lang) setDeckSourceLang(deckRow.source_lang as ScriptLang);
+      if (deckRow?.source_lang) setDeckSourceLang(deckRow.source_lang);
     });
 
     supabase
@@ -213,7 +213,7 @@ export default function PracticePage() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target, currentCard?.pronunciation ?? undefined, deckSourceLang ?? undefined);
+    speak(target, currentCard?.pronunciation ?? undefined, (deckSourceLang as ScriptLang) ?? undefined);
     const cardWpm = wpm ?? 0;
     const cardAccuracy = accuracy ?? 100;
     setSessionResults((prev) => [
@@ -397,7 +397,7 @@ export default function PracticePage() {
     return <AcidRainGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
   if (mode === 'fill_blank') {
-    return <FillBlankGame cards={cards} deckId={deckId} deckLang={deckSourceLang ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
+    return <FillBlankGame cards={cards} deckId={deckId} deckLang={(deckSourceLang as ScriptLang) ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
 
   return (
@@ -626,7 +626,7 @@ export default function PracticePage() {
               />
             </button>
           )}
-          <VirtualKeyboard target={target} input={input} pronunciation={currentCard?.pronunciation} />
+          <VirtualKeyboard target={target} input={input} pronunciation={currentCard?.pronunciation} deckLang={deckSourceLang ?? undefined} />
         </div>
       </main>
     </>

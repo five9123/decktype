@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 
-type Lang = ScriptLang;
+type KeyboardLang = ScriptLang | 'fr' | 'es' | 'de' | 'it' | 'pt';
+const EU_LANGS = new Set(['fr', 'es', 'de', 'it', 'pt']);
 
 // ── Korean Dubeolsik (두벌식) mapping ───────────────────────────────────────
 
@@ -194,6 +195,141 @@ const SHIFT_CHAR_MAP: Record<string, string> = {
   '?': 'Slash', '~': 'Backquote',
 };
 
+// ── European keyboard layouts ────────────────────────────────────────────────
+// Maps keyCode → character for each layout.  Key codes reflect physical position.
+
+interface KeyboardLayout {
+  normal: Record<string, string>;
+  shift?: Record<string, string>;
+}
+
+const EU_LAYOUTS: Record<string, KeyboardLayout> = {
+  // ── French AZERTY ──────────────────────────────────────────────────────────
+  fr: {
+    normal: {
+      // Number row (unshifted = symbols on AZERTY)
+      Digit1: '&', Digit2: 'é', Digit3: '"', Digit4: "'", Digit5: '(',
+      Digit6: '-', Digit7: 'è', Digit8: '_', Digit9: 'ç', Digit0: 'à',
+      // Letter rows (AZERTY layout on QWERTY physical keys)
+      KeyQ: 'a', KeyW: 'z', KeyE: 'e', KeyR: 'r', KeyT: 't',
+      KeyY: 'y', KeyU: 'u', KeyI: 'i', KeyO: 'o', KeyP: 'p',
+      KeyA: 'q', KeyS: 's', KeyD: 'd', KeyF: 'f', KeyG: 'g',
+      KeyH: 'h', KeyJ: 'j', KeyK: 'k', KeyL: 'l', Semicolon: 'm',
+      KeyZ: 'w', KeyX: 'x', KeyC: 'c', KeyV: 'v',
+      KeyB: 'b', KeyN: 'n', KeyM: ',',
+      Comma: ';', Period: ':', Slash: '!',
+    },
+    shift: {
+      Digit1: '1', Digit2: '2', Digit3: '3', Digit4: '4', Digit5: '5',
+      Digit6: '6', Digit7: '7', Digit8: '8', Digit9: '9', Digit0: '0',
+    },
+  },
+
+  // ── Spanish QWERTY ─────────────────────────────────────────────────────────
+  es: {
+    normal: {
+      Semicolon: 'ñ', Quote: "'", BracketLeft: '`', BracketRight: '+',
+      Minus: "'", Equal: '¡', Backquote: 'º',
+      Slash: '-',
+      // Letters identical to English QWERTY — only override changed keys
+      KeyQ: 'q', KeyW: 'w', KeyE: 'e', KeyR: 'r', KeyT: 't',
+      KeyY: 'y', KeyU: 'u', KeyI: 'i', KeyO: 'o', KeyP: 'p',
+      KeyA: 'a', KeyS: 's', KeyD: 'd', KeyF: 'f', KeyG: 'g',
+      KeyH: 'h', KeyJ: 'j', KeyK: 'k', KeyL: 'l',
+      KeyZ: 'z', KeyX: 'x', KeyC: 'c', KeyV: 'v',
+      KeyB: 'b', KeyN: 'n', KeyM: 'm',
+    },
+    shift: {
+      Semicolon: 'Ñ', BracketLeft: '^', BracketRight: '*',
+      Minus: '?', Equal: '¿', Backquote: 'ª',
+      Digit1: '!', Digit2: '"', Digit3: '·', Digit4: '$', Digit5: '%',
+      Digit6: '&', Digit7: '/', Digit8: '(', Digit9: ')', Digit0: '=',
+    },
+  },
+
+  // ── German QWERTZ ──────────────────────────────────────────────────────────
+  de: {
+    normal: {
+      KeyY: 'z', KeyZ: 'y', // Y↔Z swap
+      Semicolon: 'ö', Quote: 'ä', BracketLeft: 'ü', Minus: 'ß',
+      BracketRight: '+', Equal: '´', Backquote: '^',
+      Slash: '-',
+      // Unchanged letters
+      KeyQ: 'q', KeyW: 'w', KeyE: 'e', KeyR: 'r', KeyT: 't',
+      KeyU: 'u', KeyI: 'i', KeyO: 'o', KeyP: 'p',
+      KeyA: 'a', KeyS: 's', KeyD: 'd', KeyF: 'f', KeyG: 'g',
+      KeyH: 'h', KeyJ: 'j', KeyK: 'k', KeyL: 'l',
+      KeyX: 'x', KeyC: 'c', KeyV: 'v',
+      KeyB: 'b', KeyN: 'n', KeyM: 'm',
+    },
+    shift: {
+      Semicolon: 'Ö', Quote: 'Ä', BracketLeft: 'Ü', Minus: '?',
+      Digit1: '!', Digit2: '"', Digit3: '§', Digit4: '$', Digit5: '%',
+      Digit6: '&', Digit7: '/', Digit8: '(', Digit9: ')', Digit0: '=',
+    },
+  },
+
+  // ── Italian QWERTY ─────────────────────────────────────────────────────────
+  it: {
+    normal: {
+      Semicolon: 'ò', Quote: 'à', BracketLeft: 'è', BracketRight: '+',
+      Minus: "'", Equal: 'ì', Backquote: '\\',
+      Backslash: 'ù', Slash: '-',
+      KeyQ: 'q', KeyW: 'w', KeyE: 'e', KeyR: 'r', KeyT: 't',
+      KeyY: 'y', KeyU: 'u', KeyI: 'i', KeyO: 'o', KeyP: 'p',
+      KeyA: 'a', KeyS: 's', KeyD: 'd', KeyF: 'f', KeyG: 'g',
+      KeyH: 'h', KeyJ: 'j', KeyK: 'k', KeyL: 'l',
+      KeyZ: 'z', KeyX: 'x', KeyC: 'c', KeyV: 'v',
+      KeyB: 'b', KeyN: 'n', KeyM: 'm',
+    },
+    shift: {
+      Semicolon: 'ç', Quote: '°', BracketLeft: 'é', BracketRight: '*',
+      Minus: '?', Equal: '^',
+      Digit1: '!', Digit2: '"', Digit3: '£', Digit4: '$', Digit5: '%',
+      Digit6: '&', Digit7: '/', Digit8: '(', Digit9: ')', Digit0: '=',
+    },
+  },
+
+  // ── Portuguese QWERTY ──────────────────────────────────────────────────────
+  pt: {
+    normal: {
+      Semicolon: 'ç', Quote: 'º', BracketLeft: '+', BracketRight: '´',
+      Minus: "'", Equal: '«', Backquote: '\\',
+      Backslash: '~', Slash: '-',
+      KeyQ: 'q', KeyW: 'w', KeyE: 'e', KeyR: 'r', KeyT: 't',
+      KeyY: 'y', KeyU: 'u', KeyI: 'i', KeyO: 'o', KeyP: 'p',
+      KeyA: 'a', KeyS: 's', KeyD: 'd', KeyF: 'f', KeyG: 'g',
+      KeyH: 'h', KeyJ: 'j', KeyK: 'k', KeyL: 'l',
+      KeyZ: 'z', KeyX: 'x', KeyC: 'c', KeyV: 'v',
+      KeyB: 'b', KeyN: 'n', KeyM: 'm',
+    },
+    shift: {
+      Semicolon: 'Ç', Quote: 'ª', BracketLeft: '*', BracketRight: '`',
+      Minus: '?', Equal: '»',
+      Digit1: '!', Digit2: '"', Digit3: '#', Digit4: '$', Digit5: '%',
+      Digit6: '&', Digit7: '/', Digit8: '(', Digit9: ')', Digit0: '=',
+    },
+  },
+};
+
+// Pre-built reverse lookups: character → { code, shift } for each EU layout
+const EU_CHAR_MAP: Record<string, Record<string, { code: string; shift: boolean }>> = {};
+for (const [lang, layout] of Object.entries(EU_LAYOUTS)) {
+  const map: Record<string, { code: string; shift: boolean }> = {};
+  for (const [code, ch] of Object.entries(layout.normal)) {
+    map[ch] = { code, shift: false };
+    // Uppercase variant → same code + shift
+    const upper = ch.toUpperCase();
+    if (upper !== ch && upper.length === 1) map[upper] = { code, shift: true };
+  }
+  if (layout.shift) {
+    for (const [code, ch] of Object.entries(layout.shift)) {
+      map[ch] = { code, shift: true };
+    }
+  }
+  EU_CHAR_MAP[lang] = map;
+}
+
 /** Decompose a composed Hangul syllable into keystroke jamo sequence */
 function decomposeHangul(ch: string): string[] {
   const code = ch.charCodeAt(0);
@@ -213,7 +349,7 @@ function decomposeHangul(ch: string): string[] {
 }
 
 /** Return ordered { code, shift } pairs for every keystroke needed to type `ch` */
-function getHintKeys(ch: string, lang: Lang): { code: string; shift: boolean }[] {
+function getHintKeys(ch: string, lang: KeyboardLang): { code: string; shift: boolean }[] {
   if (!ch || ch === ' ') return ch === ' ' ? [{ code: 'Space', shift: false }] : [];
 
   if (lang === 'ko') {
@@ -224,9 +360,19 @@ function getHintKeys(ch: string, lang: Lang): { code: string; shift: boolean }[]
     });
   }
 
-  // Shift + special character (!, @, #, etc.)
-  const shiftCode = SHIFT_CHAR_MAP[ch];
-  if (shiftCode) return [{ code: shiftCode, shift: true }];
+  // EU layout reverse lookup (fr, es, de, it, pt)
+  const euMap = EU_CHAR_MAP[lang];
+  if (euMap) {
+    const hit = euMap[ch];
+    if (hit) return [hit];
+    // Fallback: try matching by ROWS label (for keys not in layout override)
+  }
+
+  // Shift + special character for English (!, @, #, etc.)
+  if (!euMap) {
+    const shiftCode = SHIFT_CHAR_MAP[ch];
+    if (shiftCode) return [{ code: shiftCode, shift: true }];
+  }
 
   // English / Latin — match by lowercase label in ROWS
   const lower = ch.toLowerCase();
@@ -249,7 +395,7 @@ function getHintKeys(ch: string, lang: Lang): { code: string; shift: boolean }[]
  * matched kana + trailing romaji in composition.
  */
 function computeHintKeys(
-  target: string, input: string, lang: Lang, pronunciation?: string,
+  target: string, input: string, lang: KeyboardLang, pronunciation?: string,
 ): { code: string; shift: boolean }[] {
   // Japanese: romaji-based keyboard hints
   if (lang === 'ja') {
@@ -484,11 +630,16 @@ const ROWS: KeyDef[][] = [
   ],
 ];
 
-const LANG_LABEL: Record<Lang, string> = {
+const LANG_LABEL: Record<KeyboardLang, string> = {
   ko: '한국어 키보드 (두벌식)',
   ja: '日本語入力 (ローマ字)',
   zh: '中文输入 (拼音)',
   en: 'Keyboard',
+  fr: 'Clavier français (AZERTY)',
+  es: 'Teclado español (QWERTY)',
+  de: 'Deutsche Tastatur (QWERTZ)',
+  it: 'Tastiera italiana (QWERTY)',
+  pt: 'Teclado português (QWERTY)',
 };
 
 // ── Component ───────────────────────────────────────────────────────────────
@@ -553,14 +704,19 @@ function Key({ def, isPressed, hintPriority, primary, secondary }: KeyProps) {
 }
 
 export function VirtualKeyboard({
-  target, input, pronunciation,
+  target, input, pronunciation, deckLang,
 }: {
   target: string;
   input: string;
   /** Optional reading (furigana) for Japanese kanji targets */
   pronunciation?: string;
+  /** Deck source language — overrides auto-detection for EU Latin-script languages */
+  deckLang?: string;
 }) {
-  const lang = detectLang(target, pronunciation);
+  // EU languages can't be auto-detected (all Latin → 'en'), so use deckLang when available
+  const lang: KeyboardLang = (deckLang && EU_LANGS.has(deckLang))
+    ? (deckLang as KeyboardLang)
+    : detectLang(target, pronunciation);
   const [pressed, setPressed] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -614,6 +770,21 @@ export function VirtualKeyboard({
                 } else if (koNorm) {
                   primary = koNorm;
                   secondary = def.label;
+                }
+              } else {
+                const euLayout = EU_LAYOUTS[lang];
+                if (euLayout) {
+                  const norm = euLayout.normal[def.code];
+                  const sh   = euLayout.shift?.[def.code];
+                  if (isShift && sh) {
+                    primary = sh;
+                    secondary = norm ?? def.label;
+                  } else if (norm && norm !== def.label.toLowerCase()) {
+                    primary = norm;
+                    secondary = def.label;
+                  } else if (norm) {
+                    primary = norm;
+                  }
                 }
               }
               return (
