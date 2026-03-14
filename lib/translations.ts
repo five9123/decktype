@@ -578,8 +578,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     savingLabel: 'Saving...',
 
     landingBadge: 'AI-powered · Free to start',
-    landingHero1: 'Learn from songs,',
-    landingHero2: 'movies & EVERYTHING.',
+    landingHero1: 'Paste what you love.',
+    landingHero2: 'Master the language within.',
     landingSubtext: 'Paste lyrics, drop subtitle files, or share any URL. AI creates vocabulary cards — then practice with typing, word games, or fill-in-the-blank.',
     startForFree: 'Start for Free',
     tryWithoutDeck: 'Try without a Deck',
@@ -976,8 +976,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     savingLabel: '저장 중...',
 
     landingBadge: 'AI 탑재 · 무료로 시작',
-    landingHero1: '좋아하는 노래, 영화,',
-    landingHero2: '아니메로 언어를 배워보세요',
+    landingHero1: '최애 콘텐츠 붙여넣고',
+    landingHero2: '타이핑으로 마스터하기',
     landingSubtext: '노래 가사, 자막 파일, 또는 텍스트만 붙여넣으면 AI로 30초만에 단어 카드 생성. 타이핑, 단어 게임, 빈칸채우기로 연습해보세요.',
     startForFree: '무료로 시작',
     tryWithoutDeck: '덱 없이 체험하기',
