@@ -135,7 +135,7 @@ export default function DeckDetailPage() {
             </Link>
             <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{deck.name}</h1>
             <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
-              {deck.card_count} {t.cards} &middot; {deck.note_type}
+              {deck.card_count} {t.cards} &middot; {deck.note_type === 'Cloze' ? (t.clozeCards ?? 'Fill in Blank') : (t.vocabularyCards ?? 'Vocabulary')}
             </p>
           </div>
           <div className="flex gap-2">

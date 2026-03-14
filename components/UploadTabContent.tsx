@@ -219,7 +219,7 @@ export function UploadTabContent() {
             <div>
               <h2 className="text-lg font-bold" style={{ color: 'var(--text)' }}>{parsed.name}</h2>
               <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                {parsed.cards.length} {t.cards} &middot; {parsed.noteType}
+                {parsed.cards.length} {t.cards} &middot; {parsed.noteType === 'Cloze' ? (t.clozeCards ?? 'Fill in Blank') : (t.vocabularyCards ?? 'Vocabulary')}
               </p>
             </div>
             {user ? (

@@ -32,7 +32,7 @@ export function DeckCard({ deck, dueCount }: { deck: Deck; dueCount?: number }) 
       <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>
         <span>{deck.card_count} {t.cards}</span>
         <span style={{ color: 'var(--border)' }}>|</span>
-        <span>{deck.note_type}</span>
+        <span>{deck.note_type === 'Cloze' ? (t.clozeCards ?? 'Fill in Blank') : (t.vocabularyCards ?? 'Vocabulary')}</span>
       </div>
 
       {deck.tags.length > 0 && (

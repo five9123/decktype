@@ -791,7 +791,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateWithAI: 'Generate with AI',
     generating: 'Generating cards with AI...',
     vocabularyCards: 'Vocabulary',
-    clozeCards: 'Fill-in-blank',
+    clozeCards: 'Fill in Blank',
     bothCardTypes: 'Both',
     supportedFormats: 'Supports .srt, .txt, .lrc files (max 2MB)',
     mediaNoContent: 'No content found in file',
@@ -801,7 +801,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
 
     // Game modes
     acidRain: 'Word Rain',
-    fillBlank: 'Fill Blank',
+    fillBlank: 'Fill in Blank',
     classicTyping: 'Classic Typing',
 
     // Acid Rain
@@ -1967,7 +1967,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateWithAI: 'Generar con IA',
     generating: 'Generando tarjetas con IA...',
     vocabularyCards: 'Vocabulario',
-    clozeCards: 'Completar espacio',
+    clozeCards: 'Rellena espacios',
     bothCardTypes: 'Ambos',
     supportedFormats: 'Compatible con .srt, .txt, .lrc (máx. 2MB)',
     mediaNoContent: 'No se encontró contenido en el archivo',
@@ -1976,7 +1976,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     lineCount: 'líneas',
 
     acidRain: 'Word Rain',
-    fillBlank: 'Completar',
+    fillBlank: 'Rellena espacios',
     classicTyping: 'Escritura Clásica',
 
     score: 'Puntos',
