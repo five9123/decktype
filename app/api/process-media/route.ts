@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { checkRateLimit } from '@/lib/api-middleware';
+import { checkRateLimit, requireAuth } from '@/lib/api-middleware';
+import { checkAiQuota, recordAiUsage } from '@/lib/ai-usage';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds (Vercel Pro)
@@ -209,9 +210,37 @@ async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cl
 
 export async function POST(req: Request) {
   try {
-    // Rate limiting
+    // Rate limiting (per-IP, first line of defense)
     const rateLimitRes = checkRateLimit(req, 'process-media', RATE_LIMIT_MAX, RATE_LIMIT_WINDOW);
     if (rateLimitRes) return rateLimitRes;
+
+    // Authentication required — AI calls cost money
+    const { user, supabase, response: authError } = await requireAuth();
+    if (authError) {
+      return NextResponse.json(
+        { error: 'Sign in required to use AI features', code: 'AUTH_REQUIRED', vocabulary: [], cloze: [] },
+        { status: 401 },
+      );
+    }
+
+    // Daily quota check (Free: 3/day, Pro: 50/day)
+    const quota = await checkAiQuota(supabase, user);
+    if (!quota.allowed) {
+      return NextResponse.json(
+        {
+          error: quota.plan === 'free'
+            ? `Free plan: ${quota.limit} AI requests per day. Upgrade to Pro for ${quota.limit * 16}+ daily requests.`
+            : `Daily AI limit reached (${quota.limit}). Resets at midnight UTC.`,
+          code: 'QUOTA_EXCEEDED',
+          used: quota.used,
+          limit: quota.limit,
+          plan: quota.plan,
+          vocabulary: [],
+          cloze: [],
+        },
+        { status: 429 },
+      );
+    }
 
     const body = (await req.json()) as ProcessMediaBody;
     const { text, sourceLang, targetLang, mode = 'both', maxWords = 30 } = body;
@@ -239,9 +268,13 @@ export async function POST(req: Request) {
 
     const result = await callOpenAI(prompt);
 
+    // Record successful usage AFTER the call succeeds (don't count failed attempts)
+    await recordAiUsage(supabase, user.id, 'process-media');
+
     return NextResponse.json({
       vocabulary: mode === 'cloze' ? [] : result.vocabulary,
       cloze: mode === 'vocabulary' ? [] : result.cloze,
+      quota: { used: quota.used + 1, limit: quota.limit },
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';

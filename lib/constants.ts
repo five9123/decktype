@@ -18,6 +18,10 @@ export const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
 export const FREE_DECK_LIMIT = 1;
 export const FREE_CARDS_PER_DECK = 100;
 
+/** AI daily usage limits */
+export const AI_DAILY_LIMIT_FREE = 3;
+export const AI_DAILY_LIMIT_PRO = 50;
+
 /** Scoring weights */
 export const ACCURACY_WEIGHT = 0.7;
 export const SPEED_WEIGHT = 0.3;

@@ -47,6 +47,9 @@ export default function CreateDeckPage() {
 
   // --- Text Tab ---
   const [rawText, setRawText] = useState('');
+  const [textAiMode, setTextAiMode] = useState(false);
+  const [textAiProcessing, setTextAiProcessing] = useState(false);
+  const [textAiError, setTextAiError] = useState('');
 
   // --- Shared for URL/Text ---
   const [detectedLang, setDetectedLang] = useState<ScriptLang>('en');
@@ -84,6 +87,74 @@ export default function CreateDeckPage() {
     setTargetLang(detected === 'en' ? 'ko' : 'en');
     handleExtractWords(rawText, detected);
   }, [rawText, handleExtractWords]);
+
+  // ─── AI Analyze (Text Tab) ───────────────────────────────────────────
+
+  const handleTextAiAnalyze = useCallback(async () => {
+    if (!rawText.trim()) return;
+    setError('');
+    setTextAiError('');
+    const detected = detectLang(rawText);
+    setDetectedLang(detected);
+    const target = detected === 'en' ? 'ko' : 'en';
+    setTargetLang(target);
+    setTextAiMode(true);
+    setTextAiProcessing(true);
+
+    try {
+      const res = await fetch('/api/process-media', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: rawText.slice(0, 8000),
+          sourceLang: detected,
+          targetLang: target,
+          mode: 'both',
+          maxWords: 30,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.error) {
+        // Handle auth/quota errors with actionable messages
+        if (data.code === 'AUTH_REQUIRED') {
+          setTextAiError('Sign in to use AI features. Use "Extract Words" for free word extraction.');
+        } else if (data.code === 'QUOTA_EXCEEDED') {
+          setTextAiError(data.error);
+        } else {
+          setTextAiError(data.error);
+        }
+        setTextAiProcessing(false);
+        setTextAiMode(false);
+        return;
+      }
+
+      // vocabulary → WordEntry (Basic cards)
+      const vocabEntries: WordEntry[] = (data.vocabulary ?? []).map((v: { word: string; translation: string; pronunciation: string; context: string }) => ({
+        id: nextId(),
+        front: v.word,
+        back: v.translation,
+        pronunciation: v.pronunciation,
+        status: 'found' as const,
+      }));
+
+      // cloze → store in mediaCardsRef for getCardsToSave()
+      const clozeCards: MediaCardsResult[] = (data.cloze ?? []).map((c: { sentence_with_blank: string; answer: string; hint: string; full_sentence: string }) => ({
+        front: (c.sentence_with_blank ?? '').trim(),
+        back: (c.answer ?? '').trim(),
+        pronunciation: (c.hint ?? '').trim(),
+        extra: (c.full_sentence ?? '').trim(),
+        noteType: 'Cloze' as const,
+      }));
+
+      mediaCardsRef.current = clozeCards;
+      setWordEntries(vocabEntries);
+      setExtractState('editing');
+    } catch {
+      setTextAiError('Failed to connect to AI service. Please try again.');
+    }
+    setTextAiProcessing(false);
+  }, [rawText]);
 
   // ─── Lookup Meanings ───────────────────────────────────────────────────
 
@@ -173,6 +244,26 @@ export default function CreateDeckPage() {
         extra: c.extra.trim(),
         noteType: c.noteType,
       }));
+    }
+    // Text tab with AI mode: combine vocabulary (Basic) + cloze cards
+    if (tab === 'text' && textAiMode) {
+      const basics = wordEntries
+        .filter((w) => w.front.trim())
+        .map((w) => ({
+          front: w.front.trim(),
+          back: w.back.trim(),
+          pronunciation: w.pronunciation.trim(),
+          extra: '',
+          noteType: 'Basic',
+        }));
+      const clozes = mediaCardsRef.current.map((c) => ({
+        front: c.front.trim(),
+        back: c.back.trim(),
+        pronunciation: c.pronunciation.trim(),
+        extra: c.extra.trim(),
+        noteType: c.noteType,
+      }));
+      return [...basics, ...clozes];
     }
     return wordEntries
       .filter((w) => w.front.trim())
@@ -268,7 +359,8 @@ export default function CreateDeckPage() {
 
   // ─── Render ────────────────────────────────────────────────────────────
 
-  const cardCount = wordEntries.filter((w) => w.front.trim()).length;
+  const cardCount = wordEntries.filter((w) => w.front.trim()).length
+    + (textAiMode ? mediaCardsRef.current.length : 0);
 
   return (
     <>
@@ -321,6 +413,9 @@ export default function CreateDeckPage() {
                 if (tabItem.key !== tab && extractState !== 'idle') {
                   setExtractState('idle');
                   setWordEntries([]);
+                  setTextAiMode(false);
+                  setTextAiError('');
+                  mediaCardsRef.current = [];
                 }
               }}
               className="px-4 py-1.5 rounded-full text-sm font-medium transition-all"
@@ -375,7 +470,7 @@ export default function CreateDeckPage() {
         {/* ═══ Text Tab ═══ */}
         {tab === 'text' && (
           <div>
-            {extractState === 'idle' && (
+            {extractState === 'idle' && !textAiProcessing && (
               <div
                 className="rounded-xl p-6"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
@@ -404,41 +499,104 @@ export default function CreateDeckPage() {
                     &nbsp;&middot; {rawText.length.toLocaleString()} chars
                   </p>
                 )}
-                <button
-                  onClick={handleExtractFromText}
-                  disabled={!rawText.trim()}
-                  className="px-5 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
-                  style={{
-                    background: 'var(--accent)',
-                    color: '#fff',
-                    border: 'none',
-                    cursor: !rawText.trim() ? 'not-allowed' : 'pointer',
-                    opacity: !rawText.trim() ? 0.6 : 1,
-                  }}
-                >
-                  Extract Words →
-                </button>
+                {textAiError && (
+                  <div
+                    className="px-4 py-3 rounded-xl text-sm mb-3"
+                    style={{
+                      background: 'rgba(248,113,113,0.1)',
+                      border: '1px solid rgba(248,113,113,0.3)',
+                      color: 'var(--incorrect)',
+                    }}
+                  >
+                    {textAiError}
+                  </div>
+                )}
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={handleExtractFromText}
+                    disabled={!rawText.trim()}
+                    className="px-5 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
+                    style={{
+                      background: 'var(--surface2)',
+                      color: 'var(--text)',
+                      border: '1px solid var(--border)',
+                      cursor: !rawText.trim() ? 'not-allowed' : 'pointer',
+                      opacity: !rawText.trim() ? 0.6 : 1,
+                    }}
+                  >
+                    Extract Words →
+                  </button>
+                  <button
+                    onClick={handleTextAiAnalyze}
+                    disabled={!rawText.trim()}
+                    className="px-5 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
+                    style={{
+                      background: 'var(--accent)',
+                      color: '#fff',
+                      border: 'none',
+                      cursor: !rawText.trim() ? 'not-allowed' : 'pointer',
+                      opacity: !rawText.trim() ? 0.6 : 1,
+                    }}
+                  >
+                    ✨ AI Analyze
+                  </button>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>
+                    {!user
+                      ? 'Sign in to use AI analysis'
+                      : `AI-powered vocabulary + cloze cards (${isPro ? '50' : '3'}/day)`}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* AI Processing spinner */}
+            {textAiProcessing && (
+              <div className="flex flex-col items-center justify-center py-20">
+                <div
+                  className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin mb-4"
+                  style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+                />
+                <p className="font-medium" style={{ color: 'var(--text)' }}>Analyzing with AI...</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Extracting vocabulary and generating cloze cards</p>
               </div>
             )}
 
             {/* Word Editing UI (shared) */}
-            {(extractState === 'editing' || extractState === 'looking_up') && (
-              <WordEditingUI
-                entries={wordEntries}
-                detectedLang={detectedLang}
-                targetLang={targetLang}
-                setTargetLang={setTargetLang}
-                extractState={extractState}
-                lookupProgress={lookupProgress}
-                onUpdate={updateWord}
-                onDelete={deleteWord}
-                onAdd={addWord}
-                onLookup={handleLookup}
-                onBack={() => {
-                  setExtractState('idle');
-                  setWordEntries([]);
-                }}
-              />
+            {(extractState === 'editing' || extractState === 'looking_up') && !textAiProcessing && (
+              <div>
+                {/* Cloze card count indicator for AI mode */}
+                {textAiMode && mediaCardsRef.current.length > 0 && (
+                  <div
+                    className="px-4 py-3 rounded-xl text-sm mb-4"
+                    style={{
+                      background: 'rgba(99,102,241,0.08)',
+                      border: '1px solid rgba(99,102,241,0.2)',
+                      color: 'var(--text)',
+                    }}
+                  >
+                    ✨ AI generated <strong>{wordEntries.length}</strong> vocabulary cards + <strong>{mediaCardsRef.current.length}</strong> cloze cards
+                  </div>
+                )}
+                <WordEditingUI
+                  entries={wordEntries}
+                  detectedLang={detectedLang}
+                  targetLang={targetLang}
+                  setTargetLang={setTargetLang}
+                  extractState={extractState}
+                  lookupProgress={lookupProgress}
+                  onUpdate={updateWord}
+                  onDelete={deleteWord}
+                  onAdd={addWord}
+                  onLookup={handleLookup}
+                  onBack={() => {
+                    setExtractState('idle');
+                    setWordEntries([]);
+                    setTextAiMode(false);
+                    setTextAiError('');
+                    mediaCardsRef.current = [];
+                  }}
+                />
+              </div>
             )}
           </div>
         )}

@@ -11,7 +11,8 @@ import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { detectFieldMapping, applyMapping, type FieldMapping, type FieldRole } from '@/lib/field-mapping';
 import { cleanCardText } from '@/lib/card-cleaner';
-import type { ParsedDeck } from '@/types';
+import { detectLang } from '@/lib/lang-detect';
+import type { ParsedDeck, ParsedCard } from '@/types';
 
 type UploadState = 'idle' | 'parsing' | 'preview' | 'saving' | 'error';
 
@@ -35,6 +36,8 @@ export function UploadTabContent() {
   const [parsed, setParsed] = useState<ParsedDeck | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [fieldMapping, setFieldMapping] = useState<FieldMapping>({});
+  const [enriching, setEnriching] = useState(false);
+  const [enrichedCards, setEnrichedCards] = useState<ParsedCard[] | null>(null);
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.name.endsWith('.apkg')) {
@@ -147,6 +150,83 @@ export function UploadTabContent() {
 
     router.push(`/deck/${deck.id}`);
   };
+
+  // ─── AI Enrich ────────────────────────────────────────────────────────
+
+  const handleAiEnrich = useCallback(async () => {
+    if (!parsed) return;
+    setEnriching(true);
+    setErrorMsg('');
+
+    try {
+      // Build text from first 50 cards for AI analysis
+      const cardsForAi = parsed.cards.slice(0, 50);
+      const sampleText = cardsForAi
+        .map((c) => {
+          const mapped = applyMapping(c.rawFields, fieldMapping);
+          const front = mapped.front || c.front;
+          const back = mapped.back || c.back;
+          return back ? `${front} — ${back}` : front;
+        })
+        .join('\n');
+
+      const sourceLang = detectLang(sampleText);
+      const targetLang = sourceLang === 'en' ? 'ko' : 'en';
+
+      const res = await fetch('/api/process-media', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text: sampleText.slice(0, 8000),
+          sourceLang,
+          targetLang,
+          mode: 'vocabulary',
+          maxWords: Math.min(cardsForAi.length, 50),
+        }),
+      });
+      const data = await res.json();
+
+      if (data.error) {
+        if (data.code === 'AUTH_REQUIRED') {
+          setErrorMsg('Sign in to use AI Enrich. You can still save the deck without AI enrichment.');
+        } else {
+          setErrorMsg(data.error);
+        }
+        setEnriching(false);
+        return;
+      }
+
+      const aiResults: { word: string; translation: string; pronunciation: string; context: string }[] =
+        data.vocabulary ?? [];
+
+      // Build lookup map: normalize front → AI result
+      const aiMap = new Map<string, typeof aiResults[0]>();
+      for (const r of aiResults) {
+        aiMap.set(r.word.toLowerCase().trim(), r);
+      }
+
+      // Enrich parsed cards with AI-generated pronunciation and missing translations
+      const updated = parsed.cards.map((card) => {
+        const mapped = applyMapping(card.rawFields, fieldMapping);
+        const front = (mapped.front || card.front).trim();
+        const match = aiMap.get(front.toLowerCase());
+        if (!match) return card;
+
+        return {
+          ...card,
+          pronunciation: card.pronunciation || match.pronunciation || '',
+          back: card.back || match.translation || '',
+          extra: card.extra || match.context || '',
+        };
+      });
+
+      setEnrichedCards(updated);
+      setParsed({ ...parsed, cards: updated });
+    } catch {
+      setErrorMsg('Failed to connect to AI service. Please try again.');
+    }
+    setEnriching(false);
+  }, [parsed, fieldMapping]);
 
   const previewCards = parsed?.cards.slice(0, 20).map((card) => {
     const mapped = applyMapping(card.rawFields, fieldMapping);
@@ -318,6 +398,40 @@ export function UploadTabContent() {
                   <span><span style={{ color: 'var(--muted)' }}>Pronunciation </span><strong style={{ color: 'var(--text)' }}>{previewCards[0].pronunciation.slice(0, 40)}</strong></span>
                 )}
               </div>
+            )}
+          </div>
+
+          {/* AI Enrich */}
+          <div
+            className="flex flex-wrap items-center gap-3 rounded-xl px-4 py-3 mb-4"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+          >
+            <button
+              onClick={handleAiEnrich}
+              disabled={enriching}
+              className="px-5 py-2 rounded-xl text-sm font-bold transition-opacity hover:opacity-90"
+              style={{
+                background: 'var(--accent)',
+                color: '#fff',
+                border: 'none',
+                cursor: enriching ? 'not-allowed' : 'pointer',
+                opacity: enriching ? 0.7 : 1,
+              }}
+            >
+              {enriching ? '✨ Enriching...' : '✨ AI Enrich Cards'}
+            </button>
+            <span className="text-xs" style={{ color: 'var(--muted)' }}>
+              {enrichedCards
+                ? 'AI enrichment applied — pronunciation and context added'
+                : user
+                  ? 'Add missing translations, pronunciation, and context with AI'
+                  : 'Sign in to use AI enrichment'}
+            </span>
+            {enriching && (
+              <div
+                className="w-4 h-4 rounded-full border-2 border-t-transparent animate-spin ml-auto"
+                style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+              />
             )}
           </div>
 

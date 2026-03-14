@@ -41,7 +41,13 @@ interface Props {
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const MAX_INPUT_CHARS = 8000;
 
-function friendlyError(msg: string): string {
+function friendlyError(msg: string, code?: string): string {
+  if (code === 'AUTH_REQUIRED') {
+    return 'Sign in required to use AI features.';
+  }
+  if (code === 'QUOTA_EXCEEDED') {
+    return msg; // Already user-friendly from server
+  }
   if (msg.includes('timeout') || msg.includes('aborted')) {
     return 'Processing timed out. Try reducing the text or lowering the max words count.';
   }
@@ -170,7 +176,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
       const data = await res.json();
 
       if (!res.ok) {
-        setError(friendlyError(data.error ?? 'Failed to generate cards'));
+        setError(friendlyError(data.error ?? 'Failed to generate cards', data.code));
         setState('preview');
         return;
       }
