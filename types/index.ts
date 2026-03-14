@@ -21,6 +21,7 @@ export interface Deck {
   card_count: number;
   note_type: string;
   tags: string[];
+  source_lang: string | null;
   created_at: string;
 }
 

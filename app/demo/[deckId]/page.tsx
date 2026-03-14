@@ -17,6 +17,7 @@ import { DEMO_DECKS } from '@/lib/demo-decks';
 import type { DemoCard } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import type { Card, PracticeMode } from '@/types';
+import type { ScriptLang } from '@/lib/lang-detect';
 
 function toDemoCards(demoCards: DemoCard[]): Card[] {
   return demoCards.map((c, i) => ({
@@ -143,7 +144,7 @@ export default function DemoPracticePage() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target, currentCard?.pronunciation ?? undefined);
+    speak(target, currentCard?.pronunciation ?? undefined, deck?.lang as ScriptLang | undefined);
     setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, isComposing, sessionComplete]);
@@ -256,7 +257,7 @@ export default function DemoPracticePage() {
   }
   if (mode === 'fill_blank') {
     const clozeCards = deck.cards.filter(c => c.noteType === 'Cloze');
-    return <FillBlankGame cards={toDemoCards(clozeCards)} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
+    return <FillBlankGame cards={toDemoCards(clozeCards)} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
   }
 
   // ── Results screen ──

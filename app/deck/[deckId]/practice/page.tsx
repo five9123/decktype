@@ -20,6 +20,7 @@ import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { AcidRainGame } from '@/components/AcidRainGame';
 import { FillBlankGame } from '@/components/FillBlankGame';
 import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
+import type { ScriptLang } from '@/lib/lang-detect';
 
 /** Unbiased Fisher-Yates shuffle */
 function shuffle<T>(arr: T[]): T[] {
@@ -55,6 +56,7 @@ export default function PracticePage() {
   useEffect(() => { updateMasteryRef.current = updateMastery; });
 
   const [cards, setCards] = useState<Card[]>([]);
+  const [deckSourceLang, setDeckSourceLang] = useState<ScriptLang | null>(null);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -92,6 +94,11 @@ export default function PracticePage() {
     if (!user || !deckId) return;
     if (order === 'smart_review' && masteryLoading) return; // Wait for mastery data
     const supabase = createBrowserClient();
+
+    // Load deck metadata for source_lang (TTS language hint)
+    supabase.from('decks').select('source_lang').eq('id', deckId).single().then(({ data: deckRow }: { data: { source_lang: string | null } | null }) => {
+      if (deckRow?.source_lang) setDeckSourceLang(deckRow.source_lang as ScriptLang);
+    });
 
     supabase
       .from('cards')
@@ -213,7 +220,7 @@ export default function PracticePage() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target, currentCard?.pronunciation ?? undefined);
+    speak(target, currentCard?.pronunciation ?? undefined, deckSourceLang ?? undefined);
     const cardWpm = wpm ?? 0;
     const cardAccuracy = accuracy ?? 100;
     setSessionResults((prev) => [
@@ -397,7 +404,7 @@ export default function PracticePage() {
     return <AcidRainGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
   if (mode === 'fill_blank') {
-    return <FillBlankGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
+    return <FillBlankGame cards={cards} deckId={deckId} deckLang={deckSourceLang ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
 
   return (

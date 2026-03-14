@@ -15,6 +15,7 @@ import { AcidRainGame } from '@/components/AcidRainGame';
 import { FillBlankGame } from '@/components/FillBlankGame';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import type { Card, PracticeMode } from '@/types';
+import type { ScriptLang } from '@/lib/lang-detect';
 
 interface GuestCard {
   front: string;
@@ -27,6 +28,7 @@ interface GuestCard {
 interface GuestDeck {
   name: string;
   cards: GuestCard[];
+  sourceLang?: string;
 }
 
 function toCards(guestCards: GuestCard[]): Card[] {
@@ -162,7 +164,7 @@ function GuestPracticePageInner() {
       setShowCardConfetti(true);
       confettiTimer.current = setTimeout(() => setShowCardConfetti(false), 2500);
     }
-    speak(target, currentCard?.pronunciation ?? undefined);
+    speak(target, currentCard?.pronunciation ?? undefined, (deck?.sourceLang as ScriptLang) ?? undefined);
     setSessionResults((prev) => [...prev, { wpm: wpm ?? 0, accuracy: accuracy ?? 100 }]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, isComposing, sessionComplete]);
@@ -337,7 +339,7 @@ function GuestPracticePageInner() {
     return <AcidRainGame cards={toCards(filteredCards)} deckId="guest" onExit={handleBackToModes} />;
   }
   if (selectedMode === 'fill_blank') {
-    return <FillBlankGame cards={toCards(filteredCards)} deckId="guest" onExit={handleBackToModes} />;
+    return <FillBlankGame cards={toCards(filteredCards)} deckId="guest" deckLang={(deck?.sourceLang as ScriptLang) ?? undefined} onExit={handleBackToModes} />;
   }
 
   // ── Results screen ──

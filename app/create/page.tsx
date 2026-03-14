@@ -67,6 +67,7 @@ export default function CreateDeckPage() {
   const [lookupProgress, setLookupProgress] = useState(0);
 
   const mediaCardsRef = useRef<MediaCardsResult[]>([]);
+  const [mediaSourceLang, setMediaSourceLang] = useState<string | null>(null);
 
   // ─── URL Extraction ────────────────────────────────────────────────────
 
@@ -244,7 +245,7 @@ export default function CreateDeckPage() {
       try {
         sessionStorage.setItem(
           'atype-guest-deck',
-          JSON.stringify({ name: deckName.trim(), cards })
+          JSON.stringify({ name: deckName.trim(), cards, sourceLang: tab === 'media' ? mediaSourceLang : detectedLang || null })
         );
       } catch { /* ignore */ }
       router.push('/practice/guest');
@@ -254,6 +255,9 @@ export default function CreateDeckPage() {
     const supabase = createBrowserClient();
     const cardsToSave = isPro ? cards : cards.slice(0, FREE_CARDS_PER_DECK);
 
+    // Determine source language: Media tab uses its own state; URL/Text tabs use detectedLang
+    const sourceLangToSave = tab === 'media' ? mediaSourceLang : detectedLang || null;
+
     const { data: deck, error: deckErr } = await supabase
       .from('decks')
       .insert({
@@ -262,6 +266,7 @@ export default function CreateDeckPage() {
         card_count: cardsToSave.length,
         note_type: cardsToSave.some((c) => c.noteType === 'Cloze') ? 'Cloze' : 'Basic',
         tags: [],
+        source_lang: sourceLangToSave,
       })
       .select()
       .single();
@@ -620,6 +625,7 @@ export default function CreateDeckPage() {
             deckName={deckName}
             setDeckName={setDeckName}
             onCardsReady={handleMediaCardsReady}
+            onSourceLangChange={setMediaSourceLang}
             isPro={isPro}
           />
         )}

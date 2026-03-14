@@ -7,7 +7,7 @@ export const maxDuration = 60; // seconds (Vercel Pro)
 // Rate limit: 5 requests per minute per IP (LLM calls cost money)
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW = 60_000;
-const MAX_INPUT_CHARS = 4000;
+const MAX_INPUT_CHARS = 8000;
 const MAX_TOKENS = 4096;
 
 interface VocabItem {

@@ -11,10 +11,12 @@ import { ConfettiEffect } from '@/components/ConfettiEffect';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import type { Card } from '@/types';
+import type { ScriptLang } from '@/lib/lang-detect';
 
 interface Props {
   cards: Card[];
   deckId: string;
+  deckLang?: ScriptLang;
   onExit: () => void;
 }
 
@@ -28,7 +30,7 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export function FillBlankGame({ cards: rawCards, deckId, onExit }: Props) {
+export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const router = useRouter();
@@ -113,7 +115,7 @@ export function FillBlankGame({ cards: rawCards, deckId, onExit }: Props) {
   useEffect(() => {
     if (!isComplete || isComposing || sessionComplete || resultSavedRef.current) return;
     resultSavedRef.current = true;
-    speak(answer);
+    speak(answer, currentCard?.pronunciation ?? undefined, deckLang);
     setResults((prev) => [...prev, { correct: true, cardId: currentCard?.id ?? '' }]);
 
     autoAdvanceStart.current = performance.now();

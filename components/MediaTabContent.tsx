@@ -32,6 +32,7 @@ interface Props {
   deckName: string;
   setDeckName: (name: string) => void;
   onCardsReady: (cards: MediaCardsResult[]) => void;
+  onSourceLangChange?: (lang: string) => void;
   isPro: boolean;
 }
 
@@ -45,7 +46,7 @@ const TARGET_LANGS = [
 ];
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-const MAX_INPUT_CHARS = 4000;
+const MAX_INPUT_CHARS = 8000;
 
 function friendlyError(msg: string): string {
   if (msg.includes('timeout') || msg.includes('aborted')) {
@@ -74,7 +75,7 @@ function friendlyError(msg: string): string {
 
 // ── Component ──────────────────────────────────────────────────────────
 
-export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: Props) {
+export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceLangChange, isPro }: Props) {
   const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -111,6 +112,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
       const detected = detectLang(result.fullText.slice(0, 500));
       if (detected) {
         setSourceLang(detected);
+        onSourceLangChange?.(detected);
         setTargetLang(detected === 'en' ? 'ko' : 'en');
       }
 
@@ -125,7 +127,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
     } catch {
       setError('Failed to parse file. Make sure it is a valid .srt, .txt, or .lrc file.');
     }
-  }, [deckName, setDeckName, t.mediaNoContent]);
+  }, [deckName, setDeckName, t.mediaNoContent, onSourceLangChange]);
 
   const handleFileSelect = (file: File) => {
     if (file.size > MAX_FILE_SIZE) {
@@ -422,7 +424,7 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, isPro }: 
               </label>
               <select
                 value={sourceLang}
-                onChange={(e) => setSourceLang(e.target.value)}
+                onChange={(e) => { setSourceLang(e.target.value); onSourceLangChange?.(e.target.value); }}
                 className="w-full px-3 py-2 rounded-lg text-sm"
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
               >
