@@ -130,17 +130,17 @@ export default function HomePage() {
 
           {/* Headline */}
           <h1 className="font-bold leading-tight mb-6" style={{ wordBreak: 'keep-all' }}>
-            <span className="block" style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', color: 'var(--text)' }}>
+            <span className="block" style={{ fontSize: 'clamp(2.25rem, 6.5vw, 4.75rem)', color: 'var(--text)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}>
               {t.landingHero1}
             </span>
-            <span className="block" style={{ fontSize: 'clamp(2rem, 5vw, 4.5rem)', color: 'var(--accent)' }}>
+            <span className="block" style={{ fontSize: 'clamp(2.25rem, 6.5vw, 4.75rem)', color: 'var(--accent)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}>
               {t.landingHero2}
             </span>
           </h1>
 
           {/* Subtext */}
           <p
-            className="text-lg mb-10 leading-relaxed"
+            className="text-sm sm:text-lg mb-10 leading-relaxed"
             style={{ maxWidth: 520, color: 'var(--muted)', wordBreak: 'keep-all', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
           >
             {t.landingSubtext.split(/(?<=\. |。)/).map((s, i, a) => (
