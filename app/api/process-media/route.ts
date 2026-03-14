@@ -8,7 +8,7 @@ export const maxDuration = 60; // seconds (Vercel Pro)
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW = 60_000;
 const MAX_INPUT_CHARS = 4000;
-const MAX_TOKENS = 2000;
+const MAX_TOKENS = 4096;
 
 interface VocabItem {
   word: string;
@@ -100,6 +100,46 @@ ${text}
 """`;
 }
 
+/**
+ * Attempt to repair truncated JSON from OpenAI (e.g. when finish_reason is "length").
+ * Closes unclosed strings, arrays, and objects so JSON.parse can succeed.
+ */
+function repairJSON(raw: string): unknown | null {
+  // First try parsing as-is
+  try { return JSON.parse(raw); } catch { /* continue */ }
+
+  let s = raw.trim();
+
+  // If truncated mid-string, close the string
+  // Count unescaped quotes — if odd, close the open string
+  let inString = false;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '\\') { i++; continue; }
+    if (s[i] === '"') inString = !inString;
+  }
+  if (inString) s += '"';
+
+  // Remove trailing comma (invalid JSON)
+  s = s.replace(/,\s*$/, '');
+
+  // Close open brackets/braces
+  const stack: string[] = [];
+  inString = false;
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === '\\' && inString) { i++; continue; }
+    if (s[i] === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (s[i] === '{') stack.push('}');
+    else if (s[i] === '[') stack.push(']');
+    else if (s[i] === '}' || s[i] === ']') stack.pop();
+  }
+  // Remove any trailing comma before we close
+  s = s.replace(/,\s*$/, '');
+  while (stack.length > 0) s += stack.pop();
+
+  try { return JSON.parse(s); } catch { return null; }
+}
+
 async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cloze: ClozeItem[] }> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
@@ -128,10 +168,27 @@ async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cl
   }
 
   const data = await res.json();
-  const content = data?.choices?.[0]?.message?.content;
+  const choice = data?.choices?.[0];
+  const content = choice?.message?.content;
   if (!content) throw new Error('Empty response from OpenAI');
 
-  const parsed = JSON.parse(content);
+  const wasTruncated = choice.finish_reason === 'length';
+
+  let parsed: Record<string, unknown>;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    // Response was likely truncated — try to repair
+    const repaired = repairJSON(content);
+    if (!repaired || typeof repaired !== 'object') {
+      throw new Error(
+        wasTruncated
+          ? 'AI response was too long and got cut off. Try reducing max words count.'
+          : 'AI returned invalid JSON. Please try again.',
+      );
+    }
+    parsed = repaired as Record<string, unknown>;
+  }
 
   return {
     vocabulary: Array.isArray(parsed.vocabulary) ? parsed.vocabulary : [],

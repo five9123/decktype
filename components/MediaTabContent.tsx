@@ -63,6 +63,12 @@ function friendlyError(msg: string): string {
   if (msg.includes('Empty response')) {
     return 'AI returned an empty response. Try with shorter text.';
   }
+  if (msg.includes('cut off') || msg.includes('too long')) {
+    return 'AI response was too long and got cut off. Try reducing the max words count or using a shorter text.';
+  }
+  if (msg.includes('invalid JSON') || msg.includes('Unterminated string')) {
+    return 'AI returned a malformed response. Please try again — sometimes reducing max words helps.';
+  }
   return msg;
 }
 
