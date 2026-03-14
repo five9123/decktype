@@ -95,7 +95,7 @@ export default function DashboardPage() {
                 pointerEvents: atLimit ? 'none' : 'auto',
               }}
             >
-              + {t.createDeck}
+              {t.createDeck}
             </Link>
           </div>
         </div>
@@ -124,7 +124,7 @@ export default function DashboardPage() {
               className="inline-block mt-4 px-6 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity hover:opacity-90"
               style={{ background: 'var(--accent)', color: '#fff' }}
             >
-              + {t.createDeck}
+              {t.createDeck}
             </Link>
           </div>
         ) : (

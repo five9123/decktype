@@ -843,7 +843,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginReassurance1: '무료로 1개 덱 사용 가능',
     loginReassurance2: '신용카드 필요 없음',
 
-    myDecks: '내 덱',
+    myDecks: '마이덱',
     uploadDeck: '덱 업로드',
     noDeckYet: '아직 덱이 없습니다. .apkg 파일을 업로드해서 시작하세요!',
     cards: '카드',
@@ -889,7 +889,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     shareResult: '결과 공유',
     backToDeck: '덱으로 돌아가기',
 
-    statsTitle: '내 통계',
+    statsTitle: '통계',
     statsSubtitle: '연습 기록과 진행 상황',
     noStatsYet: '아직 연습 기록이 없습니다. 연습을 시작해서 통계를 확인하세요!',
     totalSessions: '세션',

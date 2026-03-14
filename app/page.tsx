@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
+import { HeroCarousel } from '@/components/HeroCarousel';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -182,72 +183,8 @@ export default function HomePage() {
             🎤 {t.landingKpopCta} →
           </Link>
 
-          {/* Product mockup */}
-          <div
-            className="w-full rounded-2xl overflow-hidden"
-            style={{
-              maxWidth: 780,
-              border: '1px solid var(--border)',
-              background: 'var(--surface)',
-              boxShadow: '0 32px 80px rgba(0,0,0,0.35)',
-            }}
-          >
-            {/* Browser chrome */}
-            <div
-              className="flex items-center gap-2 px-4 py-3"
-              style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface2)' }}
-            >
-              <span className="w-3 h-3 rounded-full" style={{ background: '#F87171' }} />
-              <span className="w-3 h-3 rounded-full" style={{ background: '#FBBF24' }} />
-              <span className="w-3 h-3 rounded-full" style={{ background: '#4ADE80' }} />
-              <div
-                className="flex-1 mx-4 px-3 py-1 rounded-md text-xs text-center"
-                style={{ background: 'var(--bg)', color: 'var(--muted)' }}
-              >
-                typee.app/practice
-              </div>
-            </div>
-            {/* Typing UI preview */}
-            <div className="p-8 text-center">
-              <p className="text-3xl font-bold mb-1" style={{ color: 'var(--text)' }}>
-                자전거
-              </p>
-              <p className="text-sm mb-1" style={{ color: 'var(--accent)', opacity: 0.8 }}>
-                jajeongeo
-              </p>
-              <p className="text-base mb-6" style={{ color: 'var(--muted)' }}>
-                bicycle
-              </p>
-              <div className="flex justify-center flex-wrap gap-0.5 font-mono text-xl mb-6">
-                {['자','전','거'].map((ch, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      color: i < 1 ? 'var(--correct)' : i === 1 ? 'var(--incorrect)' : 'var(--muted)',
-                      opacity: i === 2 ? 0.4 : 1,
-                    }}
-                  >
-                    {ch}
-                  </span>
-                ))}
-              </div>
-              <div
-                className="mx-auto max-w-xs px-4 py-3 rounded-xl text-sm text-left"
-                style={{
-                  background: 'var(--bg)',
-                  border: '1px solid var(--accent)',
-                  color: 'var(--text)',
-                }}
-              >
-                자저<span style={{ borderRight: '2px solid var(--accent)' }}>&nbsp;</span>
-              </div>
-              <div className="flex justify-center gap-6 mt-5 text-sm" style={{ color: 'var(--muted)' }}>
-                <span><span style={{ color: 'var(--accent)', fontWeight: 700 }}>74</span> WPM</span>
-                <span><span style={{ color: 'var(--correct)', fontWeight: 700 }}>96%</span> Accuracy</span>
-                <span><span style={{ color: 'var(--text)', fontWeight: 700 }}>3</span> / 20 cards</span>
-              </div>
-            </div>
-          </div>
+          {/* Product mockup carousel */}
+          <HeroCarousel />
         </section>
 
         {/* ── How It Works ── */}
