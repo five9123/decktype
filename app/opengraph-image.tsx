@@ -57,7 +57,7 @@ export default function Image() {
             lineHeight: 1.2,
           }}
         >
-          Type it. Learn it. Master any deck.
+          Paste what you love. Type it. Learn it.
         </div>
 
         {/* Subtitle */}
@@ -69,7 +69,7 @@ export default function Image() {
             maxWidth: 640,
           }}
         >
-          Anki Deck Typing Practice — WPM tracking, smart review & more
+          AI creates typing cards from lyrics, subtitles & articles instantly.
         </div>
 
         {/* Domain */}

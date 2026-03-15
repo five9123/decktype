@@ -12,11 +12,11 @@ import { Analytics } from '@vercel/analytics/next';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'typee — Learn Languages Through Music & Movies',
+    default: 'typee — Paste what you love. Type it. Learn it.',
     template: '%s | typee',
   },
   description:
-    'Learn any language through songs and movies you love. Paste lyrics or drop SRT subtitles — AI creates typing cards instantly.',
+    'Paste lyrics, subtitles, or articles — AI creates typing cards instantly. Learn any language through content you love.',
   keywords: [
     'language learning',
     'song lyrics learning',
@@ -52,16 +52,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'typee',
-    title: 'typee — Learn Languages Through Music & Movies',
+    title: 'typee — Paste what you love. Type it. Learn it.',
     description:
-      'Paste song lyrics or drop subtitle files — AI creates typing cards and games instantly.',
+      'Paste lyrics, subtitles, or articles — AI creates typing cards and games instantly. Learn any language through content you love.',
     url: BASE_URL,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'typee — Learn Languages Through Music & Movies',
+    title: 'typee — Paste what you love. Type it. Learn it.',
     description:
-      'Learn any language through songs and movies you love. Paste lyrics or drop SRT subtitles — AI creates typing cards instantly.',
+      'Paste lyrics, subtitles, or articles — AI creates typing cards instantly. Learn any language through content you love.',
   },
 };
 
