@@ -24,6 +24,10 @@ CREATE POLICY "Users insert own ai_usage"
   ON public.ai_usage FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+CREATE POLICY "Users delete own ai_usage"
+  ON public.ai_usage FOR DELETE
+  USING (auth.uid() = user_id);
+
 -- Cleanup: auto-delete rows older than 7 days (run via pg_cron or manual)
 -- This keeps the table small while retaining enough history for debugging
 COMMENT ON TABLE public.ai_usage IS 'Tracks per-user AI API calls for daily quota enforcement. Rows older than 7 days can be pruned.';

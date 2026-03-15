@@ -22,6 +22,7 @@ import { STORAGE_KEY_SESSION } from '@/lib/storage-keys';
 import dynamic from 'next/dynamic';
 const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
 const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
+const WordTrainGame = dynamic(() => import('@/components/WordTrainGame').then((m) => ({ default: m.WordTrainGame })), { ssr: false });
 import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
@@ -395,6 +396,9 @@ export default function PracticePage() {
   }
   if (mode === 'fill_blank') {
     return <FillBlankGame cards={cards} deckId={deckId} deckLang={(deckSourceLang as ScriptLang) ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
+  }
+  if (mode === 'word_train') {
+    return <WordTrainGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
 
   return (

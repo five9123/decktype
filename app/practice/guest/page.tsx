@@ -14,6 +14,7 @@ import { PreferencesPanel } from '@/components/PreferencesPanel';
 import dynamic from 'next/dynamic';
 const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
 const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
+const WordTrainGame = dynamic(() => import('@/components/WordTrainGame').then((m) => ({ default: m.WordTrainGame })), { ssr: false });
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { rawCardsToCards } from '@/lib/card-utils';
 import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
@@ -274,6 +275,7 @@ function GuestPracticePageInner() {
       { value: 'back_to_front', label: t.backToFront, count: basicCount },
       { value: 'fill_blank', label: t.fillBlank, count: clozeCount },
       { value: 'acid_rain', label: t.acidRain, count: basicCount },
+      { value: 'word_train', label: t.wordTrain, count: basicCount },
     ];
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12" style={{ background: 'var(--bg)' }}>
@@ -328,6 +330,9 @@ function GuestPracticePageInner() {
   }
   if (selectedMode === 'fill_blank') {
     return <FillBlankGame cards={rawCardsToCards(filteredCards, 'guest', 'guest')} deckId="guest" deckLang={(deck?.sourceLang as ScriptLang) ?? undefined} onExit={handleBackToModes} />;
+  }
+  if (selectedMode === 'word_train') {
+    return <WordTrainGame cards={rawCardsToCards(filteredCards, 'guest', 'guest')} deckId="guest" onExit={handleBackToModes} />;
   }
 
   // ── Results screen ──

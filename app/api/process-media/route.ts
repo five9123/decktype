@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { checkRateLimit, requireAuth } from '@/lib/api-middleware';
-import { checkAiQuota, recordAiUsage } from '@/lib/ai-usage';
+import { getAiLimit, reserveAiUsage, rollbackAiUsage } from '@/lib/ai-usage';
+import { LANG_NAMES } from '@/lib/constants';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds (Vercel Pro)
@@ -32,15 +33,6 @@ interface ProcessMediaBody {
   mode?: 'vocabulary' | 'cloze' | 'both';
   maxWords?: number;
 }
-
-const LANG_NAMES: Record<string, string> = {
-  en: 'English',
-  ko: 'Korean',
-  ja: 'Japanese',
-  zh: 'Chinese',
-  es: 'Spanish',
-  fr: 'French',
-};
 
 function buildVocabularyPrompt(text: string, sourceLang: string, targetLang: string, maxWords: number): string {
   return `You are a language learning assistant. Given the following text in ${LANG_NAMES[sourceLang] ?? sourceLang}, extract the ${maxWords} most important vocabulary words for a ${LANG_NAMES[targetLang] ?? targetLang} speaker learning ${LANG_NAMES[sourceLang] ?? sourceLang}.
@@ -223,18 +215,25 @@ export async function POST(req: Request) {
       );
     }
 
-    // Daily quota check (Free: 3/day, Pro: 50/day)
-    const quota = await checkAiQuota(supabase, user);
-    if (!quota.allowed) {
+    // Get user plan limits (Free: 3/day, Pro: 50/day)
+    const { limit, plan } = await getAiLimit(supabase, user);
+
+    // Reserve a quota slot BEFORE calling OpenAI (prevents race conditions)
+    const { reservationId, used } = await reserveAiUsage(supabase, user.id, 'process-media');
+
+    // Check if reservation exceeded the limit
+    if (used > limit) {
+      // Rollback the reservation
+      if (reservationId) await rollbackAiUsage(supabase, reservationId);
       return NextResponse.json(
         {
-          error: quota.plan === 'free'
-            ? `Free plan: ${quota.limit} AI requests per day. Upgrade to Pro for ${quota.limit * 16}+ daily requests.`
-            : `Daily AI limit reached (${quota.limit}). Resets at midnight UTC.`,
+          error: plan === 'free'
+            ? `Free plan: ${limit} AI requests per day. Upgrade to Pro for ${limit * 16}+ daily requests.`
+            : `Daily AI limit reached (${limit}). Resets at midnight UTC.`,
           code: 'QUOTA_EXCEEDED',
-          used: quota.used,
-          limit: quota.limit,
-          plan: quota.plan,
+          used: used - 1, // subtract the rolled-back reservation
+          limit,
+          plan,
           vocabulary: [],
           cloze: [],
         },
@@ -246,9 +245,11 @@ export async function POST(req: Request) {
     const { text, sourceLang, targetLang, mode = 'both', maxWords = 30 } = body;
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
+      if (reservationId) await rollbackAiUsage(supabase, reservationId);
       return NextResponse.json({ error: 'text is required' }, { status: 400 });
     }
     if (!sourceLang || !targetLang) {
+      if (reservationId) await rollbackAiUsage(supabase, reservationId);
       return NextResponse.json({ error: 'sourceLang and targetLang are required' }, { status: 400 });
     }
 
@@ -266,15 +267,19 @@ export async function POST(req: Request) {
       prompt = buildBothPrompt(truncated, sourceLang, targetLang, clampedMax, maxCloze);
     }
 
-    const result = await callOpenAI(prompt);
-
-    // Record successful usage AFTER the call succeeds (don't count failed attempts)
-    await recordAiUsage(supabase, user.id, 'process-media');
+    let result;
+    try {
+      result = await callOpenAI(prompt);
+    } catch (err) {
+      // Rollback reservation on OpenAI failure (don't count failed attempts)
+      if (reservationId) await rollbackAiUsage(supabase, reservationId);
+      throw err;
+    }
 
     return NextResponse.json({
       vocabulary: mode === 'cloze' ? [] : result.vocabulary,
       cloze: mode === 'vocabulary' ? [] : result.cloze,
-      quota: { used: quota.used + 1, limit: quota.limit },
+      quota: { used, limit },
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal server error';

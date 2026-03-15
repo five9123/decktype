@@ -42,3 +42,29 @@ export const TARGET_LANGS: { code: string; label: string }[] = [
   { code: 'it', label: 'Italiano' },
   { code: 'pt', label: 'Português' },
 ];
+
+/** Language English names (for AI prompts) */
+export const LANG_NAMES: Record<string, string> = {
+  en: 'English',
+  ko: 'Korean',
+  ja: 'Japanese',
+  zh: 'Chinese',
+  es: 'Spanish',
+  fr: 'French',
+  de: 'German',
+  it: 'Italian',
+  pt: 'Portuguese',
+};
+
+/** Language BCP-47 codes (for MyMemory API) */
+export const LANG_CODES_BCP47: Record<string, string> = {
+  ko: 'ko',
+  ja: 'ja',
+  zh: 'zh-CN',
+  en: 'en',
+  es: 'es',
+  fr: 'fr',
+  de: 'de',
+  it: 'it',
+  pt: 'pt',
+};

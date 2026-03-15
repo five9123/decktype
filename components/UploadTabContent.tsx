@@ -8,11 +8,14 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { MAX_UPLOAD_SIZE, FREE_CARDS_PER_DECK } from '@/lib/constants';
 import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
+import { saveDeckWithCards } from '@/lib/deck-save';
+import { friendlyError } from '@/lib/api-errors';
 import { ErrorAlert } from '@/components/ErrorAlert';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { detectFieldMapping, applyMapping, type FieldMapping, type FieldRole } from '@/lib/field-mapping';
 import { cleanCardText } from '@/lib/card-cleaner';
 import { detectLang } from '@/lib/lang-detect';
-import type { ParsedDeck, ParsedCard } from '@/types';
+import type { ParsedDeck } from '@/types';
 
 type UploadState = 'idle' | 'parsing' | 'preview' | 'saving' | 'error';
 
@@ -37,7 +40,7 @@ export function UploadTabContent() {
   const [isDragOver, setIsDragOver] = useState(false);
   const [fieldMapping, setFieldMapping] = useState<FieldMapping>({});
   const [enriching, setEnriching] = useState(false);
-  const [enrichedCards, setEnrichedCards] = useState<ParsedCard[] | null>(null);
+  const [isEnriched, setIsEnriched] = useState(false);
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.name.endsWith('.apkg')) {
@@ -98,57 +101,32 @@ export function UploadTabContent() {
 
     const supabase = createBrowserClient();
 
-    const mappedCards = parsed.cards.map((card) => {
+    const cards = parsed.cards.map((card) => {
       const mapped = applyMapping(card.rawFields, fieldMapping);
       return {
-        ...card,
         front: mapped.front || card.front,
         back: mapped.back || card.back,
-        pronunciation: mapped.pronunciation,
+        pronunciation: mapped.pronunciation ?? '',
+        extra: card.extra ?? '',
+        noteType: card.noteType,
       };
     });
 
-    const cardsToSave = isPro ? mappedCards : mappedCards.slice(0, FREE_CARDS_PER_DECK);
+    const result = await saveDeckWithCards({
+      supabase,
+      userId: user.id,
+      deckName: parsed.name,
+      cards,
+      isPro,
+    });
 
-    const { data: deck, error: deckError } = await supabase
-      .from('decks')
-      .insert({
-        user_id: user.id,
-        name: parsed.name,
-        card_count: cardsToSave.length,
-        note_type: parsed.noteType,
-        tags: [],
-      })
-      .select()
-      .single();
-
-    if (deckError || !deck) {
-      setErrorMsg(deckError?.message ?? 'Failed to save deck');
+    if (result.error) {
+      setErrorMsg(result.error);
       setState('error');
       return;
     }
 
-    const BATCH_SIZE = 100;
-    for (let i = 0; i < cardsToSave.length; i += BATCH_SIZE) {
-      const batch = cardsToSave.slice(i, i + BATCH_SIZE).map((card, idx) => ({
-        deck_id: deck.id,
-        front: card.front,
-        back: card.back,
-        pronunciation: card.pronunciation ?? '',
-        extra: card.extra,
-        note_type: card.noteType,
-        sort_order: i + idx,
-      }));
-
-      const { error: cardsError } = await supabase.from('cards').insert(batch);
-      if (cardsError) {
-        setErrorMsg('Failed to save some cards');
-        setState('error');
-        return;
-      }
-    }
-
-    router.push(`/deck/${deck.id}`);
+    router.push(`/deck/${result.deckId}`);
   };
 
   // ─── AI Enrich ────────────────────────────────────────────────────────
@@ -190,7 +168,7 @@ export function UploadTabContent() {
         if (data.code === 'AUTH_REQUIRED') {
           setErrorMsg('Sign in to use AI Enrich. You can still save the deck without AI enrichment.');
         } else {
-          setErrorMsg(data.error);
+          setErrorMsg(friendlyError(data.error, data.code));
         }
         setEnriching(false);
         return;
@@ -220,7 +198,7 @@ export function UploadTabContent() {
         };
       });
 
-      setEnrichedCards(updated);
+      setIsEnriched(true);
       setParsed({ ...parsed, cards: updated });
     } catch {
       setErrorMsg('Failed to connect to AI service. Please try again.');
@@ -281,14 +259,7 @@ export function UploadTabContent() {
 
       {/* Parsing Progress */}
       {state === 'parsing' && (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div
-            className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin mb-4"
-            style={{ borderColor: 'var(--border)', borderTopColor: 'transparent' }}
-          />
-          <p className="font-medium" style={{ color: 'var(--text)' }}>{t.parsing}</p>
-          <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{progressMsg}</p>
-        </div>
+        <LoadingSpinner title={t.parsing} subtitle={progressMsg} />
       )}
 
       {/* Card Preview */}
@@ -421,7 +392,7 @@ export function UploadTabContent() {
               {enriching ? '✨ Enriching...' : '✨ AI Enrich Cards'}
             </button>
             <span className="text-xs" style={{ color: 'var(--muted)' }}>
-              {enrichedCards
+              {isEnriched
                 ? 'AI enrichment applied — pronunciation and context added'
                 : user
                   ? 'Add missing translations, pronunciation, and context with AI'
@@ -476,15 +447,7 @@ export function UploadTabContent() {
       )}
 
       {/* Saving */}
-      {state === 'saving' && (
-        <div className="flex flex-col items-center justify-center py-20">
-          <div
-            className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin mb-4"
-            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
-          />
-          <p className="font-medium" style={{ color: 'var(--text)' }}>Saving deck...</p>
-        </div>
-      )}
+      {state === 'saving' && <LoadingSpinner title="Saving deck..." />}
     </div>
   );
 }

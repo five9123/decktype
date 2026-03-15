@@ -68,3 +68,36 @@ export async function recordAiUsage(
     endpoint,
   });
 }
+
+/**
+ * Reserve a quota slot BEFORE calling OpenAI to prevent race conditions.
+ * Insert first, then verify the count hasn't exceeded the limit.
+ * Returns the reservation ID for potential rollback.
+ */
+export async function reserveAiUsage(
+  supabase: SupabaseClient,
+  userId: string,
+  endpoint: string = 'process-media',
+): Promise<{ reservationId: number | null; used: number }> {
+  // 1. Insert a row to "reserve" the slot
+  const { data: row } = await supabase
+    .from('ai_usage')
+    .insert({ user_id: userId, endpoint })
+    .select('id')
+    .single();
+
+  // 2. Count today's total usage (including the just-inserted row)
+  const used = await getDailyAiUsage(supabase, userId);
+
+  return { reservationId: row?.id ?? null, used };
+}
+
+/**
+ * Rollback a reserved AI usage slot (e.g. when quota exceeded or API call fails).
+ */
+export async function rollbackAiUsage(
+  supabase: SupabaseClient,
+  reservationId: number,
+): Promise<void> {
+  await supabase.from('ai_usage').delete().eq('id', reservationId);
+}

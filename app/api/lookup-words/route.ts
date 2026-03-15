@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { romanize } from '@/lib/romanize';
 import type { ScriptLang } from '@/lib/lang-detect';
 import { checkRateLimit } from '@/lib/api-middleware';
+import { LANG_CODES_BCP47 } from '@/lib/constants';
 
 export const runtime = 'nodejs';
 
@@ -31,17 +32,7 @@ interface LookupResult {
   pronunciation: string;
 }
 
-/**
- * Language code mapping for MyMemory API (BCP-47 style).
- */
-const LANG_CODES: Record<string, string> = {
-  ko: 'ko',
-  ja: 'ja',
-  zh: 'zh-CN',
-  en: 'en',
-  es: 'es',
-  fr: 'fr',
-};
+// LANG_CODES_BCP47 imported from @/lib/constants
 
 export async function POST(req: Request) {
   try {
@@ -63,8 +54,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'sourceLang and targetLang are required' }, { status: 400 });
     }
 
-    const src = LANG_CODES[sourceLang] ?? sourceLang;
-    const tgt = LANG_CODES[targetLang] ?? targetLang;
+    const src = LANG_CODES_BCP47[sourceLang] ?? sourceLang;
+    const tgt = LANG_CODES_BCP47[targetLang] ?? targetLang;
     const validScriptLangs: ScriptLang[] = ['ko', 'ja', 'zh', 'en'];
     const scriptLang: ScriptLang = validScriptLangs.includes(sourceLang as ScriptLang)
       ? (sourceLang as ScriptLang)

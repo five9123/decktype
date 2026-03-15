@@ -415,6 +415,8 @@ export type Translations = {
   finalScore: string;
   playAgain: string;
   acidRainDesc: string;
+  wordTrain: string;
+  wordTrainDesc: string;
 
   // Fill Blank
   showHint: string;
@@ -817,6 +819,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: 'Final Score',
     playAgain: 'Play Again',
     acidRainDesc: 'Words fall from above — type them to destroy!',
+    wordTrain: 'Word Train',
+    wordTrainDesc: 'Words scroll across — type the answer before they escape!',
 
     // Fill Blank
     showHint: 'Show meaning hint',
@@ -1212,6 +1216,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: '최종 점수',
     playAgain: '다시 하기',
     acidRainDesc: '단어가 위에서 떨어집니다 — 타이핑으로 파괴하세요!',
+    wordTrain: '워드트레인',
+    wordTrainDesc: '단어가 흘러갑니다 — 빠져나가기 전에 타이핑하세요!',
 
     showHint: '뜻 힌트 보기',
     hintTimerLabel: '글자 힌트',
@@ -1606,6 +1612,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: '最終スコア',
     playAgain: 'もう一度',
     acidRainDesc: '上から単語が落ちてくる — タイピングで破壊！',
+    wordTrain: 'ワードトレイン',
+    wordTrainDesc: '単語が横に流れる — 逃げる前にタイピング！',
 
     showHint: '意味ヒントを表示',
     hintTimerLabel: '文字ヒント',
@@ -2000,6 +2008,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: 'Puntuación Final',
     playAgain: 'Jugar de nuevo',
     acidRainDesc: '¡Las palabras caen desde arriba — escríbelas para destruirlas!',
+    wordTrain: 'Word Train',
+    wordTrainDesc: '¡Las palabras se desplazan — escribe antes de que escapen!',
 
     showHint: 'Ver pista de significado',
     hintTimerLabel: 'Pista de letra',
@@ -2394,6 +2404,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: '最终分数',
     playAgain: '再来一次',
     acidRainDesc: '单词从上方落下——打字消灭它们！',
+    wordTrain: 'Word Train',
+    wordTrainDesc: '单词横向滚动——在它们逃走之前打出答案！',
 
     showHint: '查看释义提示',
     hintTimerLabel: '字母提示',
@@ -2788,6 +2800,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: 'Score Final',
     playAgain: 'Rejouer',
     acidRainDesc: 'Les mots tombent du ciel — tapez-les pour les détruire !',
+    wordTrain: 'Word Train',
+    wordTrainDesc: 'Les mots défilent — tapez avant qu\'ils s\'échappent !',
 
     showHint: 'Voir indice de sens',
     hintTimerLabel: 'Indice lettre',

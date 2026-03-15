@@ -5,6 +5,8 @@ import { detectAndParse, type ParsedMedia } from '@/lib/media-parser';
 import { detectLang } from '@/lib/lang-detect';
 import { TARGET_LANGS } from '@/lib/constants';
 import { ErrorAlert } from '@/components/ErrorAlert';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { friendlyError } from '@/lib/api-errors';
 import { useLanguage } from '@/contexts/LanguageContext';
 import type { NoteType } from '@/types';
 
@@ -40,37 +42,6 @@ interface Props {
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const MAX_INPUT_CHARS = 8000;
-
-function friendlyError(msg: string, code?: string): string {
-  if (code === 'AUTH_REQUIRED') {
-    return 'Sign in required to use AI features.';
-  }
-  if (code === 'QUOTA_EXCEEDED') {
-    return msg; // Already user-friendly from server
-  }
-  if (msg.includes('timeout') || msg.includes('aborted')) {
-    return 'Processing timed out. Try reducing the text or lowering the max words count.';
-  }
-  if (msg.includes('Too many requests') || msg.includes('429')) {
-    return 'Too many requests. Please wait a minute and try again. (Limit: 5/min)';
-  }
-  if (msg.includes('not configured') || msg.includes('OPENAI_API_KEY')) {
-    return 'AI processing is not configured on the server.';
-  }
-  if (msg.includes('OpenAI API error')) {
-    return 'AI service error. Please try again in a moment.';
-  }
-  if (msg.includes('Empty response')) {
-    return 'AI returned an empty response. Try with shorter text.';
-  }
-  if (msg.includes('cut off') || msg.includes('too long')) {
-    return 'AI response was too long and got cut off. Try reducing the max words count or using a shorter text.';
-  }
-  if (msg.includes('invalid JSON') || msg.includes('Unterminated string')) {
-    return 'AI returned a malformed response. Please try again — sometimes reducing max words helps.';
-  }
-  return msg;
-}
 
 // ── Component ──────────────────────────────────────────────────────────
 
@@ -492,18 +463,12 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
 
       {/* ═══ Processing: Spinner ═══ */}
       {state === 'processing' && (
-        <div className="flex flex-col items-center py-16">
-          <div
-            className="w-8 h-8 rounded-full border-3 border-t-transparent animate-spin mb-4"
-            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent', borderWidth: 3 }}
-          />
-          <p className="text-sm font-medium mb-1" style={{ color: 'var(--text)' }}>
-            {t.generating ?? 'Generating cards with AI...'}
-          </p>
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>
-            This may take up to 30 seconds
-          </p>
-        </div>
+        <LoadingSpinner
+          title={t.generating ?? 'Generating cards with AI...'}
+          subtitle="This may take up to 30 seconds"
+          size="sm"
+          className="py-16"
+        />
       )}
 
       {/* ═══ Editing: Generated cards ═══ */}

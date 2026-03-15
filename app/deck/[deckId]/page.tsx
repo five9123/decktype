@@ -233,6 +233,7 @@ export default function DeckDetailPage() {
                 { value: 'back_to_front' as PracticeMode, label: t.backToFront },
                 { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
                 { value: 'acid_rain' as PracticeMode, label: t.acidRain },
+                { value: 'word_train' as PracticeMode, label: t.wordTrain },
               ].map((opt) => (
                 <button
                   key={opt.value}
