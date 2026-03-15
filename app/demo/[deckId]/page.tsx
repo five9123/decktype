@@ -14,6 +14,7 @@ import { PreferencesPanel } from '@/components/PreferencesPanel';
 import dynamic from 'next/dynamic';
 const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
 const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
+const WordTrainGame = dynamic(() => import('@/components/WordTrainGame').then((m) => ({ default: m.WordTrainGame })), { ssr: false });
 import { DEMO_DECKS } from '@/lib/demo-decks';
 import type { DemoCard, LocalizedText } from '@/lib/demo-decks';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
@@ -259,6 +260,10 @@ export default function DemoPracticePage() {
   if (mode === 'fill_blank') {
     const clozeCards = deck.cards.filter(c => c.noteType === 'Cloze');
     return <FillBlankGame cards={rawCardsToCards(resolveDemoCards(clozeCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
+  }
+  if (mode === 'word_train') {
+    const basicCards = deck.cards.filter(c => !c.noteType || c.noteType === 'Basic');
+    return <WordTrainGame cards={rawCardsToCards(resolveDemoCards(basicCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
   }
 
   // ── Results screen ──
