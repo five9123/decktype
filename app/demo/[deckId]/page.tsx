@@ -255,7 +255,7 @@ export default function DemoPracticePage() {
   // Route to game-specific components (use deck.cards directly to access all card types)
   if (mode === 'acid_rain') {
     const basicCards = deck.cards.filter(c => !c.noteType || c.noteType === 'Basic');
-    return <AcidRainGame cards={rawCardsToCards(resolveDemoCards(basicCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
+    return <AcidRainGame cards={rawCardsToCards(resolveDemoCards(basicCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
   }
   if (mode === 'fill_blank') {
     const clozeCards = deck.cards.filter(c => c.noteType === 'Cloze');
@@ -263,7 +263,7 @@ export default function DemoPracticePage() {
   }
   if (mode === 'word_train') {
     const basicCards = deck.cards.filter(c => !c.noteType || c.noteType === 'Basic');
-    return <WordTrainGame cards={rawCardsToCards(resolveDemoCards(basicCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} onExit={() => router.push('/demo')} />;
+    return <WordTrainGame cards={rawCardsToCards(resolveDemoCards(basicCards, uiLang, deck.lang), `demo-${deckId}`, 'demo')} deckId={`demo-${deckId}`} deckLang={deck.lang as ScriptLang | undefined} onExit={() => router.push('/demo')} />;
   }
 
   // ── Results screen ──

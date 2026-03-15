@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 // ── Constants ───────────────────────────────────────────────────────
-const SLIDE_COUNT = 3;
+const SLIDE_COUNT = 4;
 const SLIDE_DURATION = 5000;
 const TRANSITION_MS = 400;
 
@@ -11,13 +11,15 @@ const SLIDES = [
   { id: 'classic', url: 'typee.app/practice', label: 'Classic Typing' },
   { id: 'fill-blank', url: 'typee.app/practice', label: 'Fill in Blank' },
   { id: 'word-rain', url: 'typee.app/play', label: 'Word Rain' },
+  { id: 'word-train', url: 'typee.app/play', label: 'Word Train' },
 ] as const;
 
 // ── Phase delays per slide (ms between each phase step) ─────────────
 const CLASSIC_DELAYS = [600, 600, 400, 800];
 const FILL_DELAYS = [700, 500, 500, 600];
 const RAIN_DELAYS = [800, 600, 600, 500];
-const PHASE_DELAYS = [CLASSIC_DELAYS, FILL_DELAYS, RAIN_DELAYS];
+const TRAIN_DELAYS = [700, 500, 600, 800];
+const PHASE_DELAYS = [CLASSIC_DELAYS, FILL_DELAYS, RAIN_DELAYS, TRAIN_DELAYS];
 
 // ── Slide 1: Classic Typing ─────────────────────────────────────────
 function ClassicSlide({ phase }: { phase: number }) {
@@ -328,8 +330,183 @@ function WordRainSlide({ phase }: { phase: number }) {
   );
 }
 
+// ── Slide 4: Word Train ─────────────────────────────────────────────
+const TRAIN_CARDS = [
+  { front: '친구', hint: 'chingu', back: '友達' },
+  { front: '가족', hint: 'gajok', back: '家族' },
+];
+
+// Combo milestone thresholds (% positions along bar)
+const MILESTONES = [
+  { label: '+1s', pct: 20 },
+  { label: '+1s', pct: 40 },
+  { label: '+2s', pct: 67 },
+  { label: '+3s', pct: 100 },
+];
+
+function WordTrainSlide({ phase }: { phase: number }) {
+  const cardIdx = phase >= 3 ? 1 : 0;
+  const card = TRAIN_CARDS[cardIdx];
+  const inputText = phase === 0 ? '' : phase === 1 ? 'ch' : phase === 2 ? 'chingu' : '';
+  const isCorrect = phase === 2;
+  const showBonus = phase === 3;
+  const timerSec = [45, 44, 43, 44][phase] ?? 44;
+  const score = phase >= 3 ? 10 : 0;
+  // Car position: left % of track
+  const carPct = [18, 42, 64, 12][phase] ?? 12;
+  // Combo bar fill %
+  const comboFill = phase >= 3 ? 38 : 18;
+
+  return (
+    <div className="px-5 py-5 sm:px-7">
+      {/* HUD */}
+      <div
+        className="flex items-center justify-between mb-3 text-sm"
+        style={{ color: 'var(--muted)' }}
+      >
+        <span style={{ fontWeight: 700 }}>
+          <span style={{ color: 'var(--accent)' }}>⏱</span>
+          {' '}
+          <span
+            style={{
+              color: 'var(--text)',
+              transition: 'color 0.3s',
+            }}
+          >
+            {timerSec}s
+          </span>
+          {showBonus && (
+            <span
+              className="text-xs font-bold ml-1"
+              style={{ color: 'var(--correct)', transition: 'opacity 0.3s' }}
+            >
+              +1s
+            </span>
+          )}
+        </span>
+        <span className="text-xs">
+          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{score}</span>
+          <span className="ml-1">pts</span>
+        </span>
+      </div>
+
+      {/* Combo milestones bar */}
+      <div className="relative mb-4">
+        {/* Labels */}
+        <div className="relative h-4 mb-0.5">
+          {MILESTONES.map((m) => (
+            <span
+              key={m.label + m.pct}
+              className="absolute text-xs"
+              style={{
+                left: `${m.pct}%`,
+                transform: 'translateX(-50%)',
+                color: 'var(--muted)',
+                fontSize: 9,
+              }}
+            >
+              {m.label}
+            </span>
+          ))}
+        </div>
+        {/* Track */}
+        <div
+          className="relative rounded-full overflow-hidden"
+          style={{ height: 6, background: 'var(--border)' }}
+        >
+          <div
+            style={{
+              height: '100%',
+              width: `${comboFill}%`,
+              background: 'var(--accent)',
+              borderRadius: '9999px',
+              transition: 'width 0.5s ease',
+            }}
+          />
+          {/* Milestone tick marks */}
+          {MILESTONES.map((m) => (
+            <div
+              key={m.pct}
+              className="absolute top-0 bottom-0"
+              style={{
+                left: `${m.pct}%`,
+                width: 2,
+                background: 'var(--bg)',
+                opacity: 0.7,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Word display */}
+      <div className="text-center mb-4">
+        <p
+          className="text-3xl font-bold mb-1"
+          style={{ color: 'var(--text)', transition: 'opacity 0.2s' }}
+        >
+          {card.back}
+        </p>
+        <p className="text-xs" style={{ color: 'var(--accent)', opacity: 0.85 }}>
+          [{card.hint}]
+        </p>
+      </div>
+
+      {/* Train track */}
+      <div className="relative mb-3">
+        {/* Upper rail */}
+        <div style={{ height: 2, background: 'var(--border)', borderRadius: 1 }} />
+        {/* Track area */}
+        <div
+          className="relative overflow-hidden"
+          style={{ height: 44, background: 'var(--surface)' }}
+        >
+          {/* Train car */}
+          <div
+            className="absolute flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-bold"
+            style={{
+              top: '50%',
+              left: `${carPct}%`,
+              transform: 'translateY(-50%)',
+              background: isCorrect
+                ? 'var(--correct)'
+                : 'linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--correct)))',
+              color: '#fff',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+              transition: 'left 0.5s ease, background 0.3s',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span style={{ fontSize: 18 }}>🚃</span>
+            <span>{card.front}</span>
+          </div>
+        </div>
+        {/* Lower rail */}
+        <div style={{ height: 2, background: 'var(--border)', borderRadius: 1 }} />
+      </div>
+
+      {/* Input field */}
+      <div
+        className="px-4 py-2.5 rounded-xl text-sm text-center"
+        style={{
+          background: 'var(--bg)',
+          border: `1px solid ${isCorrect ? 'var(--correct)' : 'var(--accent)'}`,
+          color: isCorrect ? 'var(--correct)' : 'var(--text)',
+          transition: 'border-color 0.3s, color 0.3s',
+          fontFamily: 'monospace',
+        }}
+      >
+        {inputText || '\u00A0'}
+        {!isCorrect && phase < 2 && (
+          <span style={{ borderRight: '2px solid var(--accent)' }}>&nbsp;</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── Mode label pills ────────────────────────────────────────────────
-const MODE_LABELS = ['✏️ Typing', '📝 Fill in Blank', '🌧️ Word Rain'];
+const MODE_LABELS = ['✏️ Typing', '📝 Fill in Blank', '🌧️ Word Rain', '🚂 Word Train'];
 
 // ── Main Carousel ───────────────────────────────────────────────────
 export function HeroCarousel() {
@@ -451,6 +628,7 @@ export function HeroCarousel() {
           {activeSlide === 0 && <ClassicSlide phase={animPhase} />}
           {activeSlide === 1 && <FillBlankSlide phase={animPhase} />}
           {activeSlide === 2 && <WordRainSlide phase={animPhase} />}
+          {activeSlide === 3 && <WordTrainSlide phase={animPhase} />}
         </div>
       </div>
 

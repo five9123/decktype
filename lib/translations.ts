@@ -37,6 +37,7 @@ export type Translations = {
   deckLimitReached: string;
   shareDeck: string;
   shareTypetris: string;
+  shareWordTrain: string;
   linkCopied: string;
 
   // Upload
@@ -415,11 +416,15 @@ export type Translations = {
   finalScore: string;
   playAgain: string;
   acidRainDesc: string;
+  fillBlankDesc: string;
+  backToFrontDesc: string;
   wordTrain: string;
   wordTrainDesc: string;
   wordTrainTimerDesc: string;
   timeUp: string;
   wordsCompleted: string;
+  pronunciation: string;
+  targetWord: string;
 
   // Fill Blank
   showHint: string;
@@ -461,6 +466,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReached: 'Free plan limit reached (1 deck). Upgrade to Pro for unlimited decks.',
     shareDeck: 'Share Deck',
     shareTypetris: 'Share Word Rain',
+    shareWordTrain: 'Share Word Train',
     linkCopied: 'Link copied!',
 
     uploadTitle: 'Upload Anki Deck',
@@ -822,11 +828,15 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: 'Final Score',
     playAgain: 'Play Again',
     acidRainDesc: 'Words fall from above — type them to destroy!',
+    fillBlankDesc: 'Fill in the blank with the correct word',
+    backToFrontDesc: 'See the word → type it',
     wordTrain: 'Word Train',
-    wordTrainDesc: 'Type each word before time runs out!',
+    wordTrainDesc: 'See the meaning — type the word before the train passes!',
     wordTrainTimerDesc: 'Build combos for bonus time!',
     timeUp: "Time's Up!",
     wordsCompleted: 'Words',
+    pronunciation: 'Pronunciation',
+    targetWord: 'Target Word',
 
     // Fill Blank
     showHint: 'Show meaning hint',
@@ -867,6 +877,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReached: '무료 플랜 한도 도달 (1개 덱). Pro로 업그레이드하면 무제한입니다.',
     shareDeck: '덱 공유',
     shareTypetris: '워드 레인 공유',
+    shareWordTrain: '워드 트레인 공유',
     linkCopied: '링크 복사됨!',
 
     uploadTitle: 'Anki 덱 업로드',
@@ -1211,7 +1222,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: '카드 유형',
     lineCount: '줄',
 
-    acidRain: '게임: 워드 레인',
+    acidRain: '워드 레인',
     fillBlank: '빈칸 채우기',
     classicTyping: '클래식 타이핑',
 
@@ -1222,11 +1233,15 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: '최종 점수',
     playAgain: '다시 하기',
     acidRainDesc: '단어가 위에서 떨어집니다 — 타이핑으로 파괴하세요!',
-    wordTrain: '워드트레인',
-    wordTrainDesc: '시간 안에 단어를 타이핑하세요!',
+    fillBlankDesc: '빈칸에 알맞은 단어를 채우세요',
+    backToFrontDesc: '단어를 보고 → 그대로 타이핑',
+    wordTrain: '워드 트레인',
+    wordTrainDesc: '열차가 지나가기 전에 단어의 뜻을 보고 타이핑하세요',
     wordTrainTimerDesc: '콤보를 쌓아 보너스 시간을 얻으세요!',
     timeUp: '시간 종료!',
     wordsCompleted: '완료 단어',
+    pronunciation: '발음 기호',
+    targetWord: '목표 단어',
 
     showHint: '뜻 힌트 보기',
     hintTimerLabel: '글자 힌트',
@@ -1266,6 +1281,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReached: '無料プランの上限です（1デッキ）。Proにアップグレードで無制限。',
     shareDeck: 'デッキをシェア',
     shareTypetris: 'ワードレインをシェア',
+    shareWordTrain: 'ワードトレインをシェア',
     linkCopied: 'リンクをコピー!',
 
     uploadTitle: 'Ankiデッキをアップロード',
@@ -1610,7 +1626,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     generateMode: 'カードタイプ',
     lineCount: '行',
 
-    acidRain: 'ゲーム: ワードレイン',
+    acidRain: 'ワードレイン',
     fillBlank: '穴埋め',
     classicTyping: 'クラシックタイピング',
 
@@ -1621,11 +1637,15 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: '最終スコア',
     playAgain: 'もう一度',
     acidRainDesc: '上から単語が落ちてくる — タイピングで破壊！',
+    fillBlankDesc: '空欄に正しい単語を入力してください',
+    backToFrontDesc: '単語を見て → そのまま入力',
     wordTrain: 'ワードトレイン',
-    wordTrainDesc: '時間内に単語をタイピング！',
+    wordTrainDesc: '単語の意味を見て、列車が通り過ぎる前にタイピング！',
     wordTrainTimerDesc: 'コンボでボーナスタイムを獲得！',
     timeUp: 'タイムアップ！',
     wordsCompleted: '完了単語',
+    pronunciation: '発音記号',
+    targetWord: '目標単語',
 
     showHint: '意味ヒントを表示',
     hintTimerLabel: '文字ヒント',
@@ -1665,6 +1685,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReached: 'Límite del plan gratuito (1 mazo). Mejora a Pro para mazos ilimitados.',
     shareDeck: 'Compartir mazo',
     shareTypetris: 'Compartir Word Rain',
+    shareWordTrain: 'Compartir Word Train',
     linkCopied: '¡Enlace copiado!',
 
     uploadTitle: 'Subir Mazo Anki',
@@ -2020,11 +2041,15 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: 'Puntuación Final',
     playAgain: 'Jugar de nuevo',
     acidRainDesc: '¡Las palabras caen desde arriba — escríbelas para destruirlas!',
+    fillBlankDesc: 'Rellena el espacio con la palabra correcta',
+    backToFrontDesc: 'Ve la palabra → escríbela',
     wordTrain: 'Word Train',
-    wordTrainDesc: '¡Escribe cada palabra a tiempo!',
+    wordTrainDesc: '¡Ve el significado y escribe la palabra antes de que pase el tren!',
     wordTrainTimerDesc: '¡Haz combos para tiempo extra!',
     timeUp: '¡Se acabó el tiempo!',
     wordsCompleted: 'Palabras',
+    pronunciation: 'Pronunciación',
+    targetWord: 'Palabra objetivo',
 
     showHint: 'Ver pista de significado',
     hintTimerLabel: 'Pista de letra',
@@ -2064,6 +2089,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReached: '已达免费计划上限（1个牌组）。升级至Pro享无限牌组。',
     shareDeck: '分享牌组',
     shareTypetris: '分享Word Rain',
+    shareWordTrain: '分享Word Train',
     linkCopied: '链接已复制！',
 
     uploadTitle: '上传Anki牌组',
@@ -2419,11 +2445,15 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: '最终分数',
     playAgain: '再来一次',
     acidRainDesc: '单词从上方落下——打字消灭它们！',
+    fillBlankDesc: '用正确的单词填空',
+    backToFrontDesc: '看到单词 → 直接输入',
     wordTrain: 'Word Train',
-    wordTrainDesc: '在时间内输入单词！',
+    wordTrainDesc: '看到单词含义，在列车驶过前完成输入！',
     wordTrainTimerDesc: '连击获得额外时间！',
     timeUp: '时间到！',
     wordsCompleted: '完成单词',
+    pronunciation: '发音标记',
+    targetWord: '目标单词',
 
     showHint: '查看释义提示',
     hintTimerLabel: '字母提示',
@@ -2463,6 +2493,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReached: 'Limite du plan gratuit atteinte (1 deck). Passez à Pro pour des decks illimités.',
     shareDeck: 'Partager le deck',
     shareTypetris: 'Partager Word Rain',
+    shareWordTrain: 'Partager Word Train',
     linkCopied: 'Lien copié !',
 
     uploadTitle: 'Importer un Deck Anki',
@@ -2818,11 +2849,15 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     finalScore: 'Score Final',
     playAgain: 'Rejouer',
     acidRainDesc: 'Les mots tombent du ciel — tapez-les pour les détruire !',
+    fillBlankDesc: 'Complétez le blanc avec le mot manquant',
+    backToFrontDesc: 'Voyez le mot → tapez-le',
     wordTrain: 'Word Train',
-    wordTrainDesc: 'Tapez chaque mot à temps !',
+    wordTrainDesc: 'Voyez la signification — tapez le mot avant que le train ne passe !',
     wordTrainTimerDesc: 'Enchaînez pour du temps bonus !',
     timeUp: 'Temps écoulé !',
     wordsCompleted: 'Mots',
+    pronunciation: 'Prononciation',
+    targetWord: 'Mot cible',
 
     showHint: 'Voir indice de sens',
     hintTimerLabel: 'Indice lettre',

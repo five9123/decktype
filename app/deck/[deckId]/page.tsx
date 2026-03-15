@@ -31,6 +31,8 @@ export default function DeckDetailPage() {
   const [savingCard, setSavingCard] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [shareError, setShareError] = useState('');
+  const [shareTrainCopied, setShareTrainCopied] = useState(false);
+  const [shareTrainError, setShareTrainError] = useState('');
 
   const { masteryMap, getDeckProgress } = useMastery(deckId);
   const progress = getDeckProgress();
@@ -97,6 +99,21 @@ export default function DeckDetailPage() {
     }
   };
 
+  const handleShareWordTrain = async () => {
+    if (!deck) return;
+    try {
+      setShareTrainError('');
+      const encoded = await encodeDeckForShare(deck.name, cards);
+      const url = `${BASE_URL}/play/wordtrain#${encoded}`;
+      await navigator.clipboard.writeText(url);
+      setShareTrainCopied(true);
+      setTimeout(() => setShareTrainCopied(false), 2000);
+    } catch (e) {
+      setShareTrainError(e instanceof Error ? e.message : 'Failed to generate link');
+      setTimeout(() => setShareTrainError(''), 3000);
+    }
+  };
+
   if (loading) {
     return (
       <>
@@ -160,6 +177,30 @@ export default function DeckDetailPage() {
                   style={{ background: 'var(--incorrect)', color: '#fff' }}
                 >
                   {shareError}
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                onClick={handleShareWordTrain}
+                disabled={cards.filter((c) => c.note_type !== 'Cloze').length === 0}
+                className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+                style={{
+                  background: shareTrainCopied ? 'var(--correct)' : 'var(--surface)',
+                  border: `1px solid ${shareTrainCopied ? 'var(--correct)' : 'var(--border)'}`,
+                  color: shareTrainCopied ? '#fff' : 'var(--text)',
+                  cursor: cards.filter((c) => c.note_type !== 'Cloze').length > 0 ? 'pointer' : 'not-allowed',
+                  opacity: cards.filter((c) => c.note_type !== 'Cloze').length > 0 ? 1 : 0.5,
+                }}
+              >
+                {shareTrainCopied ? `✓ ${t.linkCopied}` : `🚂 ${t.shareWordTrain}`}
+              </button>
+              {shareTrainError && (
+                <div
+                  className="absolute top-full left-0 mt-1 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap z-10"
+                  style={{ background: 'var(--incorrect)', color: '#fff' }}
+                >
+                  {shareTrainError}
                 </div>
               )}
             </div>
@@ -230,24 +271,36 @@ export default function DeckDetailPage() {
             <p className="text-xs font-medium mb-2" style={{ color: 'var(--muted)' }}>MODE</p>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: 'back_to_front' as PracticeMode, label: t.backToFront },
-                { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
-                { value: 'acid_rain' as PracticeMode, label: t.acidRain },
-                { value: 'word_train' as PracticeMode, label: t.wordTrain },
+                { value: 'back_to_front' as PracticeMode, label: t.backToFront, desc: t.backToFrontDesc },
+                { value: 'fill_blank' as PracticeMode, label: t.fillBlank, desc: t.fillBlankDesc },
+                { value: 'acid_rain' as PracticeMode, label: t.acidRain, desc: t.acidRainDesc },
+                { value: 'word_train' as PracticeMode, label: t.wordTrain, desc: t.wordTrainDesc },
               ].map((opt) => (
-                <button
-                  key={opt.value}
-                  onClick={() => setMode(opt.value)}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                  style={{
-                    background: mode === opt.value ? 'var(--accent)' : 'var(--surface2)',
-                    color: mode === opt.value ? '#fff' : 'var(--text)',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {opt.label}
-                </button>
+                <div key={opt.value} className="relative group/tip">
+                  <button
+                    onClick={() => setMode(opt.value)}
+                    className="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    style={{
+                      background: mode === opt.value ? 'var(--accent)' : 'var(--surface2)',
+                      color: mode === opt.value ? '#fff' : 'var(--text)',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                  <div
+                    className="absolute bottom-full left-0 mb-2 px-3 py-2 rounded-lg text-xs w-56 pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity z-20"
+                    style={{
+                      background: 'var(--surface2)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text)',
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+                    }}
+                  >
+                    {opt.desc}
+                  </div>
+                </div>
               ))}
             </div>
           </div>

@@ -392,13 +392,13 @@ export default function PracticePage() {
 
   // Route to game-specific components
   if (mode === 'acid_rain') {
-    return <AcidRainGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
+    return <AcidRainGame cards={cards} deckId={deckId} deckLang={(deckSourceLang as ScriptLang) ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
   if (mode === 'fill_blank') {
     return <FillBlankGame cards={cards} deckId={deckId} deckLang={(deckSourceLang as ScriptLang) ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
   if (mode === 'word_train') {
-    return <WordTrainGame cards={cards} deckId={deckId} onExit={() => router.push(`/deck/${deckId}`)} />;
+    return <WordTrainGame cards={cards} deckId={deckId} deckLang={(deckSourceLang as ScriptLang) ?? undefined} onExit={() => router.push(`/deck/${deckId}`)} />;
   }
 
   return (

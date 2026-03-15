@@ -86,29 +86,38 @@ export default function DemoPage() {
           <p className="text-xs font-bold mb-3" style={{ color: 'var(--muted)' }}>MODE</p>
           <div className="flex gap-2 flex-wrap">
             {([
-              { value: 'back_to_front' as PracticeMode, label: t.backToFront },
-              { value: 'fill_blank' as PracticeMode, label: t.fillBlank },
-              { value: 'acid_rain' as PracticeMode, label: t.acidRain },
-              { value: 'word_train' as PracticeMode, label: t.wordTrain },
+              { value: 'back_to_front' as PracticeMode, label: t.backToFront, desc: t.backToFrontDesc },
+              { value: 'fill_blank' as PracticeMode, label: t.fillBlank, desc: t.fillBlankDesc },
+              { value: 'acid_rain' as PracticeMode, label: t.acidRain, desc: t.acidRainDesc },
+              { value: 'word_train' as PracticeMode, label: t.wordTrain, desc: t.wordTrainDesc },
             ] as const).map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setMode(opt.value)}
-                className="px-4 py-2 rounded-lg text-sm font-medium"
-                style={{
-                  background: mode === opt.value ? 'var(--accent)' : 'var(--surface2)',
-                  color: mode === opt.value ? '#fff' : 'var(--text)',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                {opt.label}
-              </button>
+              <div key={opt.value} className="relative group/tip">
+                <button
+                  onClick={() => setMode(opt.value)}
+                  className="px-4 py-2 rounded-lg text-sm font-medium"
+                  style={{
+                    background: mode === opt.value ? 'var(--accent)' : 'var(--surface2)',
+                    color: mode === opt.value ? '#fff' : 'var(--text)',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {opt.label}
+                </button>
+                <div
+                  className="absolute bottom-full left-0 mb-2 px-3 py-2 rounded-lg text-xs w-56 pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity z-20"
+                  style={{
+                    background: 'var(--surface2)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+                  }}
+                >
+                  {opt.desc}
+                </div>
+              </div>
             ))}
           </div>
-          <p className="text-xs mt-2" style={{ color: 'var(--muted)' }}>
-            {t.demoModeHintWord}
-          </p>
         </div>
 
         {/* Deck cards */}

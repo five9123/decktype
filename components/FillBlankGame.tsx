@@ -12,6 +12,7 @@ import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { shuffle } from '@/lib/utils';
 import type { Card } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
+import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 
 interface Props {
   cards: Card[];
@@ -429,6 +430,13 @@ export function FillBlankGame({ cards: rawCards, deckId, deckLang, onExit }: Pro
             />
           </button>
         )}
+
+        <VirtualKeyboard
+          target={answer}
+          input={input}
+          pronunciation={currentCard?.pronunciation ?? undefined}
+          deckLang={deckLang}
+        />
       </div>
     </div>
   );

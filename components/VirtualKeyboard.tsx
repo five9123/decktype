@@ -424,17 +424,31 @@ function computeHintKeys(
     // Match confirmed kana against target segments
     let matchedRomajiLen = 0;
     let kanaPos = 0;
-    for (const seg of segments) {
-      if (kanaPos + seg.kana.length <= confirmedHira.length) {
-        const inputSeg = confirmedHira.substring(kanaPos, kanaPos + seg.kana.length);
-        if (inputSeg === seg.kana) {
-          matchedRomajiLen += seg.romaji.length;
-          kanaPos += seg.kana.length;
+
+    // Detect "romaji pronunciation mode": pronunciation was given as ASCII romaji,
+    // so buildRomajiSegments created letter-by-letter ASCII segments (seg.kana = 'k', 'a', etc.).
+    // In this mode, if the user is typing via IME, confirmedHira may contain actual kana
+    // ('か') that won't match the ASCII seg.kana ('k'). Fix: convert confirmed kana back
+    // to its romaji length using buildRomajiSegments(confirmedHira).
+    const isRomajiPronMode = segments.length > 0 && !/[\u3040-\u30FF]/.test(segments[0].kana);
+
+    if (isRomajiPronMode && /[\u3040-\u30FF]/.test(confirmedHira)) {
+      // IME kana input with romaji pronunciation — convert kana to romaji length
+      const confirmedSegs = buildRomajiSegments(confirmedHira, undefined);
+      matchedRomajiLen = confirmedSegs.reduce((sum, s) => sum + s.romaji.length, 0);
+    } else {
+      for (const seg of segments) {
+        if (kanaPos + seg.kana.length <= confirmedHira.length) {
+          const inputSeg = confirmedHira.substring(kanaPos, kanaPos + seg.kana.length);
+          if (inputSeg === seg.kana) {
+            matchedRomajiLen += seg.romaji.length;
+            kanaPos += seg.kana.length;
+          } else {
+            break; // mismatch — show hints for this position
+          }
         } else {
-          break; // mismatch — show hints for this position
+          break; // input exhausted
         }
-      } else {
-        break; // input exhausted
       }
     }
 
@@ -735,10 +749,20 @@ export function VirtualKeyboard({
 
   const isShift = pressed.has('ShiftLeft') || pressed.has('ShiftRight');
 
+  // Hint highlight toggle (persisted in localStorage)
+  const [showHints, setShowHints] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    const stored = localStorage.getItem('vk-show-hints');
+    return stored === null ? true : stored === '1';
+  });
+  useEffect(() => {
+    localStorage.setItem('vk-show-hints', showHints ? '1' : '0');
+  }, [showHints]);
+
   // Compute next-key hints with priority (1 = immediate, 2 = upcoming)
   // Uses grapheme-aware partial-composition logic for Korean
   const hintKeys = computeHintKeys(target, input, lang, pronunciation);
-  const hintMap  = buildHintMap(hintKeys);
+  const hintMap  = showHints ? buildHintMap(hintKeys) : new Map<string, number>();
 
   return (
     <div className="hidden md:flex justify-center select-none mt-3 pb-4">
@@ -751,12 +775,51 @@ export function VirtualKeyboard({
           boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
         }}
       >
-        <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>
-          ⌨ {LANG_LABEL[lang]}
-        </p>
-        {ROWS.map((row, ri) => (
-          <div key={ri} style={{ display: 'flex', gap: '3px', ...(ri === ROWS.length - 1 ? { alignSelf: 'stretch' } : {}) }}>
-            {row.map((def) => {
+        <div className="flex items-center justify-between w-full mb-1">
+          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+            ⌨ {LANG_LABEL[lang]}
+          </p>
+          <button
+            onClick={() => setShowHints((v) => !v)}
+            className="flex items-center gap-1 text-xs rounded"
+            style={{
+              padding: '2px 6px',
+              color: showHints ? '#ffab00' : 'var(--muted)',
+              background: showHints ? 'rgba(255,171,0,0.1)' : 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 150ms',
+            }}
+            title={showHints ? 'Hide key hints' : 'Show key hints'}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {showHints ? (
+                <>
+                  <path d="M9 18h6" />
+                  <path d="M10 22h4" />
+                  <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" />
+                </>
+              ) : (
+                <>
+                  <path d="M9 18h6" />
+                  <path d="M10 22h4" />
+                  <path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z" opacity="0.3" />
+                  <line x1="2" y1="2" x2="22" y2="22" />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
+        {ROWS.map((row, ri) => {
+          // For CJK languages, hide Ctrl/Alt in the bottom row (they're never used for CJK input)
+          const isCJK = lang === 'ko' || lang === 'ja' || lang === 'zh';
+          const visibleRow = isCJK
+            ? row.filter((d) => !['ControlLeft','ControlRight','AltLeft','AltRight'].includes(d.code))
+            : row;
+          const isLastRow = ri === ROWS.length - 1;
+          return (
+          <div key={ri} style={{ display: 'flex', gap: '3px', ...(isLastRow ? { alignSelf: 'stretch', ...(isCJK ? { paddingLeft: `${U * 2.75}rem`, paddingRight: `${U * 2.75}rem` } : {}) } : {}) }}>
+            {visibleRow.map((def) => {
               const isPressed    = pressed.has(def.code);
               const hintPriority = isPressed ? 0 : (hintMap.get(def.code) ?? 0);
               let primary = def.label;
@@ -799,7 +862,8 @@ export function VirtualKeyboard({
               );
             })}
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

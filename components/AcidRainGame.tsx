@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSound } from '@/hooks/useSound';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { shuffle } from '@/lib/utils';
+import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import type { Card } from '@/types';
+import type { ScriptLang } from '@/lib/lang-detect';
 
 // ── Types ──────────────────────────────────────────────────────────────
 
@@ -27,6 +29,7 @@ type GameStatus = 'ready' | 'playing' | 'paused' | 'gameover';
 interface Props {
   cards: Card[];
   deckId: string;
+  deckLang?: ScriptLang;
   onExit: () => void;
 }
 
@@ -41,10 +44,14 @@ const WORDS_PER_LEVEL = 10;
 const MAX_LIVES = 5;
 const DEFAULT_CONTAINER_HEIGHT = 500; // px — fallback game area height
 const DESTROY_ANIMATION_MS = 400;
+// Word element approx height (text-sm + hint line + py-1.5 padding) — used to
+// trigger floor hit when the word's *bottom* edge crosses the 4px danger line
+const WORD_HIT_HEIGHT = 56;
+const FLOOR_LINE_HEIGHT = 4;
 
 // ── Component ──────────────────────────────────────────────────────────
 
-export function AcidRainGame({ cards, deckId, onExit }: Props) {
+export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { play: playSound } = useSound();
@@ -62,6 +69,9 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
   const [missed, setMissed] = useState(0);
   const [isComposing, setIsComposing] = useState(false);
   const [containerHeight, setContainerHeight] = useState(DEFAULT_CONTAINER_HEIGHT);
+  const [shaking, setShaking] = useState(false);
+  const [borderFlash, setBorderFlash] = useState(false);
+  const [wrongFlash, setWrongFlash] = useState(false);
 
   // Dynamically track game container height
   useEffect(() => {
@@ -146,7 +156,8 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
           continue;
         }
         const newY = w.y + w.speed;
-        if (newY >= containerHeightRef.current) {
+        // Trigger when word's bottom edge reaches the top of the danger line
+        if (newY + WORD_HIT_HEIGHT >= containerHeightRef.current - FLOOR_LINE_HEIGHT) {
           livesLost++;
           continue; // Remove the word
         }
@@ -161,6 +172,10 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
         });
         setMissed((m) => m + livesLost);
         setCombo(0);
+        setShaking(true);
+        setBorderFlash(true);
+        setTimeout(() => setShaking(false), 400);
+        setTimeout(() => setBorderFlash(false), 500);
       }
 
       return updated;
@@ -180,6 +195,9 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
     setInput('');
     setDestroyed(0);
     setMissed(0);
+    setShaking(false);
+    setBorderFlash(false);
+    setWrongFlash(false);
     sessionSavedRef.current = false;
     inputRef.current?.focus();
   }, []);
@@ -246,6 +264,20 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
     if (!isComposing) checkMatch(value);
   };
 
+  // Handle Enter key — wrong answer feedback
+  const handleEnterKey = useCallback(() => {
+    const trimmed = input.trim().normalize('NFC');
+    if (!trimmed) return;
+    const isMatch = wordsRef.current.some(
+      (w) => !w.destroyed && w.word.normalize('NFC').toLowerCase() === trimmed.toLowerCase()
+    );
+    if (!isMatch) {
+      setWrongFlash(true);
+      setInput('');
+      setTimeout(() => setWrongFlash(false), 500);
+    }
+  }, [input]);
+
   // Handle composition end (IME)
   const handleCompositionEnd = () => {
     setIsComposing(false);
@@ -272,6 +304,19 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
 
   // Partial match highlight
   const normalizedInput = input.trim().normalize('NFC').toLowerCase();
+
+  // Best target word for keyboard hints
+  const hintTarget = useMemo(() => {
+    const active = words.filter((w) => !w.destroyed);
+    if (active.length === 0) return '';
+    if (normalizedInput.length > 0) {
+      const matches = active
+        .filter((w) => w.word.normalize('NFC').toLowerCase().startsWith(normalizedInput))
+        .sort((a, b) => b.y - a.y);
+      if (matches.length > 0) return matches[0].word;
+    }
+    return active.reduce((best, w) => (w.y > best.y ? w : best)).word;
+  }, [words, normalizedInput]);
 
   // ── Ready screen ──
   if (gameStatus === 'ready') {
@@ -388,12 +433,20 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
       {/* Game Container */}
       <div
         ref={containerRef}
-        className="relative flex-1 overflow-hidden mx-4 my-2 rounded-xl"
+        className={`relative flex-1 overflow-hidden mx-4 my-2 rounded-xl${shaking ? ' wrong-shake' : ''}`}
         style={{
           minHeight: 200,
           maxHeight: DEFAULT_CONTAINER_HEIGHT,
           background: 'var(--surface)',
-          border: '1px solid var(--border)',
+          border: borderFlash
+            ? '2px solid var(--incorrect)'
+            : lives <= 2
+              ? '1px solid rgba(248,113,113,0.35)'
+              : '1px solid var(--border)',
+          boxShadow: borderFlash
+            ? '0 0 16px rgba(248,113,113,0.4), inset 0 0 16px rgba(248,113,113,0.08)'
+            : 'none',
+          transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
         }}
       >
         {words.filter((w) => !w.fadeOut).map((w) => {
@@ -404,7 +457,7 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
           return (
             <div
               key={w.id}
-              className="absolute text-sm font-bold px-3 py-1.5 rounded-lg select-none transition-transform"
+              className="absolute text-sm font-bold px-3 py-1.5 rounded-lg select-none transition-transform text-center"
               style={{
                 left: `${w.x}%`,
                 top: w.y,
@@ -442,6 +495,7 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
             opacity: 0.5,
           }}
         />
+
       </div>
 
       {/* Input */}
@@ -451,6 +505,7 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
           type="text"
           value={input}
           onChange={(e) => handleInputChange(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleEnterKey(); }}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={(e) => {
             setInput(e.currentTarget.value);
@@ -458,13 +513,19 @@ export function AcidRainGame({ cards, deckId, onExit }: Props) {
           }}
           placeholder={t.typeHere}
           autoFocus
-          className="w-full px-4 py-3 rounded-xl text-base text-center"
+          className="w-full px-4 py-3 rounded-xl text-base text-center transition-colors"
           style={{
             background: 'var(--surface)',
-            border: '1.5px solid var(--border)',
-            color: 'var(--text)',
+            border: wrongFlash ? '1.5px solid var(--incorrect)' : '1.5px solid var(--border)',
+            color: wrongFlash ? 'var(--incorrect)' : 'var(--text)',
             outline: 'none',
           }}
+        />
+
+        <VirtualKeyboard
+          target={hintTarget}
+          input={input}
+          deckLang={deckLang}
         />
       </div>
     </div>

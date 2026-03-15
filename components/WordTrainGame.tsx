@@ -4,9 +4,13 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSound } from '@/hooks/useSound';
+import { useClickOutside } from '@/hooks/useClickOutside';
+import { ToggleSwitch } from '@/components/ToggleSwitch';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { shuffle } from '@/lib/utils';
+import { VirtualKeyboard } from '@/components/VirtualKeyboard';
 import type { Card } from '@/types';
+import type { ScriptLang } from '@/lib/lang-detect';
 
 // ── Types ──────────────────────────────────────────────────────────────
 
@@ -20,13 +24,15 @@ interface WordResult {
 interface Props {
   cards: Card[];
   deckId: string;
+  deckLang?: ScriptLang;
   onExit: () => void;
 }
 
 // ── Constants ──────────────────────────────────────────────────────────
 
-const INITIAL_TIME = 60;       // seconds
-const TIME_PENALTY = 3;        // seconds lost on wrong submit
+const INITIAL_TIME = 60;
+const TIME_PENALTY = 3;
+const SCROLL_DURATION = 7; // seconds for train car to cross screen
 const COMBO_MILESTONES = [
   { threshold: 3, bonus: 1 },
   { threshold: 6, bonus: 1 },
@@ -38,7 +44,7 @@ const MAX_VISIBLE_CARS = 10;
 
 // ── Component ──────────────────────────────────────────────────────────
 
-export function WordTrainGame({ cards, deckId, onExit }: Props) {
+export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { play: playSound } = useSound();
@@ -58,7 +64,12 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
   const [results, setResults] = useState<WordResult[]>([]);
   const [cardKey, setCardKey] = useState(0);
   const [bonusText, setBonusText] = useState<string | null>(null);
-  const [flashCorrect, setFlashCorrect] = useState(false);
+  const [captureAnim, setCaptureAnim] = useState(false);
+  const [inputCorrect, setInputCorrect] = useState(false);
+  const [inputWrong, setInputWrong] = useState(false);
+  const [showPrefs, setShowPrefs] = useState(false);
+  const [showPronunciation, setShowPronunciation] = useState(true);
+  const [showTargetWord, setShowTargetWord] = useState(true);
 
   // Refs
   const cardPoolRef = useRef<Card[]>([]);
@@ -66,6 +77,13 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
   const sessionSavedRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeLeftRef = useRef(INITIAL_TIME);
+  const submittingRef = useRef(false); // guard against double-submit
+  const gameStatusRef = useRef<GameStatus>('ready');
+  const prefsRef = useRef<HTMLDivElement>(null);
+  useClickOutside(prefsRef, () => setShowPrefs(false));
+
+  // Keep gameStatus ref in sync
+  useEffect(() => { gameStatusRef.current = gameStatus; }, [gameStatus]);
 
   // ── Card pool ──
 
@@ -98,6 +116,7 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
 
   const startGame = useCallback(() => {
     sessionSavedRef.current = false;
+    submittingRef.current = false;
     cardPoolRef.current = shuffle(cards);
     cardIndexRef.current = 0;
     const firstCard = cardPoolRef.current[cardIndexRef.current++];
@@ -115,7 +134,7 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
     setResults([]);
     setCardKey(0);
     setBonusText(null);
-    setFlashCorrect(false);
+    setCaptureAnim(false);
 
     setTimeout(() => inputRef.current?.focus(), 50);
   }, [cards]);
@@ -124,12 +143,59 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
 
   const advanceCard = useCallback(() => {
     setInput('');
+    setCaptureAnim(false);
     setCurrentCard(getNextCard());
     setCardKey((k) => k + 1);
     setTimeout(() => inputRef.current?.focus(), 30);
   }, [getNextCard]);
 
-  // ── Submit answer ──
+  // ── Handle correct answer ──
+
+  const handleCorrect = useCallback(() => {
+    if (!currentCard || gameStatus !== 'playing' || submittingRef.current) return;
+    submittingRef.current = true;
+    playSound();
+    const newCombo = combo + 1;
+    const points = 10 + newCombo * 2;
+    setScore((s) => s + points);
+    setCombo(newCombo);
+    setHighestCombo((h) => Math.max(h, newCombo));
+    setCorrect((c) => c + 1);
+    setCompleted((c) => c + 1);
+    setResults((r) => [...r, { cardId: currentCard.id, correct: true }]);
+
+    // Clear input immediately + green flash + capture animation
+    setInput('');
+    setInputCorrect(true);
+    setCaptureAnim(true);
+
+    // Check combo milestones for time bonus
+    const milestone = COMBO_MILESTONES.find((m) => m.threshold === newCombo);
+    if (milestone) {
+      timeLeftRef.current = Math.min(timeLeftRef.current + milestone.bonus, 99);
+      setTimeLeft(timeLeftRef.current);
+      setBonusText(`+${milestone.bonus}s`);
+      setTimeout(() => setBonusText(null), 800);
+    }
+
+    // Advance after capture animation
+    setTimeout(() => {
+      setInputCorrect(false);
+      submittingRef.current = false;
+      advanceCard();
+    }, 300);
+  }, [currentCard, combo, gameStatus, playSound, advanceCard]);
+
+  // ── Check if input matches target ──
+
+  const checkMatch = useCallback((value: string) => {
+    if (!currentCard || gameStatus !== 'playing') return false;
+    const trimmed = value.trim().normalize('NFC');
+    const target = currentCard.front.normalize('NFC');
+    return trimmed.length > 0 && trimmed.toLowerCase() === target.toLowerCase();
+  }, [currentCard, gameStatus]);
+
+  // ── Submit answer (Enter key — only for wrong answers now) ──
 
   const handleSubmit = useCallback(() => {
     if (!currentCard || gameStatus !== 'playing') return;
@@ -137,36 +203,14 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
     const target = currentCard.front.normalize('NFC');
 
     if (trimmed.toLowerCase() === target.toLowerCase()) {
-      // ✅ Correct
-      playSound();
-      const newCombo = combo + 1;
-      const points = 10 + newCombo * 2;
-      setScore((s) => s + points);
-      setCombo(newCombo);
-      setHighestCombo((h) => Math.max(h, newCombo));
-      setCorrect((c) => c + 1);
-      setCompleted((c) => c + 1);
-      setResults((r) => [...r, { cardId: currentCard.id, correct: true }]);
-
-      // Correct flash animation
-      setFlashCorrect(true);
-      setTimeout(() => setFlashCorrect(false), 400);
-
-      // Check combo milestones for time bonus
-      const milestone = COMBO_MILESTONES.find((m) => m.threshold === newCombo);
-      if (milestone) {
-        timeLeftRef.current = Math.min(timeLeftRef.current + milestone.bonus, 99);
-        setTimeLeft(timeLeftRef.current);
-        setBonusText(`+${milestone.bonus}s`);
-        setTimeout(() => setBonusText(null), 800);
-      }
-
-      advanceCard();
+      handleCorrect();
     } else if (trimmed.length > 0) {
-      // ✗ Wrong answer
+      // Wrong answer — red shake
       setCombo(0);
       setCompleted((c) => c + 1);
       setResults((r) => [...r, { cardId: currentCard.id, correct: false }]);
+      setInputWrong(true);
+      setTimeout(() => setInputWrong(false), 500);
 
       // Time penalty
       timeLeftRef.current = Math.max(0, timeLeftRef.current - TIME_PENALTY);
@@ -178,7 +222,19 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
 
       advanceCard();
     }
-  }, [input, currentCard, combo, gameStatus, playSound, advanceCard]);
+  }, [input, currentCard, combo, gameStatus, playSound, advanceCard, handleCorrect]);
+
+  // ── Miss (train car scrolled off screen) ──
+
+  const handleMiss = useCallback(() => {
+    if (!currentCard || gameStatusRef.current !== 'playing') return;
+    setCombo(0);
+    setCompleted((c) => c + 1);
+    setResults((r) => [...r, { cardId: currentCard.id, correct: false }]);
+    setInputWrong(true);
+    setTimeout(() => setInputWrong(false), 500);
+    advanceCard();
+  }, [currentCard, advanceCard]);
 
   // ── Skip ──
 
@@ -193,8 +249,13 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
   // ── Input handlers ──
 
   const handleInputChange = (value: string) => {
+    if (submittingRef.current) return; // ignore during submission
     if (value.length > input.length) playSound();
     setInput(value);
+    // Auto-submit on match (works for both IME and non-IME)
+    if (checkMatch(value)) {
+      handleCorrect();
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -333,21 +394,47 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
             <strong>{score}</strong> <span className="text-xs" style={{ color: 'var(--muted)' }}>pts</span>
           </span>
         </div>
-        <button
-          onClick={onExit}
-          className="text-xs"
-          style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
-        >
-          Exit
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="relative" ref={prefsRef}>
+            <button
+              onClick={() => setShowPrefs((v) => !v)}
+              className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </button>
+            {showPrefs && (
+              <div
+                className="absolute right-0 top-full mt-2 w-56 rounded-xl shadow-lg z-50 p-3"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>{t.pronunciation}</span>
+                  <ToggleSwitch checked={showPronunciation} onChange={setShowPronunciation} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>{t.targetWord}</span>
+                  <ToggleSwitch checked={showTargetWord} onChange={setShowTargetWord} />
+                </div>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={onExit}
+            className="text-xs"
+            style={{ color: 'var(--muted)', background: 'none', border: 'none', cursor: 'pointer' }}
+          >
+            Exit
+          </button>
+        </div>
       </div>
 
       {/* Combo Meter */}
       <div className="px-4 py-3 max-w-lg mx-auto w-full">
         <div className="relative">
-          {/* Background bar */}
           <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--surface2)' }}>
-            {/* Fill */}
             <div
               className="h-full rounded-full transition-all duration-200"
               style={{
@@ -356,7 +443,6 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
               }}
             />
           </div>
-          {/* Milestone tick marks */}
           {COMBO_MILESTONES.map((m, i) => (
             <div
               key={i}
@@ -382,7 +468,6 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
               </span>
             </div>
           ))}
-          {/* Bonus popup */}
           {bonusText && (
             <div
               className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-bold bonus-pop"
@@ -392,7 +477,6 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
             </div>
           )}
         </div>
-        {/* Combo counter */}
         {combo > 0 && (
           <p className="text-xs text-center mt-1.5 font-bold" style={{ color: 'var(--accent)' }}>
             x{combo} combo
@@ -400,40 +484,68 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
         )}
       </div>
 
-      {/* Word Card */}
-      <div className="flex-1 flex items-center justify-center px-4">
+      {/* Word display (above track, large text) */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 min-h-0">
         {currentCard && (
-          <div
-            key={cardKey}
-            className={`card-enter p-8 rounded-2xl text-center max-w-sm w-full ${flashCorrect ? 'correct-flash' : ''}`}
-            style={{
-              background: 'var(--surface)',
-              border: '1.5px solid var(--border)',
-            }}
-          >
-            <p className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: 'var(--text)' }}>
+          <div className="text-center mb-6">
+            <p className="text-3xl sm:text-4xl font-bold mb-1" style={{ color: 'var(--text)' }}>
               {currentCard.back}
             </p>
-            {currentCard.pronunciation && (
+            {showPronunciation && currentCard.pronunciation && (
               <p className="text-sm" style={{ color: 'var(--accent)', opacity: 0.85 }}>
                 [{currentCard.pronunciation}]
               </p>
             )}
           </div>
         )}
+
+        {/* Railway Track Area */}
+        <div className="w-full max-w-lg mx-auto">
+          {/* Upper rail */}
+          <div className="rail-track w-full" />
+
+          {/* Track area with scrolling train car */}
+          <div
+            className="relative overflow-hidden"
+            style={{ height: 64, background: 'var(--surface)', borderLeft: '3px solid var(--border)', borderRight: '3px solid var(--border)' }}
+          >
+            {currentCard && (
+              <div
+                key={cardKey}
+                className={captureAnim ? 'car-capture' : 'car-scrolling'}
+                style={{
+                  animationDuration: captureAnim ? '0.3s' : `${SCROLL_DURATION}s`,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  whiteSpace: 'nowrap',
+                }}
+                onAnimationEnd={captureAnim ? undefined : handleMiss}
+              >
+                <div
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--correct)))',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  }}
+                >
+                  <span style={{ fontSize: 24 }}>🚃</span>
+                  {showTargetWord && (
+                    <span className="text-sm font-bold" style={{ color: '#fff' }}>
+                      {currentCard.front}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Lower rail */}
+          <div className="rail-track w-full" />
+        </div>
       </div>
 
-      {/* Train Track & Cars */}
-      <div className="px-4 max-w-lg mx-auto w-full">
-        {/* Track line */}
-        <div
-          className="h-0.5 mb-1"
-          style={{
-            background: 'var(--border)',
-            backgroundImage: 'repeating-linear-gradient(90deg, var(--border) 0, var(--border) 10px, transparent 10px, transparent 15px)',
-          }}
-        />
-        {/* Train cars */}
+      {/* Completed train cars */}
+      <div className="px-4 max-w-lg mx-auto w-full mt-2">
         <div className="flex items-center gap-0.5 overflow-hidden h-6 mb-2">
           {results.slice(-MAX_VISIBLE_CARS).map((r, i, arr) => (
             <span
@@ -441,7 +553,7 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
               className={i === arr.length - 1 ? 'train-slide' : ''}
               style={{ fontSize: 16, opacity: r.correct ? 1 : 0.4 }}
             >
-              {r.correct ? '🚃' : '💨'}
+              {r.correct ? '🚃' : '💥'}
             </span>
           ))}
         </div>
@@ -457,15 +569,29 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
           onKeyDown={handleKeyDown}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={(e) => {
-            setInput(e.currentTarget.value);
+            if (submittingRef.current) return;
+            const val = e.currentTarget.value;
+            setInput(val);
             setIsComposing(false);
+            // Auto-submit on match after IME composition
+            if (checkMatch(val)) {
+              handleCorrect();
+            }
           }}
           placeholder={t.typeHere}
           autoFocus
-          className="w-full px-4 py-3 rounded-xl text-base text-center"
+          className={`w-full px-4 py-3 rounded-xl text-base text-center transition-all duration-200 ${inputWrong ? 'wrong-shake' : ''}`}
           style={{
-            background: 'var(--surface)',
-            border: '1.5px solid var(--border)',
+            background: inputCorrect
+              ? 'color-mix(in srgb, var(--correct) 15%, var(--surface))'
+              : inputWrong
+                ? 'color-mix(in srgb, var(--incorrect) 10%, var(--surface))'
+                : 'var(--surface)',
+            border: inputCorrect
+              ? '2px solid var(--correct)'
+              : inputWrong
+                ? '2px solid var(--incorrect)'
+                : '1.5px solid var(--border)',
             color: 'var(--text)',
             outline: 'none',
           }}
@@ -482,6 +608,13 @@ export function WordTrainGame({ cards, deckId, onExit }: Props) {
             {t.skip} →
           </button>
         </div>
+
+        <VirtualKeyboard
+          target={currentCard?.front ?? ''}
+          input={input}
+          pronunciation={currentCard?.pronunciation ?? undefined}
+          deckLang={deckLang}
+        />
       </div>
     </div>
   );

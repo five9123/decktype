@@ -118,19 +118,31 @@ button:focus-visible, a:focus-visible, input:focus-visible {
 }
 .timer-critical { animation: timer-pulse 0.5s ease infinite; }
 
-/* Word Train: card entrance */
-@keyframes card-enter {
-  from { opacity: 0; transform: translateY(10px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+/* Word Train: train car scroll (L→R on track) */
+@keyframes car-scroll {
+  from { left: -280px; }
+  to { left: 100%; }
 }
-.card-enter { animation: card-enter 0.25s ease-out; }
+.car-scrolling {
+  position: absolute;
+  animation: car-scroll linear forwards;
+}
 
-/* Word Train: correct flash */
-@keyframes correct-flash {
-  0% { background-color: var(--correct); }
-  100% { background-color: var(--surface); }
+/* Word Train: correct capture effect */
+@keyframes car-capture {
+  to { transform: scale(0.85) translateY(-10px); opacity: 0; }
 }
-.correct-flash { animation: correct-flash 0.4s ease-out; }
+.car-capture { animation: car-capture 0.3s ease-in forwards; }
+
+/* Word Train: rail track sleeper (침목) pattern */
+.rail-track {
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--border) 0px, var(--border) 3px,
+    transparent 3px, transparent 18px
+  );
+}
 
 /* Word Train: time bonus popup */
 @keyframes bonus-pop {
