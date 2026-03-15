@@ -87,6 +87,11 @@ export function GlobalFooter() {
                   {t.footerContact}
                 </Link>
               </li>
+              <li>
+                <Link href="/changelog" className="no-underline transition-colors hover:opacity-80" style={{ color: 'var(--muted)' }}>
+                  {t.footerChangelog}
+                </Link>
+              </li>
             </ul>
           </div>
 

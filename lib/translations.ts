@@ -273,6 +273,9 @@ export type Translations = {
   footerContact: string;
   footerTerms: string;
   footerPrivacy: string;
+  footerChangelog: string;
+  changelogTitle: string;
+  changelogIntro: string;
   comingSoon: string;
 
   // About page
@@ -687,6 +690,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: 'Contact us',
     footerTerms: 'Terms of Service',
     footerPrivacy: 'Privacy Policy',
+    footerChangelog: 'Changelog',
+    changelogTitle: 'Changelog',
+    changelogIntro: 'See what\'s new in typee.',
     comingSoon: 'Coming soon.',
 
     aboutTitle: 'About typee',
@@ -1098,6 +1104,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: '문의하기',
     footerTerms: '이용약관',
     footerPrivacy: '개인정보처리방침',
+    footerChangelog: '업데이트 기록',
+    changelogTitle: '업데이트 기록',
+    changelogIntro: 'typee의 새로운 업데이트를 확인하세요.',
     comingSoon: '준비 중입니다.',
 
     aboutTitle: 'typee 소개',
@@ -1502,6 +1511,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: 'お問い合わせ',
     footerTerms: '利用規約',
     footerPrivacy: 'プライバシーポリシー',
+    footerChangelog: '更新履歴',
+    changelogTitle: '更新履歴',
+    changelogIntro: 'typeeの最新アップデートをご確認ください。',
     comingSoon: '準備中です。',
 
     aboutTitle: 'typeeについて',
@@ -1906,6 +1918,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: 'Contacto',
     footerTerms: 'Términos de servicio',
     footerPrivacy: 'Política de privacidad',
+    footerChangelog: 'Historial de cambios',
+    changelogTitle: 'Historial de cambios',
+    changelogIntro: 'Descubre las novedades de typee.',
     comingSoon: 'Próximamente.',
 
     aboutTitle: 'Acerca de typee',
@@ -2310,6 +2325,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: '联系我们',
     footerTerms: '服务条款',
     footerPrivacy: '隐私政策',
+    footerChangelog: '更新日志',
+    changelogTitle: '更新日志',
+    changelogIntro: '查看 typee 的最新更新。',
     comingSoon: '即将推出。',
 
     aboutTitle: '关于 typee',
@@ -2714,6 +2732,9 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: 'Nous contacter',
     footerTerms: "Conditions d'utilisation",
     footerPrivacy: 'Politique de confidentialité',
+    footerChangelog: 'Journal des mises à jour',
+    changelogTitle: 'Journal des mises à jour',
+    changelogIntro: 'Découvrez les nouveautés de typee.',
     comingSoon: 'Bientôt disponible.',
 
     aboutTitle: 'À propos de typee',
