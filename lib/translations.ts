@@ -690,8 +690,8 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     footerContact: 'Contact us',
     footerTerms: 'Terms of Service',
     footerPrivacy: 'Privacy Policy',
-    footerChangelog: 'Changelog',
-    changelogTitle: 'Changelog',
+    footerChangelog: 'Updates',
+    changelogTitle: 'Updates',
     changelogIntro: 'See what\'s new in typee.',
     comingSoon: 'Coming soon.',
 
