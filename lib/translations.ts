@@ -595,7 +595,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
 
     landingBadge: 'AI-powered · Free to start',
     landingHero1: 'Paste what you love.',
-    landingHero2: 'Master the language within.',
+    landingHero2: 'Type it. Learn it.',
     landingSubtext: 'Turn any lyrics, subtitles, or articles into typing practice. AI creates the cards, you master the words.',
     startForFree: 'Start for Free',
     tryWithoutDeck: 'Try without a Deck',
