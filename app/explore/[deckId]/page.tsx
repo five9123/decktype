@@ -10,6 +10,8 @@ import { LikeButton } from '@/components/LikeButton';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { cloneDeck } from '@/lib/deck-clone';
 import { FREE_DECK_LIMIT } from '@/lib/constants';
+import { DEMO_DECKS } from '@/lib/demo-decks';
+import { getSeedPublicDecks } from '@/lib/seed-public-decks';
 import type { Deck, Card } from '@/types';
 
 interface DeckWithProfile extends Deck {
@@ -31,9 +33,48 @@ export default function PublicDeckDetailPage() {
   const [cloning, setCloning] = useState(false);
   const [cloneError, setCloneError] = useState('');
   const [cloneSuccess, setCloneSuccess] = useState('');
+  const [isSeedDeck, setIsSeedDeck] = useState(false);
 
   useEffect(() => {
     if (!deckId) return;
+
+    // Check if this is a seed (demo) deck
+    const demoDeck = DEMO_DECKS.find(d => d.id === deckId);
+    if (demoDeck) {
+      const seedMeta = getSeedPublicDecks().find(s => s.id === deckId);
+      setIsSeedDeck(true);
+      setDeck({
+        id: demoDeck.id,
+        user_id: '',
+        name: demoDeck.name,
+        description: demoDeck.description,
+        card_count: demoDeck.cards.length,
+        note_type: 'Basic',
+        tags: [],
+        source_lang: demoDeck.lang,
+        is_public: true,
+        published_at: seedMeta?.published_at ?? new Date().toISOString(),
+        like_count: seedMeta?.like_count ?? 0,
+        clone_count: seedMeta?.clone_count ?? 0,
+        original_deck_id: null,
+        created_at: seedMeta?.published_at ?? new Date().toISOString(),
+        profiles: seedMeta?.profiles ?? null,
+      });
+      // Convert demo cards to Card format (preview first 10)
+      setCards(demoDeck.cards.slice(0, 10).map((c, i) => ({
+        id: c.id,
+        deck_id: demoDeck.id,
+        front: c.front,
+        back: typeof c.back === 'string' ? c.back : c.back.en,
+        pronunciation: c.pronunciation,
+        extra: c.extra ?? '',
+        note_type: c.noteType ?? 'Basic',
+        sort_order: i,
+      })));
+      setLoading(false);
+      return;
+    }
+
     const supabase = createBrowserClient();
 
     Promise.all([
@@ -137,21 +178,31 @@ export default function PublicDeckDetailPage() {
             </p>
           </div>
           <div className="flex items-center gap-2 mt-3">
-            <LikeButton deckId={deckId} initialLiked={liked} initialCount={deck.like_count} />
-            <button
-              onClick={handleClone}
-              disabled={cloning || !!cloneSuccess || (!isPro && userDeckCount >= FREE_DECK_LIMIT)}
-              className="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-opacity hover:opacity-90"
-              style={{
-                background: cloneSuccess ? 'var(--correct)' : 'var(--accent)',
-                color: '#fff',
-                border: 'none',
-                cursor: (!isPro && userDeckCount >= FREE_DECK_LIMIT) ? 'not-allowed' : 'pointer',
-                opacity: (!isPro && userDeckCount >= FREE_DECK_LIMIT) ? 0.5 : 1,
-              }}
-            >
-              {cloning ? t.loading : cloneSuccess ? `✓ ${t.cloneSuccess}` : t.cloneDeck}
-            </button>
+            {!isSeedDeck && <LikeButton deckId={deckId} initialLiked={liked} initialCount={deck.like_count} />}
+            {isSeedDeck ? (
+              <Link
+                href={`/demo/${deckId}`}
+                className="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold no-underline transition-opacity hover:opacity-90"
+                style={{ background: 'var(--accent)', color: '#fff' }}
+              >
+                {t.tryDemo ?? 'Try Demo'} →
+              </Link>
+            ) : (
+              <button
+                onClick={handleClone}
+                disabled={cloning || !!cloneSuccess || (!isPro && userDeckCount >= FREE_DECK_LIMIT)}
+                className="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-opacity hover:opacity-90"
+                style={{
+                  background: cloneSuccess ? 'var(--correct)' : 'var(--accent)',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: (!isPro && userDeckCount >= FREE_DECK_LIMIT) ? 'not-allowed' : 'pointer',
+                  opacity: (!isPro && userDeckCount >= FREE_DECK_LIMIT) ? 0.5 : 1,
+                }}
+              >
+                {cloning ? t.loading : cloneSuccess ? `✓ ${t.cloneSuccess}` : t.cloneDeck}
+              </button>
+            )}
           </div>
         </div>
 

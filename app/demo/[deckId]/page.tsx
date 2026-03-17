@@ -25,7 +25,7 @@ import type { ScriptLang } from '@/lib/lang-detect';
 /** Resolve a LocalizedText object to a string based on UI language */
 function resolveBack(back: LocalizedText, uiLang: string): string {
   const key = uiLang as keyof LocalizedText;
-  return (key in back ? back[key] : back.en);
+  return (key in back ? (back[key] ?? back.en) : back.en);
 }
 
 /** Convert DemoCards to RawCard-compatible objects with resolved back field */

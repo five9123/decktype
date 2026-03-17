@@ -6,6 +6,7 @@ import { PublicDeckCard } from '@/components/PublicDeckCard';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { EXPLORE_PAGE_SIZE } from '@/lib/constants';
 import { trackEvent } from '@/lib/analytics';
+import { getSeedPublicDecks } from '@/lib/seed-public-decks';
 
 type SortOption = 'recent' | 'popular' | 'most_cloned';
 
@@ -19,6 +20,7 @@ interface PublicDeck {
   clone_count: number;
   published_at: string | null;
   profiles: { display_name: string } | null;
+  _isSeed?: boolean;
 }
 
 export default function ExplorePage() {
@@ -58,7 +60,31 @@ export default function ExplorePage() {
     }
 
     query.then(({ data }: { data: PublicDeck[] | null }) => {
-      setDecks(data ?? []);
+      const dbDecks = data ?? [];
+      const dbIds = new Set(dbDecks.map(d => d.id));
+
+      // Merge seed decks (filtered by search/lang, excluding DB duplicates)
+      let seeds: PublicDeck[] = getSeedPublicDecks().filter(s => !dbIds.has(s.id));
+      if (search.trim()) {
+        const q = search.trim().toLowerCase();
+        seeds = seeds.filter(s => s.name.toLowerCase().includes(q));
+      }
+      if (lang) {
+        seeds = seeds.filter(s => s.source_lang === lang);
+      }
+
+      const merged = [...dbDecks, ...seeds];
+
+      // Sort merged list
+      if (sort === 'popular') {
+        merged.sort((a, b) => (b.like_count ?? 0) - (a.like_count ?? 0));
+      } else if (sort === 'most_cloned') {
+        merged.sort((a, b) => (b.clone_count ?? 0) - (a.clone_count ?? 0));
+      } else {
+        merged.sort((a, b) => new Date(b.published_at ?? 0).getTime() - new Date(a.published_at ?? 0).getTime());
+      }
+
+      setDecks(merged);
       setLoading(false);
     });
   }, [search, lang, sort]);
