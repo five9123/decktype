@@ -24,6 +24,8 @@ interface BannerConfig {
   border: string;
   color: string;
   emoji: string;
+  /** Text color for the action button (contrast against `color` used as button bg) */
+  btnTextColor: string;
 }
 
 export function RetentionBanner({ streak, dueCount, dueDecks, lastSessionDate, firstDeckId }: RetentionBannerProps) {
@@ -62,7 +64,7 @@ export function RetentionBanner({ streak, dueCount, dueDecks, lastSessionDate, f
           <Link
             href={bannerType === 'due_cards' ? `/deck/${firstDeckId}/practice?order=smart_review` : `/deck/${firstDeckId}/practice`}
             className="text-xs font-bold px-3 py-1.5 rounded-lg no-underline transition-opacity hover:opacity-90 whitespace-nowrap"
-            style={{ background: config.color, color: config.bg.includes('accent') ? '#fff' : '#000' }}
+            style={{ background: config.color, color: config.btnTextColor }}
           >
             {bannerType === 'due_cards' ? t.reviewNow : t.retentionStartBtn}
           </Link>
@@ -120,14 +122,16 @@ function getBannerConfig(
         border: 'rgba(189,147,249,0.3)',
         color: 'var(--accent)',
         emoji: '🔥',
+        btnTextColor: '#fff',
       };
     case 'practice_today':
       return {
         message: t.retentionPracticeToday,
         bg: 'var(--surface2)',
         border: 'var(--border)',
-        color: 'var(--text)',
+        color: 'var(--accent)',
         emoji: '💪',
+        btnTextColor: '#fff',
       };
     case 'welcome_back':
       return {
@@ -136,6 +140,7 @@ function getBannerConfig(
         border: 'rgba(251,191,36,0.3)',
         color: '#fbbf24',
         emoji: '👋',
+        btnTextColor: '#000',
       };
     case 'due_cards':
       return {
@@ -146,6 +151,7 @@ function getBannerConfig(
         border: 'rgba(189,147,249,0.2)',
         color: 'var(--accent)',
         emoji: '📚',
+        btnTextColor: '#fff',
       };
   }
 }
