@@ -43,7 +43,7 @@ export function GoalSettingsModal({ goals, onSetGoal, onRemoveGoal, onClose }: G
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-2xl p-6"
+        className="w-full max-w-sm sm:max-w-md rounded-2xl p-4 sm:p-6"
         style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >

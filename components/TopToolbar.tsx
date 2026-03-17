@@ -41,7 +41,7 @@ export function TopToolbar() {
           <>
             <Link
               href="/dashboard"
-              className="px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              className="px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
             >
               {t.myDecks}
@@ -79,7 +79,7 @@ export function TopToolbar() {
             ) : (
               <Link
                 href="/pricing"
-                className="px-3 py-1.5 rounded-lg text-sm font-bold no-underline transition-opacity hover:opacity-80"
+                className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-bold no-underline transition-opacity hover:opacity-80"
                 style={{ color: 'var(--accent)' }}
               >
                 {t.upgradeToPro}
@@ -91,7 +91,7 @@ export function TopToolbar() {
         {user ? (
           <button
             onClick={signOut}
-            className="px-3 py-1.5 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
+            className="px-2 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium whitespace-nowrap transition-opacity hover:opacity-80"
             style={{
               background: 'var(--surface)',
               border: '1px solid var(--border)',

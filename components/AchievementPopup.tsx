@@ -41,12 +41,13 @@ export function AchievementPopup({ achievements, onClose }: AchievementPopupProp
       onClick={onClose}
     >
       <div
-        className="px-8 py-6 rounded-2xl text-center"
+        className="px-5 sm:px-8 py-4 sm:py-6 rounded-2xl text-center mx-4"
         style={{
           background: 'var(--bg)',
           border: '2px solid var(--accent)',
           animation: 'achievePop 300ms ease-out',
           maxWidth: 320,
+          width: '100%',
         }}
         onClick={(e) => e.stopPropagation()}
       >

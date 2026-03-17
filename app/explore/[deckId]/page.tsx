@@ -118,16 +118,16 @@ export default function PublicDeckDetailPage() {
         {/* Header */}
         <Link
           href="/explore"
-          className="text-sm no-underline mb-4 inline-block transition-opacity hover:opacity-80"
+          className="text-sm no-underline mb-4 inline-block whitespace-nowrap transition-opacity hover:opacity-80"
           style={{ color: 'var(--accent)' }}
         >
           &larr; {t.exploreTitle}
         </Link>
 
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--text)' }}>{deck.name}</h1>
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+        <div className="mb-6">
+          <div className="mb-2">
+            <h1 className="text-xl sm:text-2xl font-bold mb-1 break-words" style={{ color: 'var(--text)' }}>{deck.name}</h1>
+            <p className="text-xs sm:text-sm" style={{ color: 'var(--muted)' }}>
               {deck.card_count} {t.cards} &middot; {author}
               {!isPro && userDeckCount >= FREE_DECK_LIMIT && (
                 <span className="ml-2 text-xs" style={{ color: 'var(--incorrect)' }}>
@@ -136,12 +136,12 @@ export default function PublicDeckDetailPage() {
               )}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-3">
             <LikeButton deckId={deckId} initialLiked={liked} initialCount={deck.like_count} />
             <button
               onClick={handleClone}
               disabled={cloning || !!cloneSuccess || (!isPro && userDeckCount >= FREE_DECK_LIMIT)}
-              className="px-4 py-1.5 rounded-lg text-sm font-bold transition-opacity hover:opacity-90"
+              className="px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-opacity hover:opacity-90"
               style={{
                 background: cloneSuccess ? 'var(--correct)' : 'var(--accent)',
                 color: '#fff',
@@ -166,7 +166,7 @@ export default function PublicDeckDetailPage() {
 
         {/* Card preview */}
         <div
-          className="p-5 rounded-2xl mb-6"
+          className="p-3 sm:p-5 rounded-2xl mb-6"
           style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
         >
           <h2 className="font-bold mb-4 text-sm" style={{ color: 'var(--muted)' }}>
@@ -176,7 +176,7 @@ export default function PublicDeckDetailPage() {
             {cards.map((card, i) => (
               <div
                 key={card.id}
-                className="flex items-center gap-4 px-3 py-2 rounded-xl text-sm"
+                className="flex items-center gap-2 sm:gap-4 px-2 sm:px-3 py-2 rounded-xl text-xs sm:text-sm"
                 style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
               >
                 <span style={{ color: 'var(--muted)', minWidth: 20 }}>{i + 1}</span>

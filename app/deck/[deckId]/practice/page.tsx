@@ -497,7 +497,7 @@ export default function PracticePage() {
         <div className="flex-1 flex flex-col items-center justify-center px-4 gap-6 w-full mx-auto" style={{ maxWidth: '700px' }}>
           {/* Target word with per-character coloring */}
           <div className="text-center">
-            <div className={`flex flex-wrap justify-center gap-0.5 text-2xl ${compact ? 'sm:text-3xl' : 'sm:text-4xl'} font-bold`}>
+            <div className={`flex flex-wrap justify-center gap-0.5 text-xl ${compact ? 'sm:text-3xl' : 'sm:text-3xl lg:text-4xl'} font-bold`} style={{ wordBreak: 'break-all' }}>
               {charStates.map((cs, i) => (
                 <span key={i} data-char className={`char-${cs.status}`}
                   style={cs.char === ' ' ? { width: '0.3em' } : undefined}>
@@ -511,7 +511,7 @@ export default function PracticePage() {
               </p>
             )}
             {meaningHint && (
-              <p className="text-xl font-bold mt-1" style={{ color: 'var(--muted)' }}>
+              <p className="text-base sm:text-xl font-bold mt-1 break-words" style={{ color: 'var(--muted)' }}>
                 {meaningHint}
               </p>
             )}
@@ -584,7 +584,7 @@ export default function PracticePage() {
             onCompositionEnd={() => { setIsComposing(false); }}
             placeholder={t.typeHere}
             autoFocus
-            className={`w-full px-4 py-3 rounded-xl text-base text-center${wrongSubmit ? ' wrong-shake' : ''}`}
+            className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base text-center${wrongSubmit ? ' wrong-shake' : ''}`}
             style={{
               background: 'var(--surface)',
               border: wrongSubmit ? '1.5px solid var(--incorrect)' : '1.5px solid var(--border)',

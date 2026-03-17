@@ -31,12 +31,13 @@ export function GoalCelebration({ goalType, onDismiss }: GoalCelebrationProps) {
 
   return (
     <div
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-4 rounded-2xl text-center shadow-2xl"
+      className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 sm:px-6 py-3 sm:py-4 rounded-2xl text-center shadow-2xl"
       style={{
         background: 'var(--surface)',
         border: '2px solid var(--accent)',
         color: 'var(--text)',
-        minWidth: 260,
+        width: 'calc(100% - 32px)',
+        maxWidth: 300,
         animation: 'retention-slide-down 0.4s ease-out',
       }}
     >

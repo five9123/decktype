@@ -179,26 +179,24 @@ export default function DeckDetailPage() {
       <TopToolbar />
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         {/* Deck Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <Link
-              href="/dashboard"
-              className="text-sm no-underline mb-2 inline-block transition-opacity hover:opacity-80"
-              style={{ color: 'var(--accent)' }}
-            >
-              &larr; {t.myDecks}
-            </Link>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{deck.name.length > 15 ? deck.name.slice(0, 15) + '...' : deck.name}</h1>
-            <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
-              {deck.card_count} {t.cards} &middot; {deck.note_type === 'Cloze' ? (t.clozeCards ?? 'Fill in Blank') : (t.vocabularyCards ?? 'Vocabulary')}
-            </p>
-          </div>
-          <div className="flex gap-2">
+        <div className="mb-4">
+          <Link
+            href="/dashboard"
+            className="text-sm no-underline mb-2 inline-block whitespace-nowrap transition-opacity hover:opacity-80"
+            style={{ color: 'var(--accent)' }}
+          >
+            &larr; {t.myDecks}
+          </Link>
+          <h1 className="text-xl sm:text-2xl font-bold truncate" style={{ color: 'var(--text)' }}>{deck.name}</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
+            {deck.card_count} {t.cards} &middot; {deck.note_type === 'Cloze' ? (t.clozeCards ?? 'Fill in Blank') : (t.vocabularyCards ?? 'Vocabulary')}
+          </p>
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3">
             <div className="relative">
               <button
                 onClick={handleShareTypetris}
                 disabled={cards.filter((c) => c.note_type !== 'Cloze').length === 0}
-                className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+                className="px-2 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-sm whitespace-nowrap transition-opacity hover:opacity-80"
                 style={{
                   background: shareCopied ? 'var(--correct)' : 'var(--surface)',
                   border: `1px solid ${shareCopied ? 'var(--correct)' : 'var(--border)'}`,
@@ -222,7 +220,7 @@ export default function DeckDetailPage() {
               <button
                 onClick={handleShareWordTrain}
                 disabled={cards.filter((c) => c.note_type !== 'Cloze').length === 0}
-                className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+                className="px-2 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-sm whitespace-nowrap transition-opacity hover:opacity-80"
                 style={{
                   background: shareTrainCopied ? 'var(--correct)' : 'var(--surface)',
                   border: `1px solid ${shareTrainCopied ? 'var(--correct)' : 'var(--border)'}`,
@@ -245,7 +243,7 @@ export default function DeckDetailPage() {
             <button
               onClick={() => handleTogglePublish()}
               disabled={publishing}
-              className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+              className="px-2 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-sm whitespace-nowrap transition-opacity hover:opacity-80"
               style={{
                 background: deck.is_public ? 'rgba(189,147,249,0.1)' : 'var(--surface)',
                 border: `1px solid ${deck.is_public ? 'rgba(189,147,249,0.3)' : 'var(--border)'}`,
@@ -257,7 +255,7 @@ export default function DeckDetailPage() {
             </button>
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+              className="px-2 sm:px-3 py-1.5 rounded-lg text-[11px] sm:text-sm whitespace-nowrap transition-opacity hover:opacity-80"
               style={{
                 background: 'rgba(248,113,113,0.1)',
                 border: '1px solid rgba(248,113,113,0.3)',
@@ -378,7 +376,7 @@ export default function DeckDetailPage() {
                     {opt.label}
                   </button>
                   <div
-                    className="absolute bottom-full left-0 mb-2 px-3 py-2 rounded-lg text-xs w-56 pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity z-20"
+                    className="absolute bottom-full left-0 mb-2 px-3 py-2 rounded-lg text-xs w-48 sm:w-56 pointer-events-none opacity-0 group-hover/tip:opacity-100 transition-opacity z-20"
                     style={{
                       background: 'var(--surface2)',
                       border: '1px solid var(--border)',
@@ -459,8 +457,8 @@ export default function DeckDetailPage() {
         {/* Vocabulary Cards */}
         {cards.filter((c) => c.note_type !== 'Cloze').length > 0 && (
           <div className="space-y-2 mb-8">
-            {/* Column Headers */}
-            <div className="flex items-center gap-4 px-4 py-2 text-xs font-medium" style={{ color: 'var(--muted)' }}>
+            {/* Column Headers — hidden on mobile */}
+            <div className="hidden sm:flex items-center gap-4 px-4 py-2 text-xs font-medium" style={{ color: 'var(--muted)' }}>
               <span style={{ minWidth: 24 }}>#</span>
               <span className="flex-1">{t.columnFront}</span>
               <span className="flex-1">{t.columnBack}</span>
@@ -479,7 +477,7 @@ export default function DeckDetailPage() {
                 >
                   {isEditing ? (
                     <div className="space-y-2">
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <div className="flex-1">
                           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnFront}</p>
                           <textarea
@@ -530,32 +528,59 @@ export default function DeckDetailPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-4">
-                      <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
-                      <span className="flex-1" style={{ color: 'var(--text)' }}>{card.front}</span>
-                      <span className="flex-1" style={{ color: 'var(--muted)' }}>{card.back}</span>
-                      <span style={{ minWidth: 80, textAlign: 'center' }}>
-                        {card.pronunciation && (
-                          <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface2)', color: 'var(--muted)' }}>{card.pronunciation}</span>
-                        )}
-                      </span>
-                      <span style={{ minWidth: 80, textAlign: 'center' }}>
-                        {mastery && (
-                          <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
-                        )}
-                      </span>
-                      <button
-                        onClick={() => startEdit(card)}
-                        className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
-                        aria-label="Edit card"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                        </svg>
-                      </button>
-                    </div>
+                    <>
+                      {/* Desktop row */}
+                      <div className="hidden sm:flex items-center gap-4">
+                        <span style={{ color: 'var(--muted)', minWidth: 24 }}>{i + 1}</span>
+                        <span className="flex-1 truncate" style={{ color: 'var(--text)' }}>{card.front}</span>
+                        <span className="flex-1 truncate" style={{ color: 'var(--muted)' }}>{card.back}</span>
+                        <span style={{ minWidth: 80, textAlign: 'center' }}>
+                          {card.pronunciation && (
+                            <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--surface2)', color: 'var(--muted)' }}>{card.pronunciation}</span>
+                          )}
+                        </span>
+                        <span style={{ minWidth: 80, textAlign: 'center' }}>
+                          {mastery && (
+                            <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />
+                          )}
+                        </span>
+                        <button
+                          onClick={() => startEdit(card)}
+                          className="p-1.5 rounded-lg transition-opacity hover:opacity-80"
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+                          aria-label="Edit card"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                      </div>
+                      {/* Mobile stacked row */}
+                      <div className="flex sm:hidden items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-xs" style={{ color: 'var(--muted)' }}>{i + 1}.</span>
+                            <span className="font-medium truncate" style={{ color: 'var(--text)' }}>{card.front}</span>
+                            {mastery && <MasteryBadge level={mastery.mastery_level} confidence={mastery.confidence} compact />}
+                          </div>
+                          <p className="text-xs truncate" style={{ color: 'var(--muted)' }}>
+                            {card.back}{card.pronunciation ? ` · ${card.pronunciation}` : ''}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => startEdit(card)}
+                          className="p-1.5 rounded-lg transition-opacity hover:opacity-80 shrink-0"
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)' }}
+                          aria-label="Edit card"
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </>
                   )}
                 </div>
               );
@@ -577,7 +602,7 @@ export default function DeckDetailPage() {
                 >
                   {isEditing ? (
                     <div className="space-y-2">
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <div className="flex-1">
                           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{t.columnFront}</p>
                           <textarea

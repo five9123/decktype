@@ -81,7 +81,7 @@ export default function ExplorePage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t.searchDecks}
-            className="px-3 py-2 rounded-xl text-sm flex-1 min-w-48"
+            className="px-3 py-2 rounded-xl text-sm flex-1 min-w-0 sm:min-w-48"
             style={{
               background: 'var(--surface)',
               border: '1px solid var(--border)',
@@ -109,7 +109,7 @@ export default function ExplorePage() {
               <button
                 key={opt.value}
                 onClick={() => setSort(opt.value)}
-                className="px-3 py-2 rounded-xl text-sm transition-colors"
+                className="px-2 sm:px-3 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition-colors"
                 style={{
                   background: sort === opt.value ? 'var(--accent)' : 'var(--surface)',
                   border: `1px solid ${sort === opt.value ? 'var(--accent)' : 'var(--border)'}`,

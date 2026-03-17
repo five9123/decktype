@@ -276,7 +276,7 @@ function ResultsContent() {
         />
       )}
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-6">
         {[
           { label: t.accuracyLabel, value: `${session.accuracy}%`, color: 'var(--correct)' },
           { label: t.speedLabel, value: `${session.wpm} WPM`, color: 'var(--accent)' },
@@ -285,11 +285,11 @@ function ResultsContent() {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="p-4 rounded-xl"
+            className="p-3 sm:p-4 rounded-xl"
             style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
           >
-            <p className="text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
-            <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>{stat.label}</p>
+            <p className="text-lg sm:text-2xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
+            <p className="text-[10px] sm:text-xs mt-1" style={{ color: 'var(--muted)' }}>{stat.label}</p>
           </div>
         ))}
       </div>
@@ -348,7 +348,7 @@ function ResultsContent() {
           <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>
             {t.vsLastSession ?? 'vs Previous'}
           </h3>
-          <div className="flex gap-6 text-sm">
+          <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm">
             <ComparisonStat label="WPM" current={session.wpm} previous={prevAvg.wpm} />
             <ComparisonStat label={t.accuracyLabel} current={session.accuracy} previous={prevAvg.accuracy} suffix="%" />
           </div>

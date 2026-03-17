@@ -168,12 +168,12 @@ export default function DashboardPage() {
           const firstDueDeckId = dueDecks[0]?.[0];
           return (
             <div
-              className="flex items-center justify-between px-4 py-3 rounded-xl mb-6"
+              className="flex items-center justify-between gap-3 px-3 sm:px-4 py-3 rounded-xl mb-6"
               style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
             >
               <div className="flex items-center gap-2">
                 <span style={{ fontSize: 18 }}>📚</span>
-                <span className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                <span className="text-xs sm:text-sm font-medium" style={{ color: 'var(--text)' }}>
                   {t.reviewSummary
                     .replace('{cards}', String(totalDue)).replace('{decks}', String(dueDecks.length))}
                 </span>
@@ -181,7 +181,7 @@ export default function DashboardPage() {
               {firstDueDeckId && (
                 <Link
                   href={`/deck/${firstDueDeckId}/practice?order=smart_review`}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold no-underline"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold no-underline whitespace-nowrap flex-shrink-0"
                   style={{ background: 'var(--accent)', color: '#fff' }}
                 >
                   {t.reviewNow}
@@ -205,7 +205,7 @@ export default function DashboardPage() {
             <Link
               href={atLimit ? '#' : '/create'}
               data-onboarding="create-deck"
-              className={`px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold no-underline transition-opacity ${atLimit ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
               style={{
                 background: 'var(--accent)',
                 color: '#FFFFFF',

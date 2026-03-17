@@ -79,7 +79,7 @@ export function WrongCardsReview({ cardResults, cards }: Props) {
 
   return (
     <div
-      className="p-4 rounded-xl mb-6 text-left"
+      className="p-3 sm:p-4 rounded-xl mb-4 sm:mb-6 text-left"
       style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
     >
       <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--text)' }}>

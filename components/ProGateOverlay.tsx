@@ -27,7 +27,7 @@ export function ProGateOverlay({ message, children }: ProGateOverlayProps) {
         style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(2px)' }}
       >
         <div className="text-2xl">🔒</div>
-        <p className="text-sm text-center px-4" style={{ color: 'var(--text)', maxWidth: 280 }}>
+        <p className="text-xs sm:text-sm text-center px-4" style={{ color: 'var(--text)', maxWidth: 280 }}>
           {message || t.statsProGate}
         </p>
         <Link

@@ -33,7 +33,7 @@ export function GoalProgressBar({ goalProgress, onOpenSettings }: GoalProgressBa
   }
 
   return (
-    <div className="mb-6 p-4 rounded-2xl" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+    <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-2xl" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
       <div className="flex items-center justify-between mb-3">
         <p className="text-sm font-bold" style={{ color: 'var(--text)' }}>{t.goalSettings}</p>
         <button

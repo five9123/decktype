@@ -63,7 +63,7 @@ export default function PricingPage() {
         <p className="text-xs font-bold tracking-widest mb-3" style={{ color: 'var(--accent)' }}>
           PRICING
         </p>
-        <h1 className="text-4xl font-bold mb-3" style={{ color: 'var(--text)' }}>
+        <h1 className="text-2xl sm:text-4xl font-bold mb-3" style={{ color: 'var(--text)' }}>
           {t.pricingTitle}
         </h1>
         <p className="text-base mb-10" style={{ color: 'var(--muted)' }}>
@@ -104,7 +104,7 @@ export default function PricingPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
           {/* Free */}
           <div
-            className="p-8 rounded-2xl text-left flex flex-col"
+            className="p-5 sm:p-8 rounded-2xl text-left flex flex-col"
             style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
           >
             <div className="mb-6">

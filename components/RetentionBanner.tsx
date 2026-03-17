@@ -48,7 +48,7 @@ export function RetentionBanner({ streak, dueCount, lastSessionDate, firstDeckId
 
   return (
     <div
-      className="retention-banner px-4 py-3 rounded-xl text-sm mb-4 flex items-center justify-between gap-3"
+      className="retention-banner px-3 sm:px-4 py-3 rounded-xl text-xs sm:text-sm mb-4 flex items-center justify-between gap-3"
       style={{ background: config.bg, border: `1px solid ${config.border}`, color: config.color }}
     >
       <span>

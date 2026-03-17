@@ -29,12 +29,12 @@ export function DifficultyRating({ onRate, progress }: DifficultyRatingProps) {
       <p className="text-xs text-center mb-1.5" style={{ color: 'var(--muted)' }}>
         {t.rateHint}
       </p>
-      <div className="relative grid grid-cols-4 gap-1.5 overflow-hidden rounded-xl">
+      <div className="relative grid grid-cols-4 gap-1 sm:gap-1.5 overflow-hidden rounded-xl">
         {([1, 2, 3, 4] as FSRSRating[]).map((rating) => (
           <button
             key={rating}
             onClick={() => onRate(rating)}
-            className="py-2.5 rounded-lg text-sm font-bold"
+            className="py-2.5 rounded-lg text-[11px] sm:text-sm font-bold whitespace-nowrap"
             style={{
               background: COLORS[rating],
               color: '#fff',

@@ -34,10 +34,10 @@ export function CardStatsTable({ stats }: CardStatsTableProps) {
 
   return (
     <div
-      className="rounded-xl overflow-hidden"
+      className="rounded-xl overflow-x-auto"
       style={{ border: '1px solid var(--border)' }}
     >
-      <table className="w-full text-xs">
+      <table className="w-full text-xs" style={{ minWidth: 400 }}>
         <thead>
           <tr style={{ background: 'var(--surface2)' }}>
             <th className="text-left px-3 py-2 font-medium" style={{ color: 'var(--muted)' }}>

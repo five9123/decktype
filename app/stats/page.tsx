@@ -144,17 +144,18 @@ export default function StatsPage() {
         )}
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-8 p-1 rounded-xl" style={{ background: 'var(--surface)' }}>
+        <div className="flex gap-1 mb-6 sm:mb-8 p-1 rounded-xl overflow-x-auto" style={{ background: 'var(--surface)' }}>
           {tabItems.map((ti) => (
             <button
               key={ti.key}
               onClick={() => setTab(ti.key)}
-              className="flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              className="flex-1 px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap"
               style={{
                 background: tab === ti.key ? 'var(--accent)' : 'transparent',
                 color: tab === ti.key ? '#fff' : 'var(--muted)',
                 border: 'none',
                 cursor: 'pointer',
+                minWidth: 0,
               }}
             >
               {ti.label}
@@ -181,7 +182,7 @@ export default function StatsPage() {
               <div className="space-y-6">
                 <StreakCounter streak={streak} />
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4">
                   {[
                     { label: t.totalSessions, value: sessions.length.toString() },
                     { label: t.bestAccuracy, value: `${bestAccuracy}%` },
@@ -189,11 +190,11 @@ export default function StatsPage() {
                   ].map((s) => (
                     <div
                       key={s.label}
-                      className="p-4 rounded-xl text-center"
+                      className="p-2.5 sm:p-4 rounded-xl text-center"
                       style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
                     >
-                      <p className="text-2xl font-bold" style={{ color: 'var(--accent)' }}>{s.value}</p>
-                      <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>{s.label}</p>
+                      <p className="text-lg sm:text-2xl font-bold" style={{ color: 'var(--accent)' }}>{s.value}</p>
+                      <p className="text-[10px] sm:text-xs mt-1" style={{ color: 'var(--muted)' }}>{s.label}</p>
                     </div>
                   ))}
                 </div>
@@ -288,7 +289,7 @@ export default function StatsPage() {
                               <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--text)' }}>
                                 {t.personalBest}
                               </h3>
-                              <div className="grid grid-cols-3 gap-3 text-center">
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 text-center">
                                 {deckPBs.map((pb) => (
                                   <div key={pb.id}>
                                     <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{pb.mode}</p>
@@ -331,7 +332,7 @@ export default function StatsPage() {
                       <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--text)' }}>
                         {categoryLabel}
                       </h3>
-                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                         {categoryAchievements.map((achievement) => (
                           <AchievementCard
                             key={achievement.id}
@@ -352,7 +353,41 @@ export default function StatsPage() {
                 className="rounded-xl overflow-hidden"
                 style={{ border: '1px solid var(--border)' }}
               >
-                <table className="w-full text-sm">
+                {/* Mobile card view */}
+                <div className="sm:hidden space-y-0">
+                  {sessions.slice(0, 100).map((session) => (
+                    <div
+                      key={session.id}
+                      className="px-4 py-3 flex items-center justify-between"
+                      style={{ borderBottom: '1px solid var(--border)' }}
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold" style={{ color: 'var(--accent)' }}>
+                          {session.composite_score}<span className="font-normal text-xs ml-1" style={{ color: 'var(--muted)' }}>pts</span>
+                        </p>
+                        <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                          {new Date(session.created_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className="flex gap-3 text-xs text-right">
+                        <div>
+                          <p style={{ color: 'var(--text)' }}>{session.wpm}</p>
+                          <p style={{ color: 'var(--muted)' }}>WPM</p>
+                        </div>
+                        <div>
+                          <p style={{ color: 'var(--correct)' }}>{session.accuracy}%</p>
+                          <p style={{ color: 'var(--muted)' }}>Acc</p>
+                        </div>
+                        <div>
+                          <p style={{ color: 'var(--text)' }}>{session.card_count}</p>
+                          <p style={{ color: 'var(--muted)' }}>{t.cards}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {/* Desktop table view */}
+                <table className="hidden sm:table w-full text-sm">
                   <thead>
                     <tr style={{ background: 'var(--surface2)' }}>
                       <th className="text-left px-4 py-3 font-medium" style={{ color: 'var(--muted)' }}>Date</th>

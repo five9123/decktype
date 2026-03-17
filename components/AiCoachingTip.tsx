@@ -58,7 +58,7 @@ export function AiCoachingTip({ accuracy, wpm, compositeScore, errorPatterns, mo
 
   return (
     <div
-      className="px-4 py-4 rounded-xl mb-6 text-left"
+      className="px-3 sm:px-4 py-3 sm:py-4 rounded-xl mb-4 sm:mb-6 text-left"
       style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
     >
       <div className="flex items-center justify-between mb-3">
