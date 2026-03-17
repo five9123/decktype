@@ -1,13 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 
 type BillingInterval = 'monthly' | 'yearly';
+
+interface ReferralInfo {
+  code: string;
+  influencer_name: string;
+  discount_pct: number;
+}
 
 const FREE_FEATURES = [
   '3 decks',
@@ -25,16 +31,55 @@ const PRO_FEATURES = [
   'Priority support',
 ];
 
-export default function PricingPage() {
+function applyDiscount(cents: number, pct: number): string {
+  return '$' + (cents * (1 - pct / 100) / 100).toFixed(2).replace('.00', '');
+}
+
+function PricingContent() {
   const { user } = useAuth();
   const { isPro, loading: profileLoading } = useProfile();
   const { t } = useLanguage();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [interval, setInterval] = useState<BillingInterval>('monthly');
   const [loading, setLoading] = useState(false);
+  const [referral, setReferral] = useState<ReferralInfo | null>(null);
 
-  const price = interval === 'monthly' ? '$5' : '$48';
+  // Monthly = 500 cents ($5), Yearly = 4800 cents ($48)
+  const baseMonthly = 500;
+  const baseYearly = 4800;
+
+  const rawPrice = interval === 'monthly' ? '$5' : '$48';
+  const discountedPrice = referral
+    ? applyDiscount(interval === 'monthly' ? baseMonthly : baseYearly, referral.discount_pct)
+    : rawPrice;
   const period = interval === 'monthly' ? t.pricingPerMonth : t.pricingPerYear;
+
+  // Validate referral code from ?ref= param or sessionStorage
+  useEffect(() => {
+    const refParam = searchParams.get('ref');
+    const storedCode = typeof window !== 'undefined' ? sessionStorage.getItem('referralCode') : null;
+    const codeToValidate = refParam ?? storedCode;
+    if (!codeToValidate) return;
+
+    fetch('/api/referral/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: codeToValidate }),
+    })
+      .then(r => r.json())
+      .then((data: { valid: boolean } & Partial<ReferralInfo>) => {
+        if (data.valid && data.code && data.influencer_name && data.discount_pct) {
+          sessionStorage.setItem('referralCode', data.code);
+          setReferral({
+            code: data.code,
+            influencer_name: data.influencer_name,
+            discount_pct: data.discount_pct,
+          });
+        }
+      })
+      .catch(() => {/* ignore */});
+  }, [searchParams]);
 
   const handleGetPro = async () => {
     if (!user) {
@@ -42,11 +87,15 @@ export default function PricingPage() {
       return;
     }
     setLoading(true);
+    const storedCode = typeof window !== 'undefined' ? sessionStorage.getItem('referralCode') : null;
     try {
       const res = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId: interval }),
+        body: JSON.stringify({
+          priceId: interval,
+          referralCode: storedCode ?? undefined,
+        }),
       });
       const { url } = await res.json();
       if (url) window.location.href = url;
@@ -66,9 +115,38 @@ export default function PricingPage() {
         <h1 className="text-2xl sm:text-4xl font-bold mb-3" style={{ color: 'var(--text)' }}>
           {t.pricingTitle}
         </h1>
-        <p className="text-base mb-10" style={{ color: 'var(--muted)' }}>
+        <p className="text-base mb-8" style={{ color: 'var(--muted)' }}>
           {t.pricingSubtitle}
         </p>
+
+        {/* Referral discount banner */}
+        {referral && (
+          <div
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl mb-8 text-sm font-medium"
+            style={{
+              background: 'rgba(52,211,153,0.12)',
+              border: '1px solid rgba(52,211,153,0.4)',
+              color: '#059669',
+            }}
+          >
+            <span>🎁</span>
+            <span>
+              <strong>{referral.influencer_name}</strong> 특별 할인 —{' '}
+              <strong>{referral.discount_pct}% OFF</strong> 적용 중
+            </span>
+            <button
+              onClick={() => {
+                sessionStorage.removeItem('referralCode');
+                setReferral(null);
+              }}
+              className="ml-1 opacity-60 hover:opacity-100 transition-opacity"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'inherit' }}
+              aria-label="Remove discount"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
         {/* Billing toggle */}
         <div
@@ -162,13 +240,26 @@ export default function PricingPage() {
               <p className="text-xs font-bold tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.7)' }}>
                 {t.pricingProTier.toUpperCase()}
               </p>
-              <div className="flex items-end gap-1 mb-1">
-                <span className="text-4xl font-bold text-white">{price}</span>
+              <div className="flex items-end gap-2 mb-1">
+                {referral && (
+                  <span
+                    className="text-2xl font-bold line-through"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                  >
+                    {rawPrice}
+                  </span>
+                )}
+                <span className="text-4xl font-bold text-white">{discountedPrice}</span>
                 <span className="text-base mb-1" style={{ color: 'rgba(255,255,255,0.8)' }}>{period}</span>
               </div>
-              {interval === 'yearly' && (
+              {interval === 'yearly' && !referral && (
                 <p className="text-sm" style={{ color: 'rgba(255,255,255,0.7)' }}>
                   billed annually ($4/mo)
+                </p>
+              )}
+              {referral && (
+                <p className="text-sm font-bold" style={{ color: 'rgba(255,255,255,0.9)' }}>
+                  🎁 {referral.discount_pct}% 할인 적용됨
                 </p>
               )}
             </div>
@@ -216,5 +307,13 @@ export default function PricingPage() {
         </p>
       </main>
     </>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense>
+      <PricingContent />
+    </Suspense>
   );
 }

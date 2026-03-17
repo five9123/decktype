@@ -48,6 +48,24 @@ export async function POST(request: NextRequest) {
         stripe_subscription_id: session.subscription as string,
         subscription_status: 'active',
       }).eq('id', userId);
+
+      // Track referral conversion if a code was used
+      const referralCode = session.metadata?.referral_code;
+      if (referralCode) {
+        const { data: refRow } = await supabase
+          .from('referral_codes')
+          .select('id')
+          .eq('code', referralCode.toUpperCase())
+          .single();
+        if (refRow) {
+          await supabase.from('referral_conversions').insert({
+            referral_code_id: refRow.id,
+            user_id: userId,
+            stripe_session_id: session.id,
+            plan: session.metadata?.price_interval ?? 'unknown',
+          });
+        }
+      }
       break;
     }
 
