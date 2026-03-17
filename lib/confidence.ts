@@ -1,6 +1,7 @@
 // ── Confidence Scoring & SRS Interval Calculator ──
 
-import type { MasteryLevel } from '@/types';
+import type { MasteryLevel, FSRSRating } from '@/types';
+import { schedule, autoRate, type FSRSState } from '@/lib/fsrs';
 
 const DECAY_FACTOR = 0.7; // Exponential decay for weighting recent attempts
 
@@ -110,6 +111,7 @@ export function adjustEaseFactor(currentEase: number, accuracy: number): number 
 
 /**
  * Calculate updated mastery stats after a practice attempt.
+ * Now integrates FSRS scheduling for optimal review intervals.
  */
 export function updateMasteryStats(params: {
   current: {
@@ -120,12 +122,18 @@ export function updateMasteryStats(params: {
     streak: number;
     error_count: number;
     ease_factor?: number;
+    stability?: number;
+    difficulty?: number;
+    reps?: number;
+    lapses?: number;
+    last_practiced_at?: string;
   };
   newAccuracy: number;  // 0-100
   newWpm: number;
   userAvgWpm: number;
+  rating?: FSRSRating;  // User-provided rating; auto-rated if omitted
 }) {
-  const { current, newAccuracy, newWpm, userAvgWpm } = params;
+  const { current, newAccuracy, newWpm, userAvgWpm, rating: userRating } = params;
   const isCorrect = newAccuracy >= 80; // Consider >= 80% accuracy as "correct"
 
   const attemptCount = current.attempt_count + 1;
@@ -138,7 +146,6 @@ export function updateMasteryStats(params: {
   const avgWpm = ((current.avg_wpm * current.attempt_count) + newWpm) / attemptCount;
 
   // Build recent arrays for confidence calculation (we only have current + aggregates)
-  // Use the new value as most recent, avg as historical
   const recentAccuracies = [newAccuracy];
   const recentWpms = [newWpm];
   if (current.attempt_count > 0) {
@@ -155,8 +162,30 @@ export function updateMasteryStats(params: {
   });
 
   const masteryLevel = getMasteryLevel(confidence);
+
+  // FSRS scheduling
+  const wpmRatio = userAvgWpm > 0 ? newWpm / userAvgWpm : 1;
+  const fsrsRating: FSRSRating = userRating ?? autoRate(newAccuracy, wpmRatio);
+
+  const fsrsState: FSRSState = {
+    stability: current.stability ?? 0,
+    difficulty: current.difficulty ?? 5.0,
+    reps: current.reps ?? 0,
+    lapses: current.lapses ?? 0,
+  };
+
+  // Calculate elapsed days since last practice
+  let elapsedDays = 0;
+  if (current.last_practiced_at) {
+    const lastDate = new Date(current.last_practiced_at);
+    elapsedDays = Math.max(0, (Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+  }
+
+  const { nextState, intervalDays } = schedule(fsrsState, fsrsRating, elapsedDays);
+  const nextReviewAt = new Date(Date.now() + intervalDays * 24 * 60 * 60 * 1000);
+
+  // Keep ease_factor updated for backward compatibility
   const easeFactor = adjustEaseFactor(current.ease_factor ?? 2.5, newAccuracy);
-  const nextReviewAt = calculateNextReview(confidence, streak, easeFactor);
 
   return {
     confidence,
@@ -172,5 +201,11 @@ export function updateMasteryStats(params: {
     ease_factor: Math.round(easeFactor * 100) / 100,
     next_review_at: nextReviewAt.toISOString(),
     last_practiced_at: new Date().toISOString(),
+    // FSRS fields
+    stability: nextState.stability,
+    difficulty: nextState.difficulty,
+    reps: nextState.reps,
+    lapses: nextState.lapses,
+    last_rating: fsrsRating,
   };
 }

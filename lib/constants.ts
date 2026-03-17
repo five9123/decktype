@@ -15,12 +15,18 @@ export const LANGS: { code: Lang; label: string; flag: string }[] = [
 export const MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
 
 /** Free plan limits */
-export const FREE_DECK_LIMIT = 1;
-export const FREE_CARDS_PER_DECK = 100;
+export const FREE_DECK_LIMIT = 3;
+export const FREE_CARDS_PER_DECK = 200;
 
 /** AI daily usage limits */
-export const AI_DAILY_LIMIT_FREE = 3;
+export const AI_DAILY_LIMIT_FREE = 5;
 export const AI_DAILY_LIMIT_PRO = 50;
+
+/** Explore page size */
+export const EXPLORE_PAGE_SIZE = 20;
+
+/** Max display name length */
+export const MAX_DISPLAY_NAME_LENGTH = 30;
 
 /** Scoring weights */
 export const ACCURACY_WEIGHT = 0.7;

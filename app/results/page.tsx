@@ -1,5 +1,5 @@
 'use client';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -12,7 +12,16 @@ import { WrongCardsReview } from '@/components/WrongCardsReview';
 import { analyzeErrorPatterns } from '@/lib/error-patterns';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { STORAGE_KEY_SESSION } from '@/lib/storage-keys';
-import type { MasteryLevel } from '@/types';
+import { useProfile } from '@/hooks/useProfile';
+import { trackEvent } from '@/lib/analytics';
+import { AiCoachingTip } from '@/components/AiCoachingTip';
+import { XPGainAnimation } from '@/components/XPGainAnimation';
+import { AchievementPopup } from '@/components/AchievementPopup';
+import { useXP } from '@/hooks/useXP';
+import { useAchievements, type AchievementContext } from '@/hooks/useAchievements';
+import { useProgress } from '@/hooks/useProgress';
+import { calculateSessionXP } from '@/lib/achievements';
+import type { MasteryLevel, Achievement } from '@/types';
 
 interface CardResult {
   card_id: string;
@@ -90,18 +99,104 @@ interface PrevSessionAvg {
 function ResultsContent() {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const { isPro } = useProfile();
   const searchParams = useSearchParams();
   const deckId = searchParams.get('deck');
 
   const [session, setSession] = useState<SessionData | null>(null);
   const [prevAvg, setPrevAvg] = useState<PrevSessionAvg | null>(null);
+  const [xpGained, setXpGained] = useState(0);
+  const [showXpAnim, setShowXpAnim] = useState(false);
+  const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+  const xpAwardedRef = useRef(false);
+  const { awardXP } = useXP();
+  const { checkAndUnlock } = useAchievements();
+  const { streak, sessions: allSessions } = useProgress();
 
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY_SESSION);
-      if (raw) setSession(JSON.parse(raw));
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setSession(parsed);
+        trackEvent('practice_completed', {
+          deck_id: deckId,
+          score: parsed.composite_score,
+          wpm: parsed.wpm,
+          accuracy: parsed.accuracy,
+          mode: parsed.mode,
+        });
+      }
     } catch { /* ignore */ }
-  }, []);
+  }, [deckId]);
+
+  // Award XP after session loads (once)
+  useEffect(() => {
+    if (!session || !user || xpAwardedRef.current) return;
+    xpAwardedRef.current = true;
+
+    const xp = calculateSessionXP({
+      cardCount: session.card_count,
+      accuracy: session.accuracy,
+      currentStreak: streak.current,
+      levelUpCount: session.levelUps?.length ?? 0,
+    });
+
+    setXpGained(xp);
+    setShowXpAnim(true);
+
+    awardXP(xp, 'session_complete', session.deck_id).then(() => {
+      trackEvent('xp_gained', { amount: xp, source: 'session_complete' });
+    });
+  }, [session, user, streak.current, awardXP]);
+
+  // Check achievements after XP is awarded
+  useEffect(() => {
+    if (!session || !user || xpGained === 0) return;
+
+    const buildContext = async (): Promise<AchievementContext> => {
+      const supabase = createBrowserClient();
+
+      // Total mastered cards
+      const { count: masteredCount } = await supabase
+        .from('card_mastery')
+        .select('id', { count: 'exact', head: true })
+        .eq('mastery_level', 'mastered');
+
+      // Total cards practiced (sum of card_count from all sessions)
+      const totalCards = allSessions.reduce((s, sess) => s + (sess.card_count ?? 0), 0);
+
+      // Best WPM across all personal bests
+      const { data: pbData } = await supabase
+        .from('personal_bests')
+        .select('best_wpm')
+        .order('best_wpm', { ascending: false })
+        .limit(1);
+
+      // Distinct modes used
+      const { data: modesData } = await supabase
+        .from('typing_sessions')
+        .select('mode')
+        .eq('user_id', user!.id);
+      const uniqueModes = new Set((modesData ?? []).map((m: { mode: string }) => m.mode));
+
+      return {
+        currentStreak: streak.current,
+        totalSessions: allSessions.length,
+        totalMastered: masteredCount ?? 0,
+        bestWpm: pbData?.[0]?.best_wpm ?? 0,
+        totalCardsPracticed: totalCards,
+        modesUsed: uniqueModes.size,
+      };
+    };
+
+    buildContext().then((ctx) => {
+      checkAndUnlock(ctx, awardXP).then((newAchs) => {
+        if (newAchs.length > 0) setNewAchievements(newAchs);
+      });
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [xpGained]);
 
   // Load previous sessions for comparison
   useEffect(() => {
@@ -158,7 +253,7 @@ function ResultsContent() {
       </div>
 
       <div
-        className="inline-flex items-center justify-center w-28 h-28 rounded-full mb-8"
+        className="inline-flex items-center justify-center w-28 h-28 rounded-full mb-4"
         style={{ border: `4px solid ${rating.color}` }}
       >
         <div>
@@ -168,6 +263,18 @@ function ResultsContent() {
           <p className="text-xs" style={{ color: 'var(--muted)' }}>Score</p>
         </div>
       </div>
+
+      {/* XP Gain */}
+      <XPGainAnimation amount={xpGained} show={showXpAnim} />
+      <div className="mb-8" />
+
+      {/* Achievement Popup */}
+      {newAchievements.length > 0 && (
+        <AchievementPopup
+          achievements={newAchievements}
+          onClose={() => setNewAchievements([])}
+        />
+      )}
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         {[
@@ -284,12 +391,38 @@ function ResultsContent() {
         );
       })()}
 
+      {/* AI Coaching Tips */}
+      {user && (
+        <AiCoachingTip
+          accuracy={session.accuracy}
+          wpm={session.wpm}
+          compositeScore={session.composite_score}
+          errorPatterns={analyzeErrorPatterns(
+            (session.cardResults ?? []).filter((cr) => cr.typed_text && cr.target_text && cr.accuracy < 100) as { typed_text: string; target_text: string }[]
+          )}
+          mode={session.mode}
+        />
+      )}
+
       {/* Wrong Cards Review */}
       {session.cardResults && session.cards && (
         <WrongCardsReview
           cardResults={session.cardResults as { card_id: string; wpm: number; accuracy: number; typed_text: string; target_text: string }[]}
           cards={session.cards}
         />
+      )}
+
+      {/* Upgrade prompt for high scores */}
+      {!isPro && session.composite_score >= 85 && (
+        <Link
+          href="/pricing"
+          onClick={() => trackEvent('upgrade_clicked', { source: 'results_high_score', score: session.composite_score })}
+          className="block px-4 py-3 rounded-xl text-sm mb-2 no-underline transition-opacity hover:opacity-90"
+          style={{ background: 'rgba(189,147,249,0.1)', border: '1px solid rgba(189,147,249,0.3)', color: 'var(--accent)' }}
+        >
+          <span className="font-bold">{t.resultsUpgradePrompt}</span>{' '}
+          <span style={{ textDecoration: 'underline' }}>{t.resultsUpgradeCta}</span>
+        </Link>
       )}
 
       <div className="flex flex-col gap-3">
@@ -303,6 +436,7 @@ function ResultsContent() {
         <button
           type="button"
           onClick={() => {
+            trackEvent('share_clicked', { platform: 'x', score: session.composite_score });
             const text = `🎤 Score ${session.composite_score} | ${session.accuracy}% accuracy | ${session.wpm} WPM\n\ntypee — learn languages through music & movies\nhttps://www.typee.app`;
             const url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank', 'noopener,noreferrer,width=550,height=420');

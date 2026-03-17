@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { TARGET_LANGS } from '@/lib/constants';
+import { TARGET_LANGS, AI_DAILY_LIMIT_FREE, AI_DAILY_LIMIT_PRO } from '@/lib/constants';
 import { extractWords } from '@/lib/text-parser';
 import { detectLang, type ScriptLang } from '@/lib/lang-detect';
 import { friendlyError } from '@/lib/api-errors';
@@ -322,7 +322,7 @@ export function TextTabContent({ onSave, isPro }: Props) {
               ✨ AI Analyze
             </button>
             <span className="text-xs" style={{ color: 'var(--muted)' }}>
-              {!user ? 'Sign in to use AI analysis' : `AI-powered vocabulary + cloze cards (${isPro ? '50' : '3'}/day)`}
+              {!user ? 'Sign in to use AI analysis' : `AI-powered vocabulary + cloze cards (${isPro ? AI_DAILY_LIMIT_PRO : AI_DAILY_LIMIT_FREE}/day)`}
             </span>
           </div>
         </div>

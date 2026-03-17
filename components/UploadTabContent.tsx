@@ -9,6 +9,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { MAX_UPLOAD_SIZE, FREE_CARDS_PER_DECK } from '@/lib/constants';
 import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
 import { saveDeckWithCards } from '@/lib/deck-save';
+import { trackEvent } from '@/lib/analytics';
 import { friendlyError } from '@/lib/api-errors';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
@@ -126,6 +127,7 @@ export function UploadTabContent() {
       return;
     }
 
+    trackEvent('deck_created', { deck_id: result.deckId, card_count: cards.length, source: 'upload' });
     router.push(`/deck/${result.deckId}`);
   };
 

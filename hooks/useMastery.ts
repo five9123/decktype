@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { updateMasteryStats } from '@/lib/confidence';
 import { useAsyncData } from '@/hooks/useAsyncData';
-import type { CardMastery, MasteryLevel } from '@/types';
+import type { CardMastery, MasteryLevel, FSRSRating } from '@/types';
 
 interface DeckProgress {
   learning: number;
@@ -16,7 +16,7 @@ interface DeckProgress {
 interface UseMasteryReturn {
   masteryMap: Map<string, CardMastery>;
   loading: boolean;
-  updateMastery: (cardId: string, accuracy: number, wpm: number) => Promise<MasteryLevel | null>;
+  updateMastery: (cardId: string, accuracy: number, wpm: number, rating?: FSRSRating) => Promise<MasteryLevel | null>;
   getDeckProgress: () => DeckProgress;
   userAvgWpm: number;
 }
@@ -78,6 +78,7 @@ export function useMastery(deckId: string): UseMasteryReturn {
     cardId: string,
     accuracy: number,
     wpm: number,
+    rating?: FSRSRating,
   ): Promise<MasteryLevel | null> => {
     if (!user) return null;
 
@@ -90,6 +91,11 @@ export function useMastery(deckId: string): UseMasteryReturn {
       streak: 0,
       error_count: 0,
       ease_factor: 2.5,
+      stability: 0,
+      difficulty: 5.0,
+      reps: 0,
+      lapses: 0,
+      last_practiced_at: undefined,
     };
 
     const updated = updateMasteryStats({
@@ -97,6 +103,7 @@ export function useMastery(deckId: string): UseMasteryReturn {
       newAccuracy: accuracy,
       newWpm: wpm,
       userAvgWpm,
+      rating,
     });
 
     const oldLevel = current?.mastery_level ?? 'learning';

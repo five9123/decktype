@@ -251,6 +251,19 @@ export type Translations = {
   deckLimitReachedCta: string;
   cardLimitReachedCta: string;
   statsProGate: string;
+  resultsUpgradePrompt: string;
+  resultsUpgradeCta: string;
+  aiQuotaWarning: string;
+  aiQuotaUpgrade: string;
+  proGateUnlock: string;
+  proGatePreview: string;
+  streakMilestone: string;
+  retentionStreakMilestone: string;
+  retentionPracticeToday: string;
+  retentionWelcomeBack: string;
+  retentionDueCards: string;
+  retentionStartBtn: string;
+  retentionDismiss: string;
   billingTitle: string;
 
   // Guest flow
@@ -433,6 +446,106 @@ export type Translations = {
   showHint: string;
   hintTimerLabel: string;
   fillInMissing: string;
+
+  // Onboarding coachmark
+  onboardingWelcomeTitle: string;
+  onboardingWelcomeDesc: string;
+  onboardingCreateTitle: string;
+  onboardingCreateDesc: string;
+  onboardingStartTitle: string;
+  onboardingStartDesc: string;
+  onboardingNext: string;
+  onboardingSkip: string;
+  onboardingDone: string;
+
+  // Community Gallery
+  explore: string;
+  exploreTitle: string;
+  exploreSubtitle: string;
+  searchDecks: string;
+  filterByLanguage: string;
+  allLanguages: string;
+  sortRecent: string;
+  sortPopular: string;
+  sortMostCloned: string;
+  publishDeck: string;
+  unpublishDeck: string;
+  likeDeck: string;
+  cloneDeck: string;
+  cloneSuccess: string;
+  cloneError: string;
+  cloneDeckLimit: string;
+  publishedBy: string;
+  displayName: string;
+  displayNamePlaceholder: string;
+  setDisplayName: string;
+  noPublicDecks: string;
+  cardPreviewCount: string;
+  anonymous: string;
+  signInToClone: string;
+
+  // Goals
+  goalSettings: string;
+  goalSettingsDesc: string;
+  dailyGoal: string;
+  weeklyGoal: string;
+  sessionsGoal: string;
+  minutesGoal: string;
+  cardsGoal: string;
+  goalProgress: string;
+  goalComplete: string;
+  goalCelebrationMsg: string;
+  setGoal: string;
+  removeGoal: string;
+  noGoalsYet: string;
+
+  // AI Coaching
+  getAiTips: string;
+  aiCoachingTitle: string;
+  aiCoachingLoading: string;
+  aiCoachingError: string;
+  aiTipsRemaining: string;
+  retryBtn: string;
+
+  // SRS Difficulty Rating
+  rateAgain: string;
+  rateHard: string;
+  rateGood: string;
+  rateEasy: string;
+  rateHint: string;
+  reviewSummary: string;
+  reviewNow: string;
+
+  // XP & Level
+  xpGained: string;
+  levelLabel: string;
+  levelUp: string;
+  xpToNext: string;
+  xpThisSession: string;
+
+  // Achievements
+  achievementsTab: string;
+  achievementUnlocked: string;
+  achievementLocked: string;
+  achievStreak3: string;
+  achievStreak7: string;
+  achievStreak30: string;
+  achievStreak100: string;
+  achievSessions10: string;
+  achievSessions50: string;
+  achievSessions100: string;
+  achievSessions500: string;
+  achievMastery10: string;
+  achievMastery50: string;
+  achievMastery100: string;
+  achievSpeed40: string;
+  achievSpeed60: string;
+  achievSpeed80: string;
+  achievCards100: string;
+  achievCards500: string;
+  achievCards1000: string;
+  achievVariety3: string;
+  achievVariety5: string;
 };
 
 export const TRANSLATIONS: Record<Lang, Translations> = {
@@ -458,7 +571,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginDesc: 'Sign in to save your progress and unlock all features.',
     loginOrDivider: 'or',
     loginTryDemo: 'Try without an account',
-    loginReassurance1: '1 free deck included',
+    loginReassurance1: '3 free decks included',
     loginReassurance2: 'No credit card required',
 
     myDecks: 'My Decks',
@@ -466,7 +579,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     noDeckYet: 'No decks yet. Upload an .apkg file to get started!',
     cards: 'cards',
     lastPracticed: 'Last practiced',
-    deckLimitReached: 'Free plan limit reached (1 deck). Upgrade to Pro for unlimited decks.',
+    deckLimitReached: 'Free plan limit reached (3 decks). Upgrade to Pro for unlimited decks.',
     shareDeck: 'Share Deck',
     shareTypetris: 'Share Word Rain',
     shareWordTrain: 'Share Word Train',
@@ -630,12 +743,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     whatIsDesc: 'typee is an AI-powered language learning tool. Paste song lyrics or drop subtitle files — AI extracts vocabulary and creates practice cards. Then choose your game: classic typing practice, word games (words fall from the sky — type to destroy them), or fill-in-the-blank sentences. You build real memory through active recall, not passive flashcard review.',
     whatIsDetail1: 'Import Anki decks, paste song lyrics or movie subtitles (.srt). AI automatically extracts vocabulary and generates cloze cards — no manual work required.',
     whatIsDetail2: 'Classic typing builds muscle memory. word games is a fast-paced falling-words mode. Fill-in-the-blank tests reading comprehension. All modes use the same deck.',
-    whatIsDetail3: 'Available in 6 interface languages with 10+ themes. Free plan includes 1 deck, up to 100 cards. Pro unlocks unlimited decks for $5/month.',
+    whatIsDetail3: 'Available in 6 interface languages with 10+ themes. Free plan includes 3 decks, up to 200 cards each. Pro unlocks unlimited decks for $5/month.',
     homeFaqTitle: 'Frequently Asked Questions',
     homeFaq1Q: 'What is typee and how does it work?',
     homeFaq1A: 'typee is an AI-powered language learning app. Paste song lyrics or subtitle files (.srt) — AI (GPT-4o-mini) extracts vocabulary and creates practice cards automatically. Then practice with three game modes: classic typing, word games (falling words), or fill-in-the-blank. Every session tracks your WPM, accuracy, and mastery.',
     homeFaq2Q: 'Is typee free to use?',
-    homeFaq2A: 'Yes. The free plan includes 1 deck with up to 100 cards, all practice modes, all themes, and basic statistics. The Pro plan ($5/month or $48/year) unlocks unlimited decks, advanced progress tracking, and priority support.',
+    homeFaq2A: 'Yes. The free plan includes 3 decks with up to 200 cards each, all practice modes, all themes, and basic statistics. The Pro plan ($5/month or $48/year) unlocks unlimited decks, advanced progress tracking, and priority support.',
     homeFaq3Q: 'What content can I use to create cards?',
     homeFaq3A: 'You can paste song lyrics, upload subtitle files (.srt), paste any text, or import an Anki deck (.apkg). AI processes the content and extracts vocabulary cards and fill-in-the-blank sentences automatically.',
     homeFaq4Q: 'Do I need an Anki deck to use typee?',
@@ -670,6 +783,19 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReachedCta: 'Upgrade to Pro for unlimited decks →',
     cardLimitReachedCta: 'Upgrade to Pro for unlimited cards →',
     statsProGate: 'Advanced stats are available on the Pro plan.',
+    resultsUpgradePrompt: 'Great score! Track your progress trends with Pro.',
+    resultsUpgradeCta: 'See Pro Features →',
+    aiQuotaWarning: 'Last AI request for today.',
+    aiQuotaUpgrade: 'Need more? Upgrade to Pro for 50/day →',
+    proGateUnlock: 'Unlock with Pro',
+    proGatePreview: 'Preview — upgrade to see full data',
+    streakMilestone: 'Amazing {n}-day streak! Keep it up!',
+    retentionStreakMilestone: '{n}-day streak! You\'re on fire!',
+    retentionPracticeToday: 'Ready to practice today? Keep your streak alive!',
+    retentionWelcomeBack: 'Welcome back! Let\'s pick up where you left off.',
+    retentionDueCards: '{n} cards due for review. Quick practice?',
+    retentionStartBtn: 'Start Practice',
+    retentionDismiss: 'Dismiss',
     billingTitle: 'Billing & Plan',
 
     uploadYourDeck: 'Upload Your Deck',
@@ -747,7 +873,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     guideFormatsDesc: 'typee accepts .srt subtitle files, .txt lyrics, and Anki .apkg decks. You can also paste text directly or create cards manually. CSV/TSV uploads with auto-detected field mapping are also supported.',
     guideFaqTitle: 'FAQ',
     guideFaq1Q: 'Is typee free?',
-    guideFaq1A: 'Yes! The free plan includes 1 deck with up to 100 cards, all practice modes, and basic stats. Upgrade to Pro for unlimited decks and advanced features.',
+    guideFaq1A: 'Yes! The free plan includes 3 decks with up to 200 cards each, all practice modes, and basic stats. Upgrade to Pro for unlimited decks and advanced features.',
     guideFaq2Q: 'What languages are supported?',
     guideFaq2A: 'Any language that works in Anki works in typee — Japanese, Korean, Chinese, Spanish, French, German, and more.',
     guideFaq3Q: 'Can I use typee without an account?',
@@ -848,6 +974,106 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     showHint: 'Show meaning hint',
     hintTimerLabel: 'Letter hint',
     fillInMissing: 'Type the missing word',
+
+    // Onboarding
+    onboardingWelcomeTitle: 'Welcome to typee!',
+    onboardingWelcomeDesc: 'Learn languages by typing what you love. Paste song lyrics, subtitles, or any text — AI creates practice cards instantly.',
+    onboardingCreateTitle: 'Create Your First Deck',
+    onboardingCreateDesc: 'Paste lyrics, upload subtitles (.srt), import an Anki deck, or type cards manually. AI handles the rest.',
+    onboardingStartTitle: 'Start Learning!',
+    onboardingStartDesc: 'Create a deck to begin, or try the demo first to see how it works.',
+    onboardingNext: 'Next',
+    onboardingSkip: 'Skip',
+    onboardingDone: "Let's Go!",
+
+    // Community Gallery
+    explore: 'Explore',
+    exploreTitle: 'Community Decks',
+    exploreSubtitle: 'Discover and clone decks shared by the community',
+    searchDecks: 'Search decks...',
+    filterByLanguage: 'Filter by language',
+    allLanguages: 'All Languages',
+    sortRecent: 'Recent',
+    sortPopular: 'Popular',
+    sortMostCloned: 'Most Cloned',
+    publishDeck: 'Publish',
+    unpublishDeck: 'Unpublish',
+    likeDeck: 'Like',
+    cloneDeck: 'Clone',
+    cloneSuccess: 'Cloned!',
+    cloneError: 'Failed to clone. Please try again.',
+    cloneDeckLimit: 'Deck limit reached. Upgrade to Pro for unlimited decks.',
+    publishedBy: 'by',
+    displayName: 'Display Name',
+    displayNamePlaceholder: 'Enter your public name...',
+    setDisplayName: 'Set your display name to publish',
+    noPublicDecks: 'No public decks yet. Be the first to share!',
+    cardPreviewCount: 'Showing {n} cards',
+    anonymous: 'Anonymous',
+    signInToClone: 'Sign in to like and clone decks',
+
+    // Goals
+    goalSettings: 'Practice Goals',
+    goalSettingsDesc: 'Add a new goal',
+    dailyGoal: 'Daily',
+    weeklyGoal: 'Weekly',
+    sessionsGoal: 'Sessions',
+    minutesGoal: 'Minutes',
+    cardsGoal: 'Cards',
+    goalProgress: 'Goal Progress',
+    goalComplete: 'Goal Complete!',
+    goalCelebrationMsg: "Goal achieved! Keep it up!",
+    setGoal: 'Set Goal',
+    removeGoal: 'Remove',
+    noGoalsYet: 'No goals set yet',
+
+    // AI Coaching
+    getAiTips: '✨ Get AI Tips',
+    aiCoachingTitle: 'AI Coaching',
+    aiCoachingLoading: 'Analyzing your session...',
+    aiCoachingError: 'Failed to get tips. Please try again.',
+    aiTipsRemaining: '{n} AI uses remaining today',
+    retryBtn: 'Retry',
+
+    // SRS Difficulty Rating
+    rateAgain: 'Again',
+    rateHard: 'Hard',
+    rateGood: 'Good',
+    rateEasy: 'Easy',
+    rateHint: 'How well did you remember?',
+    reviewSummary: '{cards} cards due across {decks} decks',
+    reviewNow: 'Review Now',
+
+    // XP & Level
+    xpGained: '+{xp} XP',
+    levelLabel: 'Level {level}',
+    levelUp: 'Level Up!',
+    xpToNext: '{xp} XP to next level',
+    xpThisSession: 'XP this session',
+
+    // Achievements
+    achievementsTab: 'Achievements',
+    achievementUnlocked: 'Achievement Unlocked!',
+    achievementLocked: 'Locked',
+    achievStreak3: '3-Day Streak',
+    achievStreak7: 'Weekly Warrior',
+    achievStreak30: 'Monthly Master',
+    achievStreak100: 'Century Streak',
+    achievSessions10: 'Getting Started',
+    achievSessions50: 'Dedicated Learner',
+    achievSessions100: 'Practice Pro',
+    achievSessions500: 'Study Machine',
+    achievMastery10: 'First Mastery',
+    achievMastery50: 'Card Scholar',
+    achievMastery100: 'Mastery Expert',
+    achievSpeed40: 'Quick Fingers',
+    achievSpeed60: 'Speed Demon',
+    achievSpeed80: 'Lightning Typist',
+    achievCards100: 'Card Collector',
+    achievCards500: 'Card Enthusiast',
+    achievCards1000: 'Card Master',
+    achievVariety3: 'Mode Explorer',
+    achievVariety5: 'Jack of All Trades',
   },
 
   ko: {
@@ -872,7 +1098,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginDesc: '진행 상황을 저장하고 모든 기능을 이용하려면 로그인하세요.',
     loginOrDivider: '또는',
     loginTryDemo: '가입 없이 체험하기',
-    loginReassurance1: '무료로 1개 덱 사용 가능',
+    loginReassurance1: '무료로 3개 덱 사용 가능',
     loginReassurance2: '신용카드 필요 없음',
 
     myDecks: '마이덱',
@@ -880,7 +1106,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     noDeckYet: '아직 덱이 없습니다. .apkg 파일을 업로드해서 시작하세요!',
     cards: '카드',
     lastPracticed: '최근 연습',
-    deckLimitReached: '무료 플랜 한도 도달 (1개 덱). Pro로 업그레이드하면 무제한입니다.',
+    deckLimitReached: '무료 플랜 한도 도달 (3개 덱). Pro로 업그레이드하면 무제한입니다.',
     shareDeck: '덱 공유',
     shareTypetris: '워드 레인 공유',
     shareWordTrain: '워드 트레인 공유',
@@ -1044,12 +1270,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     whatIsDesc: 'typee는 AI 기반 언어 학습 도구입니다. 좋아하는 노래 가사, 영화 자막을 붙여넣기하면 AI가 어휘를 추출하고 연습 카드를 생성합니다. 그런 다음 클래식 타이핑, 단어 게임(하늘에서 단어가 내려옵니다 — 타이핑으로 격추), 또는 빈칸채우기로 연습하세요.',
     whatIsDetail1: 'Anki 덱, 노래 가사, 영화 자막(.srt) 어디서든 가져올 수 있습니다. AI가 어휘를 자동 추출하고 카드를 생성합니다 — 수동 작업 불필요.',
     whatIsDetail2: '클래식 타이핑은 근육 기억을 만들고, 단어 게임은 스피드를 키우고, 빈칸채우기는 문맥 이해력을 높입니다. 모든 모드가 같은 덱을 사용합니다.',
-    whatIsDetail3: '6개 인터페이스 언어와 10+ 테마 지원. 무료 플랜은 1개 덱, 최대 100장. Pro 플랜은 월 $5로 무제한 덱.',
+    whatIsDetail3: '6개 인터페이스 언어와 10+ 테마 지원. 무료 플랜은 3개 덱, 최대 200장. Pro 플랜은 월 $5로 무제한 덱.',
     homeFaqTitle: '자주 묻는 질문',
     homeFaq1Q: 'typee는 무엇이고 어떻게 작동하나요?',
     homeFaq1A: 'typee는 AI 기반 언어 학습 앱입니다. 가사, 자막(.srt)을 붙여넣으면 AI(GPT-4o-mini)가 어휘 카드를 자동 생성합니다. 클래식 타이핑, 단어 게임, 빈칸채우기 3가지 게임으로 연습할 수 있습니다. 모든 세션에서 WPM, 정확도, 마스터리를 추적합니다.',
     homeFaq2Q: 'typee는 무료인가요?',
-    homeFaq2A: '네. 무료 플랜에는 1개 덱(최대 100장), 모든 연습 모드, 모든 테마, 기본 통계가 포함됩니다. Pro 플랜(월 $5 또는 연 $48)은 무제한 덱, 고급 진행 추적, 우선 지원을 제공합니다.',
+    homeFaq2A: '네. 무료 플랜에는 3개 덱(각 최대 200장), 모든 연습 모드, 모든 테마, 기본 통계가 포함됩니다. Pro 플랜(월 $5 또는 연 $48)은 무제한 덱, 고급 진행 추적, 우선 지원을 제공합니다.',
     homeFaq3Q: '어떤 콘텐츠로 카드를 만들 수 있나요?',
     homeFaq3A: '가사 붙여넣기, 자막 파일(.srt) 업로드, 텍스트 붙여넣기, Anki 덱(.apkg) 임포트가 가능합니다. AI가 내용을 분석해 어휘 카드와 빈칸채우기 문제를 자동 생성합니다.',
     homeFaq4Q: '',
@@ -1084,6 +1310,19 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReachedCta: '무제한 덱을 위해 Pro로 업그레이드 →',
     cardLimitReachedCta: '무제한 카드를 위해 Pro로 업그레이드 →',
     statsProGate: '고급 통계는 Pro 플랜에서 이용 가능합니다.',
+    resultsUpgradePrompt: '좋은 성적이에요! Pro로 학습 추이를 추적하세요.',
+    resultsUpgradeCta: 'Pro 기능 보기 →',
+    aiQuotaWarning: '오늘의 마지막 AI 요청입니다.',
+    aiQuotaUpgrade: '더 필요하신가요? Pro로 업그레이드하면 50회/일 →',
+    proGateUnlock: 'Pro로 잠금 해제',
+    proGatePreview: '미리보기 — 업그레이드하여 전체 데이터 확인',
+    streakMilestone: '놀라운 {n}일 연속! 계속 화이팅!',
+    retentionStreakMilestone: '{n}일 연속 달성! 불타고 있어요!',
+    retentionPracticeToday: '오늘 연습할 준비 되셨나요? 연속 기록을 유지하세요!',
+    retentionWelcomeBack: '돌아오셨군요! 이어서 학습해볼까요?',
+    retentionDueCards: '복습할 카드가 {n}장 있어요. 빠르게 연습할까요?',
+    retentionStartBtn: '연습 시작',
+    retentionDismiss: '닫기',
     billingTitle: '결제 및 플랜',
 
     uploadYourDeck: '덱 업로드',
@@ -1160,7 +1399,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     guideFormatsDesc: 'typee는 .srt 자막 파일, .txt 가사, Anki .apkg 덱을 지원합니다. 텍스트를 직접 붙여넣거나 카드를 직접 만들 수도 있습니다. 필드 자동 감지 기능이 있는 CSV/TSV 업로드도 지원합니다.',
     guideFaqTitle: '자주 묻는 질문',
     guideFaq1Q: 'typee는 무료인가요?',
-    guideFaq1A: '네! 무료 플랜에는 1개의 덱(최대 100장), 모든 연습 모드, 기본 통계가 포함됩니다. Pro로 업그레이드하면 무제한 덱과 고급 기능을 이용할 수 있습니다.',
+    guideFaq1A: '네! 무료 플랜에는 3개 덱(각 최대 200장), 모든 연습 모드, 기본 통계가 포함됩니다. Pro로 업그레이드하면 무제한 덱과 고급 기능을 이용할 수 있습니다.',
     guideFaq2Q: '어떤 언어를 지원하나요?',
     guideFaq2A: 'Anki에서 작동하는 모든 언어가 typee에서도 작동합니다 — 일본어, 한국어, 중국어, 스페인어, 프랑스어, 독일어 등.',
     guideFaq3Q: '계정 없이 사용할 수 있나요?',
@@ -1255,6 +1494,106 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     showHint: '뜻 힌트 보기',
     hintTimerLabel: '글자 힌트',
     fillInMissing: '빠진 단어를 입력하세요',
+
+    // Onboarding
+    onboardingWelcomeTitle: 'typee에 오신 걸 환영합니다!',
+    onboardingWelcomeDesc: '좋아하는 콘텐츠를 타이핑하며 언어를 배워보세요. 가사, 자막, 텍스트를 붙여넣으면 AI가 연습 카드를 만들어드립니다.',
+    onboardingCreateTitle: '첫 번째 덱 만들기',
+    onboardingCreateDesc: '가사 붙여넣기, 자막(.srt) 업로드, Anki 덱 가져오기, 또는 직접 카드를 작성하세요.',
+    onboardingStartTitle: '학습을 시작하세요!',
+    onboardingStartDesc: '덱을 만들어 시작하거나, 먼저 데모를 체험해보세요.',
+    onboardingNext: '다음',
+    onboardingSkip: '건너뛰기',
+    onboardingDone: '시작하기!',
+
+    // Community Gallery
+    explore: '탐색',
+    exploreTitle: '커뮤니티 덱',
+    exploreSubtitle: '커뮤니티가 공유한 덱을 탐색하고 복제하세요',
+    searchDecks: '덱 검색...',
+    filterByLanguage: '언어 필터',
+    allLanguages: '모든 언어',
+    sortRecent: '최신순',
+    sortPopular: '인기순',
+    sortMostCloned: '복제 많은 순',
+    publishDeck: '공개',
+    unpublishDeck: '비공개',
+    likeDeck: '좋아요',
+    cloneDeck: '복제',
+    cloneSuccess: '복제 완료!',
+    cloneError: '복제 실패. 다시 시도해 주세요.',
+    cloneDeckLimit: '덱 한도 초과. Pro로 업그레이드하면 무제한으로 사용할 수 있어요.',
+    publishedBy: '작성자',
+    displayName: '표시 이름',
+    displayNamePlaceholder: '공개 이름을 입력하세요...',
+    setDisplayName: '공개를 위해 표시 이름을 설정하세요',
+    noPublicDecks: '공개 덱이 없어요. 처음으로 공유해 보세요!',
+    cardPreviewCount: '{n}개 카드 미리보기',
+    anonymous: '익명',
+    signInToClone: '좋아요와 복제는 로그인 후 이용할 수 있어요',
+
+    // Goals
+    goalSettings: '연습 목표',
+    goalSettingsDesc: '새 목표 추가',
+    dailyGoal: '일일',
+    weeklyGoal: '주간',
+    sessionsGoal: '세션',
+    minutesGoal: '분',
+    cardsGoal: '카드',
+    goalProgress: '목표 진행률',
+    goalComplete: '목표 달성!',
+    goalCelebrationMsg: '목표 달성! 계속 화이팅!',
+    setGoal: '목표 설정',
+    removeGoal: '삭제',
+    noGoalsYet: '아직 목표가 없어요',
+
+    // AI Coaching
+    getAiTips: '✨ AI 팁 받기',
+    aiCoachingTitle: 'AI 코칭',
+    aiCoachingLoading: '세션을 분석 중이에요...',
+    aiCoachingError: '팁을 가져오지 못했어요. 다시 시도해 주세요.',
+    aiTipsRemaining: '오늘 남은 AI 사용 횟수: {n}회',
+    retryBtn: '다시 시도',
+
+    // SRS Difficulty Rating
+    rateAgain: '다시',
+    rateHard: '어려움',
+    rateGood: '좋음',
+    rateEasy: '쉬움',
+    rateHint: '얼마나 잘 기억했나요?',
+    reviewSummary: '{decks}개 덱에서 {cards}장 복습 예정',
+    reviewNow: '지금 복습',
+
+    // XP & Level
+    xpGained: '+{xp} XP',
+    levelLabel: '레벨 {level}',
+    levelUp: '레벨 업!',
+    xpToNext: '다음 레벨까지 {xp} XP',
+    xpThisSession: '이번 세션 XP',
+
+    // Achievements
+    achievementsTab: '업적',
+    achievementUnlocked: '업적 달성!',
+    achievementLocked: '잠김',
+    achievStreak3: '3일 연속',
+    achievStreak7: '주간 전사',
+    achievStreak30: '월간 마스터',
+    achievStreak100: '100일 연속',
+    achievSessions10: '시작이 반',
+    achievSessions50: '열정적 학습자',
+    achievSessions100: '연습 프로',
+    achievSessions500: '학습 머신',
+    achievMastery10: '첫 마스터리',
+    achievMastery50: '카드 학자',
+    achievMastery100: '마스터리 전문가',
+    achievSpeed40: '빠른 손가락',
+    achievSpeed60: '스피드 악마',
+    achievSpeed80: '번개 타이피스트',
+    achievCards100: '카드 수집가',
+    achievCards500: '카드 매니아',
+    achievCards1000: '카드 마스터',
+    achievVariety3: '모드 탐험가',
+    achievVariety5: '만능 플레이어',
   },
 
   ja: {
@@ -1279,7 +1618,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginDesc: 'ログインして進捗を保存し、すべての機能をご利用ください。',
     loginOrDivider: 'または',
     loginTryDemo: 'アカウントなしで体験',
-    loginReassurance1: '無料で1デッキ利用可能',
+    loginReassurance1: '無料で3デッキ利用可能',
     loginReassurance2: 'クレジットカード不要',
 
     myDecks: 'マイデッキ',
@@ -1287,7 +1626,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     noDeckYet: 'まだデッキがありません。.apkgファイルをアップロードして始めましょう！',
     cards: 'カード',
     lastPracticed: '最終練習',
-    deckLimitReached: '無料プランの上限です（1デッキ）。Proにアップグレードで無制限。',
+    deckLimitReached: '無料プランの上限です（3デッキ）。Proにアップグレードで無制限。',
     shareDeck: 'デッキをシェア',
     shareTypetris: 'ワードレインをシェア',
     shareWordTrain: 'ワードトレインをシェア',
@@ -1451,12 +1790,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     whatIsDesc: 'typeeはAI搭載の言語学習ツールです。好きな曲の歌詞、映画の字幕を貼り付けると、AIが語彙を抽出して練習カードを作成します。クラシックタイピング、ワードゲーム（単語が空から降ってきます — タイピングで撃破）、または穴埋め問題でゲーム感覚で練習しましょう。',
     whatIsDetail1: 'Ankiデッキ、歌詞、映画字幕(.srt)からコンテンツを取り込めます。AIが自動で語彙を抽出しカードを生成 — 手作業不要。',
     whatIsDetail2: 'クラシックタイピングは筋肉記憶を構築。ワードゲームはスピードを鍛える。穴埋めは文脈理解を深める。すべてのモードが同じデッキを使用。',
-    whatIsDetail3: '6言語インターフェースと10以上のテーマ対応。無料プランは1デッキ最大100枚。Proプランは月額$5で無制限デッキ。',
+    whatIsDetail3: '6言語インターフェースと10以上のテーマ対応。無料プランは3デッキ各最大200枚。Proプランは月額$5で無制限デッキ。',
     homeFaqTitle: 'よくある質問',
     homeFaq1Q: 'typeeとは何ですか？どのように動作しますか？',
     homeFaq1A: 'typeeはAI搭載の言語学習アプリです。歌詞、字幕(.srt)を貼り付けるとAI（GPT-4o-mini）が語彙カードを自動生成します。クラシックタイピング、ワードゲーム、穴埋め問題の3つのゲームモードで練習できます。WPM、精度、習熟度を毎回追跡します。',
     homeFaq2Q: 'typeeは無料ですか？',
-    homeFaq2A: 'はい。無料プランには1デッキ（最大100枚）、すべての練習モード、すべてのテーマ、基本統計が含まれます。Proプラン（月額$5または年額$48）で無制限デッキ、高度な進捗追跡、優先サポートが利用できます。',
+    homeFaq2A: 'はい。無料プランには3デッキ（各最大200枚）、すべての練習モード、すべてのテーマ、基本統計が含まれます。Proプラン（月額$5または年額$48）で無制限デッキ、高度な進捗追跡、優先サポートが利用できます。',
     homeFaq3Q: 'どんなコンテンツからカードを作れますか？',
     homeFaq3A: '歌詞の貼り付け、字幕ファイル(.srt)のアップロード、テキストの貼り付け、Ankiデッキ(.apkg)のインポートが可能です。AIがコンテンツを分析して語彙カードと穴埋め問題を自動生成します。',
     homeFaq4Q: 'Ankiデッキがなくても使えますか？',
@@ -1491,6 +1830,19 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReachedCta: '無制限デッキのためProにアップグレード →',
     cardLimitReachedCta: '無制限カードのためProにアップグレード →',
     statsProGate: '高度な統計はProプランでご利用いただけます。',
+    resultsUpgradePrompt: '素晴らしいスコア！Proで学習の推移を追跡しましょう。',
+    resultsUpgradeCta: 'Pro機能を見る →',
+    aiQuotaWarning: '今日最後のAIリクエストです。',
+    aiQuotaUpgrade: 'もっと必要ですか？Proなら50回/日 →',
+    proGateUnlock: 'Proでロック解除',
+    proGatePreview: 'プレビュー — アップグレードで全データ表示',
+    streakMilestone: '{n}日連続達成！この調子で頑張りましょう！',
+    retentionStreakMilestone: '{n}日連続！絶好調です！',
+    retentionPracticeToday: '今日も練習しませんか？連続記録を維持しましょう！',
+    retentionWelcomeBack: 'おかえりなさい！続きから始めましょう。',
+    retentionDueCards: '復習カードが{n}枚あります。クイック練習しますか？',
+    retentionStartBtn: '練習開始',
+    retentionDismiss: '閉じる',
     billingTitle: '請求とプラン',
 
     uploadYourDeck: 'デッキをアップロード',
@@ -1567,7 +1919,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     guideFormatsDesc: 'typeeは.srt字幕ファイル、.txt歌詞ファイル、Anki .apkgデッキに対応しています。テキストを直接貼り付けたり、手動でカードを作成したりすることもできます。フィールド自動検出付きのCSV/TSVアップロードにも対応しています。',
     guideFaqTitle: 'よくある質問',
     guideFaq1Q: 'typeeは無料ですか？',
-    guideFaq1A: 'はい！無料プランには1デッキ（最大100枚）、全練習モード、基本統計が含まれます。Proにアップグレードすると無制限のデッキと高度な機能が利用できます。',
+    guideFaq1A: 'はい！無料プランには3デッキ（各最大200枚）、全練習モード、基本統計が含まれます。Proにアップグレードすると無制限のデッキと高度な機能が利用できます。',
     guideFaq2Q: 'どの言語に対応していますか？',
     guideFaq2A: 'Ankiで使えるすべての言語がtypeeでも使えます — 日本語、韓国語、中国語、スペイン語、フランス語、ドイツ語など。',
     guideFaq3Q: 'アカウントなしで使えますか？',
@@ -1662,6 +2014,106 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     showHint: '意味ヒントを表示',
     hintTimerLabel: '文字ヒント',
     fillInMissing: '欠けている単語を入力',
+
+    // Onboarding
+    onboardingWelcomeTitle: 'typeeへようこそ！',
+    onboardingWelcomeDesc: '好きなコンテンツをタイピングして言語を学びましょう。歌詞、字幕、テキストを貼り付ければAIが練習カードを作成します。',
+    onboardingCreateTitle: '最初のデッキを作成',
+    onboardingCreateDesc: '歌詞の貼り付け、字幕(.srt)アップロード、Ankiデッキのインポート、または手動でカードを作成できます。',
+    onboardingStartTitle: '学習を始めよう！',
+    onboardingStartDesc: 'デッキを作成して始めるか、まずデモを試してみましょう。',
+    onboardingNext: '次へ',
+    onboardingSkip: 'スキップ',
+    onboardingDone: 'はじめる！',
+
+    // Community Gallery
+    explore: '探索',
+    exploreTitle: 'コミュニティデッキ',
+    exploreSubtitle: 'コミュニティが共有したデッキを見つけてクローンしよう',
+    searchDecks: 'デッキを検索...',
+    filterByLanguage: '言語フィルター',
+    allLanguages: 'すべての言語',
+    sortRecent: '最新順',
+    sortPopular: '人気順',
+    sortMostCloned: 'クローン数順',
+    publishDeck: '公開',
+    unpublishDeck: '非公開',
+    likeDeck: 'いいね',
+    cloneDeck: 'クローン',
+    cloneSuccess: 'クローン完了！',
+    cloneError: 'クローンに失敗しました。再試行してください。',
+    cloneDeckLimit: 'デッキ上限に達しました。Proにアップグレードして無制限に。',
+    publishedBy: '作成者',
+    displayName: '表示名',
+    displayNamePlaceholder: '公開名を入力してください...',
+    setDisplayName: '公開するには表示名を設定してください',
+    noPublicDecks: '公開デッキはまだありません。最初に共有しましょう！',
+    cardPreviewCount: '{n}枚のカードを表示',
+    anonymous: '匿名',
+    signInToClone: 'いいねとクローンはサインイン後にご利用いただけます',
+
+    // Goals
+    goalSettings: '練習目標',
+    goalSettingsDesc: '新しい目標を追加',
+    dailyGoal: '毎日',
+    weeklyGoal: '毎週',
+    sessionsGoal: 'セッション',
+    minutesGoal: '分',
+    cardsGoal: 'カード',
+    goalProgress: '目標の進捗',
+    goalComplete: '目標達成！',
+    goalCelebrationMsg: '目標達成！その調子で続けましょう！',
+    setGoal: '目標を設定',
+    removeGoal: '削除',
+    noGoalsYet: 'まだ目標がありません',
+
+    // AI Coaching
+    getAiTips: '✨ AIアドバイスを取得',
+    aiCoachingTitle: 'AIコーチング',
+    aiCoachingLoading: 'セッションを分析中...',
+    aiCoachingError: 'アドバイスの取得に失敗しました。再試行してください。',
+    aiTipsRemaining: '今日の残りAI使用回数: {n}回',
+    retryBtn: '再試行',
+
+    // SRS Difficulty Rating
+    rateAgain: 'もう一度',
+    rateHard: '難しい',
+    rateGood: '良い',
+    rateEasy: '簡単',
+    rateHint: 'どのくらい覚えていましたか？',
+    reviewSummary: '{decks}デッキで{cards}枚の復習予定',
+    reviewNow: '今すぐ復習',
+
+    // XP & Level
+    xpGained: '+{xp} XP',
+    levelLabel: 'レベル {level}',
+    levelUp: 'レベルアップ！',
+    xpToNext: '次のレベルまで {xp} XP',
+    xpThisSession: '今回のセッションXP',
+
+    // Achievements
+    achievementsTab: '実績',
+    achievementUnlocked: '実績解除！',
+    achievementLocked: 'ロック中',
+    achievStreak3: '3日連続',
+    achievStreak7: 'ウィークリーウォリアー',
+    achievStreak30: 'マンスリーマスター',
+    achievStreak100: '100日連続',
+    achievSessions10: 'スタート',
+    achievSessions50: '熱心な学習者',
+    achievSessions100: '練習プロ',
+    achievSessions500: '学習マシン',
+    achievMastery10: '初マスタリー',
+    achievMastery50: 'カードスカラー',
+    achievMastery100: 'マスタリーエキスパート',
+    achievSpeed40: 'クイックフィンガー',
+    achievSpeed60: 'スピードデーモン',
+    achievSpeed80: 'ライトニングタイピスト',
+    achievCards100: 'カードコレクター',
+    achievCards500: 'カードマニア',
+    achievCards1000: 'カードマスター',
+    achievVariety3: 'モード探検家',
+    achievVariety5: 'オールラウンダー',
   },
 
   es: {
@@ -1686,7 +2138,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginDesc: 'Inicia sesión para guardar tu progreso y desbloquear todas las funciones.',
     loginOrDivider: 'o',
     loginTryDemo: 'Probar sin cuenta',
-    loginReassurance1: '1 mazo gratis incluido',
+    loginReassurance1: '3 mazos gratis incluidos',
     loginReassurance2: 'No se requiere tarjeta de crédito',
 
     myDecks: 'Mis Mazos',
@@ -1694,7 +2146,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     noDeckYet: 'Aún no hay mazos. ¡Sube un archivo .apkg para empezar!',
     cards: 'tarjetas',
     lastPracticed: 'Última práctica',
-    deckLimitReached: 'Límite del plan gratuito (1 mazo). Mejora a Pro para mazos ilimitados.',
+    deckLimitReached: 'Límite del plan gratuito (3 mazos). Mejora a Pro para mazos ilimitados.',
     shareDeck: 'Compartir mazo',
     shareTypetris: 'Compartir Word Rain',
     shareWordTrain: 'Compartir Word Train',
@@ -1858,12 +2310,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     whatIsDesc: 'typee es una herramienta de aprendizaje de idiomas con IA. Pega letras de canciones o sube subtítulos — la IA extrae vocabulario y crea tarjetas de práctica. Luego elige tu juego: escritura clásica, juegos de palabras (palabras que caen del cielo) o completar espacios en blanco.',
     whatIsDetail1: 'Importa mazos Anki, pega letras o subtítulos de películas (.srt). La IA extrae vocabulario y genera tarjetas automáticamente.',
     whatIsDetail2: 'La escritura clásica construye memoria muscular. Los juegos de palabras entrenan velocidad. Completar espacios mejora la comprensión. Todos los modos usan el mismo mazo.',
-    whatIsDetail3: 'Disponible en 6 idiomas de interfaz con más de 10 temas. Plan gratuito: 1 mazo, hasta 100 tarjetas. Pro desbloquea mazos ilimitados por $5/mes.',
+    whatIsDetail3: 'Disponible en 6 idiomas de interfaz con más de 10 temas. Plan gratuito: 3 mazos, hasta 200 tarjetas cada uno. Pro desbloquea mazos ilimitados por $5/mes.',
     homeFaqTitle: 'Preguntas frecuentes',
     homeFaq1Q: '¿Qué es typee y cómo funciona?',
     homeFaq1A: 'typee es una app de aprendizaje de idiomas con IA. Pega letras o subtítulos (.srt) — la IA (GPT-4o-mini) crea tarjetas de vocabulario automáticamente. Practica con tres modos: escritura clásica, juegos de palabras o completar espacios. Cada sesión registra tu WPM, precisión y dominio.',
     homeFaq2Q: '¿Es typee gratis?',
-    homeFaq2A: 'Sí. El plan gratuito incluye 1 mazo (hasta 100 tarjetas), todos los modos de práctica, todos los temas y estadísticas básicas. El plan Pro ($5/mes o $48/año) desbloquea mazos ilimitados.',
+    homeFaq2A: 'Sí. El plan gratuito incluye 3 mazos (hasta 200 tarjetas cada uno), todos los modos de práctica, todos los temas y estadísticas básicas. El plan Pro ($5/mes o $48/año) desbloquea mazos ilimitados.',
     homeFaq3Q: '¿Qué contenido puedo usar para crear tarjetas?',
     homeFaq3A: 'Puedes pegar letras de canciones, subir subtítulos (.srt), pegar texto o importar un mazo Anki (.apkg). La IA procesa el contenido y extrae tarjetas de vocabulario automáticamente.',
     homeFaq4Q: '¿Necesito un mazo Anki para usar typee?',
@@ -1898,6 +2350,19 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReachedCta: 'Actualiza a Pro para mazos ilimitados →',
     cardLimitReachedCta: 'Actualiza a Pro para tarjetas ilimitadas →',
     statsProGate: 'Las estadísticas avanzadas están disponibles en el plan Pro.',
+    resultsUpgradePrompt: '¡Gran puntuación! Sigue tu progreso con Pro.',
+    resultsUpgradeCta: 'Ver funciones Pro →',
+    aiQuotaWarning: 'Última solicitud de IA por hoy.',
+    aiQuotaUpgrade: '¿Necesitas más? Actualiza a Pro para 50/día →',
+    proGateUnlock: 'Desbloquear con Pro',
+    proGatePreview: 'Vista previa — actualiza para ver todos los datos',
+    streakMilestone: '¡Increíble racha de {n} días! ¡Sigue así!',
+    retentionStreakMilestone: '¡{n} días seguidos! ¡Estás en racha!',
+    retentionPracticeToday: '¿Listo para practicar hoy? ¡Mantén tu racha!',
+    retentionWelcomeBack: '¡Bienvenido de vuelta! Continuemos donde lo dejaste.',
+    retentionDueCards: '{n} tarjetas para repasar. ¿Práctica rápida?',
+    retentionStartBtn: 'Iniciar práctica',
+    retentionDismiss: 'Cerrar',
     billingTitle: 'Facturación y plan',
 
     uploadYourDeck: 'Sube tu mazo',
@@ -1974,7 +2439,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     guideFormatsDesc: 'typee acepta archivos .srt de subtítulos, .txt de letras y mazos Anki .apkg. También puedes pegar texto directamente o crear tarjetas manualmente. Se admiten cargas de CSV/TSV con detección automática de campos.',
     guideFaqTitle: 'Preguntas frecuentes',
     guideFaq1Q: '¿Es typee gratis?',
-    guideFaq1A: '¡Sí! El plan gratuito incluye 1 mazo con hasta 100 tarjetas, todos los modos de práctica y estadísticas básicas. Actualiza a Pro para mazos ilimitados.',
+    guideFaq1A: '¡Sí! El plan gratuito incluye 3 mazos con hasta 200 tarjetas cada uno, todos los modos de práctica y estadísticas básicas. Actualiza a Pro para mazos ilimitados.',
     guideFaq2Q: '¿Qué idiomas son compatibles?',
     guideFaq2A: 'Cualquier idioma que funcione en Anki funciona en typee — japonés, coreano, chino, español, francés, alemán y más.',
     guideFaq3Q: '¿Puedo usar typee sin cuenta?',
@@ -2069,6 +2534,106 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     showHint: 'Ver pista de significado',
     hintTimerLabel: 'Pista de letra',
     fillInMissing: 'Escribe la palabra que falta',
+
+    // Onboarding
+    onboardingWelcomeTitle: 'Bienvenido a typee!',
+    onboardingWelcomeDesc: 'Aprende idiomas escribiendo lo que te gusta. Pega letras, subtítulos o texto — la IA crea tarjetas de práctica al instante.',
+    onboardingCreateTitle: 'Crea tu primer mazo',
+    onboardingCreateDesc: 'Pega letras, sube subtítulos (.srt), importa un mazo Anki o crea tarjetas manualmente.',
+    onboardingStartTitle: 'Empieza a aprender!',
+    onboardingStartDesc: 'Crea un mazo para comenzar o prueba la demo primero.',
+    onboardingNext: 'Siguiente',
+    onboardingSkip: 'Saltar',
+    onboardingDone: 'Vamos!',
+
+    // Community Gallery
+    explore: 'Explorar',
+    exploreTitle: 'Mazos de la comunidad',
+    exploreSubtitle: 'Descubre y clona mazos compartidos por la comunidad',
+    searchDecks: 'Buscar mazos...',
+    filterByLanguage: 'Filtrar por idioma',
+    allLanguages: 'Todos los idiomas',
+    sortRecent: 'Reciente',
+    sortPopular: 'Popular',
+    sortMostCloned: 'Más clonados',
+    publishDeck: 'Publicar',
+    unpublishDeck: 'Despublicar',
+    likeDeck: 'Me gusta',
+    cloneDeck: 'Clonar',
+    cloneSuccess: '¡Clonado!',
+    cloneError: 'Error al clonar. Inténtalo de nuevo.',
+    cloneDeckLimit: 'Límite de mazos alcanzado. Actualiza a Pro para mazos ilimitados.',
+    publishedBy: 'por',
+    displayName: 'Nombre visible',
+    displayNamePlaceholder: 'Ingresa tu nombre público...',
+    setDisplayName: 'Establece tu nombre visible para publicar',
+    noPublicDecks: 'Aún no hay mazos públicos. ¡Sé el primero en compartir!',
+    cardPreviewCount: 'Mostrando {n} tarjetas',
+    anonymous: 'Anónimo',
+    signInToClone: 'Inicia sesión para dar me gusta y clonar mazos',
+
+    // Goals
+    goalSettings: 'Metas de práctica',
+    goalSettingsDesc: 'Agregar nueva meta',
+    dailyGoal: 'Diaria',
+    weeklyGoal: 'Semanal',
+    sessionsGoal: 'Sesiones',
+    minutesGoal: 'Minutos',
+    cardsGoal: 'Tarjetas',
+    goalProgress: 'Progreso de metas',
+    goalComplete: '¡Meta alcanzada!',
+    goalCelebrationMsg: '¡Meta lograda! ¡Sigue así!',
+    setGoal: 'Establecer meta',
+    removeGoal: 'Eliminar',
+    noGoalsYet: 'Aún no hay metas',
+
+    // AI Coaching
+    getAiTips: '✨ Obtener consejos de IA',
+    aiCoachingTitle: 'Entrenamiento IA',
+    aiCoachingLoading: 'Analizando tu sesión...',
+    aiCoachingError: 'Error al obtener consejos. Inténtalo de nuevo.',
+    aiTipsRemaining: '{n} usos de IA restantes hoy',
+    retryBtn: 'Reintentar',
+
+    // SRS Difficulty Rating
+    rateAgain: 'Otra vez',
+    rateHard: 'Difícil',
+    rateGood: 'Bien',
+    rateEasy: 'Fácil',
+    rateHint: '¿Qué tan bien lo recordaste?',
+    reviewSummary: '{cards} tarjetas pendientes en {decks} mazos',
+    reviewNow: 'Repasar ahora',
+
+    // XP & Level
+    xpGained: '+{xp} XP',
+    levelLabel: 'Nivel {level}',
+    levelUp: '¡Subiste de nivel!',
+    xpToNext: '{xp} XP para el siguiente nivel',
+    xpThisSession: 'XP de esta sesión',
+
+    // Achievements
+    achievementsTab: 'Logros',
+    achievementUnlocked: '¡Logro desbloqueado!',
+    achievementLocked: 'Bloqueado',
+    achievStreak3: 'Racha de 3 días',
+    achievStreak7: 'Guerrero semanal',
+    achievStreak30: 'Maestro mensual',
+    achievStreak100: 'Racha de 100 días',
+    achievSessions10: 'Primeros pasos',
+    achievSessions50: 'Aprendiz dedicado',
+    achievSessions100: 'Profesional',
+    achievSessions500: 'Máquina de estudio',
+    achievMastery10: 'Primera maestría',
+    achievMastery50: 'Erudito de tarjetas',
+    achievMastery100: 'Experto en maestría',
+    achievSpeed40: 'Dedos rápidos',
+    achievSpeed60: 'Demonio de velocidad',
+    achievSpeed80: 'Mecanógrafo relámpago',
+    achievCards100: 'Coleccionista',
+    achievCards500: 'Entusiasta de tarjetas',
+    achievCards1000: 'Maestro de tarjetas',
+    achievVariety3: 'Explorador de modos',
+    achievVariety5: 'Todoterreno',
   },
 
   zh: {
@@ -2093,7 +2658,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginDesc: '登录以保存进度并解锁所有功能。',
     loginOrDivider: '或',
     loginTryDemo: '无需账户即可体验',
-    loginReassurance1: '免费包含1个牌组',
+    loginReassurance1: '免费包含3个牌组',
     loginReassurance2: '无需信用卡',
 
     myDecks: '我的牌组',
@@ -2101,7 +2666,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     noDeckYet: '还没有牌组。上传.apkg文件开始学习！',
     cards: '张',
     lastPracticed: '最近练习',
-    deckLimitReached: '已达免费计划上限（1个牌组）。升级至Pro享无限牌组。',
+    deckLimitReached: '已达免费计划上限（3个牌组）。升级至Pro享无限牌组。',
     shareDeck: '分享牌组',
     shareTypetris: '分享Word Rain',
     shareWordTrain: '分享Word Train',
@@ -2265,12 +2830,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     whatIsDesc: 'typee是AI驱动的语言学习工具。粘贴歌词或上传字幕——AI提取词汇并创建练习卡片。然后选择你的游戏：经典打字练习、单词游戏（单词从天而降）或填空句子练习。',
     whatIsDetail1: '导入Anki牌组、粘贴歌词或电影字幕(.srt)。AI自动提取词汇并生成卡片——无需手动操作。',
     whatIsDetail2: '经典打字建立肌肉记忆。单词游戏训练速度。填空题提升阅读理解。所有模式使用同一牌组。',
-    whatIsDetail3: '支持6种界面语言和10多个主题。免费计划：1个牌组，最多100张卡片。Pro计划每月$5，无限牌组。',
+    whatIsDetail3: '支持6种界面语言和10多个主题。免费计划：3个牌组，每组最多200张卡片。Pro计划每月$5，无限牌组。',
     homeFaqTitle: '常见问题',
     homeFaq1Q: 'typee是什么？如何使用？',
     homeFaq1A: 'typee是AI驱动的语言学习应用。粘贴歌词或字幕(.srt)——AI（GPT-4o-mini）自动创建词汇卡片。用三种游戏模式练习：经典打字、单词游戏或填空题。每次练习追踪WPM、准确率和掌握程度。',
     homeFaq2Q: 'typee免费吗？',
-    homeFaq2A: '是的。免费计划包括1个牌组（最多100张卡片）、所有练习模式、所有主题和基本统计。Pro计划（月$5或年$48）解锁无限牌组。',
+    homeFaq2A: '是的。免费计划包括3个牌组（每组最多200张卡片）、所有练习模式、所有主题和基本统计。Pro计划（月$5或年$48）解锁无限牌组。',
     homeFaq3Q: '可以用什么内容创建卡片？',
     homeFaq3A: '可以粘贴歌词、上传字幕(.srt)、粘贴文本或导入Anki牌组(.apkg)。AI处理内容并自动提取词汇卡片和填空句子。',
     homeFaq4Q: '需要Anki牌组才能使用吗？',
@@ -2305,6 +2870,19 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReachedCta: '升级Pro获得无限牌组 →',
     cardLimitReachedCta: '升级Pro获得无限卡片 →',
     statsProGate: '高级统计功能在Pro计划中可用。',
+    resultsUpgradePrompt: '好成绩！用Pro追踪你的学习趋势。',
+    resultsUpgradeCta: '查看Pro功能 →',
+    aiQuotaWarning: '今天最后一次AI请求。',
+    aiQuotaUpgrade: '需要更多？升级Pro每天50次 →',
+    proGateUnlock: '升级Pro解锁',
+    proGatePreview: '预览 — 升级查看完整数据',
+    streakMilestone: '惊人的{n}天连续！继续加油！',
+    retentionStreakMilestone: '{n}天连续！你太棒了！',
+    retentionPracticeToday: '准备好今天练习了吗？保持你的连续记录！',
+    retentionWelcomeBack: '欢迎回来！让我们继续上次的学习吧。',
+    retentionDueCards: '{n}张卡片待复习。快速练习一下？',
+    retentionStartBtn: '开始练习',
+    retentionDismiss: '关闭',
     billingTitle: '账单与计划',
 
     uploadYourDeck: '上传牌组',
@@ -2381,7 +2959,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     guideFormatsDesc: 'typee 支持 .srt 字幕文件、.txt 歌词和 Anki .apkg 牌组。你也可以直接粘贴文本或手动创建卡片。还支持带有自动字段检测的 CSV/TSV 上传。',
     guideFaqTitle: '常见问题',
     guideFaq1Q: 'typee免费吗？',
-    guideFaq1A: '是的！免费计划包括1个牌组（最多100张卡片）、所有练习模式和基本统计。升级到Pro可获得无限牌组和高级功能。',
+    guideFaq1A: '是的！免费计划包括3个牌组（每组最多200张卡片）、所有练习模式和基本统计。升级到Pro可获得无限牌组和高级功能。',
     guideFaq2Q: '支持哪些语言？',
     guideFaq2A: '在Anki中可用的所有语言都可以在typee中使用——日语、韩语、中文、西班牙语、法语、德语等。',
     guideFaq3Q: '可以不注册使用吗？',
@@ -2476,6 +3054,106 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     showHint: '查看释义提示',
     hintTimerLabel: '字母提示',
     fillInMissing: '输入缺失的单词',
+
+    // Onboarding
+    onboardingWelcomeTitle: '欢迎使用typee！',
+    onboardingWelcomeDesc: '通过打字学习语言。粘贴歌词、字幕或文本，AI会立即创建练习卡片。',
+    onboardingCreateTitle: '创建你的第一个牌组',
+    onboardingCreateDesc: '粘贴歌词、上传字幕(.srt)、导入Anki牌组，或手动创建卡片。',
+    onboardingStartTitle: '开始学习吧！',
+    onboardingStartDesc: '创建牌组开始学习，或先试试演示。',
+    onboardingNext: '下一步',
+    onboardingSkip: '跳过',
+    onboardingDone: '开始！',
+
+    // Community Gallery
+    explore: '探索',
+    exploreTitle: '社区牌组',
+    exploreSubtitle: '发现并克隆社区分享的牌组',
+    searchDecks: '搜索牌组...',
+    filterByLanguage: '按语言筛选',
+    allLanguages: '所有语言',
+    sortRecent: '最新',
+    sortPopular: '热门',
+    sortMostCloned: '克隆最多',
+    publishDeck: '公开',
+    unpublishDeck: '取消公开',
+    likeDeck: '喜欢',
+    cloneDeck: '克隆',
+    cloneSuccess: '克隆成功！',
+    cloneError: '克隆失败，请重试。',
+    cloneDeckLimit: '已达牌组上限。升级到专业版可无限使用。',
+    publishedBy: '作者',
+    displayName: '显示名称',
+    displayNamePlaceholder: '输入您的公开名称...',
+    setDisplayName: '请设置显示名称以公开牌组',
+    noPublicDecks: '暂无公开牌组，成为第一个分享者！',
+    cardPreviewCount: '显示 {n} 张卡片',
+    anonymous: '匿名',
+    signInToClone: '登录后可点赞和克隆牌组',
+
+    // Goals
+    goalSettings: '练习目标',
+    goalSettingsDesc: '添加新目标',
+    dailyGoal: '每日',
+    weeklyGoal: '每周',
+    sessionsGoal: '次练习',
+    minutesGoal: '分钟',
+    cardsGoal: '张卡片',
+    goalProgress: '目标进度',
+    goalComplete: '目标完成！',
+    goalCelebrationMsg: '目标达成！继续加油！',
+    setGoal: '设置目标',
+    removeGoal: '删除',
+    noGoalsYet: '还没有设置目标',
+
+    // AI Coaching
+    getAiTips: '✨ 获取AI建议',
+    aiCoachingTitle: 'AI教练',
+    aiCoachingLoading: '正在分析您的练习...',
+    aiCoachingError: '获取建议失败，请重试。',
+    aiTipsRemaining: '今日剩余AI使用次数：{n}次',
+    retryBtn: '重试',
+
+    // SRS Difficulty Rating
+    rateAgain: '再来',
+    rateHard: '困难',
+    rateGood: '良好',
+    rateEasy: '简单',
+    rateHint: '你记得多好？',
+    reviewSummary: '{decks}个牌组中有{cards}张待复习',
+    reviewNow: '立即复习',
+
+    // XP & Level
+    xpGained: '+{xp} XP',
+    levelLabel: '等级 {level}',
+    levelUp: '升级了！',
+    xpToNext: '距下一级还需 {xp} XP',
+    xpThisSession: '本次练习XP',
+
+    // Achievements
+    achievementsTab: '成就',
+    achievementUnlocked: '成就解锁！',
+    achievementLocked: '未解锁',
+    achievStreak3: '3天连续',
+    achievStreak7: '周冠军',
+    achievStreak30: '月度大师',
+    achievStreak100: '百日连续',
+    achievSessions10: '初出茅庐',
+    achievSessions50: '勤奋学习者',
+    achievSessions100: '练习达人',
+    achievSessions500: '学习机器',
+    achievMastery10: '初次掌握',
+    achievMastery50: '卡片学者',
+    achievMastery100: '掌握专家',
+    achievSpeed40: '快手',
+    achievSpeed60: '速度恶魔',
+    achievSpeed80: '闪电打字员',
+    achievCards100: '卡片收藏家',
+    achievCards500: '卡片爱好者',
+    achievCards1000: '卡片大师',
+    achievVariety3: '模式探索者',
+    achievVariety5: '全能选手',
   },
 
   fr: {
@@ -2500,7 +3178,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     loginDesc: 'Connectez-vous pour sauvegarder vos progrès et débloquer toutes les fonctionnalités.',
     loginOrDivider: 'ou',
     loginTryDemo: 'Essayer sans compte',
-    loginReassurance1: '1 deck gratuit inclus',
+    loginReassurance1: '3 decks gratuits inclus',
     loginReassurance2: 'Aucune carte de crédit requise',
 
     myDecks: 'Mes Decks',
@@ -2508,7 +3186,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     noDeckYet: 'Aucun deck pour l\'instant. Importez un fichier .apkg pour commencer !',
     cards: 'cartes',
     lastPracticed: 'Dernière pratique',
-    deckLimitReached: 'Limite du plan gratuit atteinte (1 deck). Passez à Pro pour des decks illimités.',
+    deckLimitReached: 'Limite du plan gratuit atteinte (3 decks). Passez à Pro pour des decks illimités.',
     shareDeck: 'Partager le deck',
     shareTypetris: 'Partager Word Rain',
     shareWordTrain: 'Partager Word Train',
@@ -2672,12 +3350,12 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     whatIsDesc: "typee est un outil d'apprentissage des langues propulsé par l'IA. Collez des paroles ou déposez des sous-titres — l'IA extrait le vocabulaire et crée des cartes. Choisissez ensuite votre jeu : frappe classique, jeux de mots (les mots tombent du ciel) ou exercices à trous. Vous construisez une vraie mémoire par le rappel actif, pas la révision passive.",
     whatIsDetail1: "Importez des decks Anki, collez des paroles ou des sous-titres (.srt). L'IA extrait automatiquement le vocabulaire et génère des cartes à trous — aucun travail manuel requis.",
     whatIsDetail2: "La frappe classique développe la mémoire musculaire. Les jeux de mots sont un mode de mots en chute rapide. Les exercices à trous testent la compréhension en lecture. Tous les modes utilisent le même deck.",
-    whatIsDetail3: "Disponible en 6 langues d'interface avec plus de 10 thèmes. Plan gratuit : 1 deck jusqu'à 100 cartes. Pro débloque les decks illimités à 5$/mois.",
+    whatIsDetail3: "Disponible en 6 langues d'interface avec plus de 10 thèmes. Plan gratuit : 3 decks jusqu'à 200 cartes chacun. Pro débloque les decks illimités à 5$/mois.",
     homeFaqTitle: 'Questions fréquentes',
     homeFaq1Q: "Qu'est-ce que typee et comment ça marche ?",
     homeFaq1A: "typee est une app d'apprentissage des langues par l'IA. Collez des paroles ou des sous-titres (.srt) — l'IA (GPT-4o-mini) extrait le vocabulaire et crée des cartes automatiquement. Pratiquez ensuite avec trois modes : frappe classique, jeux de mots (mots en chute) ou exercices à trous. Chaque session suit WPM, précision et maîtrise.",
     homeFaq2Q: 'typee est-il gratuit ?',
-    homeFaq2A: "Oui. Le plan gratuit inclut 1 deck (jusqu'à 100 cartes), tous les modes de pratique, tous les thèmes et les statistiques de base. Le plan Pro (5$/mois ou 48$/an) débloque les decks illimités.",
+    homeFaq2A: "Oui. Le plan gratuit inclut 3 decks (jusqu'à 200 cartes chacun), tous les modes de pratique, tous les thèmes et les statistiques de base. Le plan Pro (5$/mois ou 48$/an) débloque les decks illimités.",
     homeFaq3Q: 'Quel contenu peut-on utiliser pour créer des cartes ?',
     homeFaq3A: "Collez des paroles, importez des sous-titres (.srt), collez du texte ou importez un deck Anki (.apkg). L'IA traite le contenu et extrait automatiquement des cartes de vocabulaire et des exercices à trous.",
     homeFaq4Q: "Ai-je besoin d'un deck Anki ?",
@@ -2712,6 +3390,19 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     deckLimitReachedCta: 'Passez à Pro pour des decks illimités →',
     cardLimitReachedCta: 'Passez à Pro pour des cartes illimitées →',
     statsProGate: 'Les statistiques avancées sont disponibles avec le plan Pro.',
+    resultsUpgradePrompt: 'Super score ! Suivez vos progrès avec Pro.',
+    resultsUpgradeCta: 'Voir les fonctionnalités Pro →',
+    aiQuotaWarning: 'Dernière requête IA pour aujourd\'hui.',
+    aiQuotaUpgrade: 'Besoin de plus ? Passez à Pro pour 50/jour →',
+    proGateUnlock: 'Débloquer avec Pro',
+    proGatePreview: 'Aperçu — passez à Pro pour voir toutes les données',
+    streakMilestone: 'Incroyable série de {n} jours ! Continuez !',
+    retentionStreakMilestone: '{n} jours consécutifs ! Vous êtes en feu !',
+    retentionPracticeToday: 'Prêt à pratiquer aujourd\'hui ? Maintenez votre série !',
+    retentionWelcomeBack: 'Bon retour ! Reprenons là où vous en étiez.',
+    retentionDueCards: '{n} cartes à réviser. Pratique rapide ?',
+    retentionStartBtn: 'Commencer',
+    retentionDismiss: 'Fermer',
     billingTitle: 'Facturation et plan',
 
     uploadYourDeck: 'Téléchargez votre deck',
@@ -2788,7 +3479,7 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     guideFormatsDesc: "typee accepte les fichiers de sous-titres .srt, les paroles .txt et les paquets Anki .apkg. Vous pouvez aussi coller du texte directement ou créer des cartes manuellement. Les imports CSV/TSV avec détection automatique des champs sont également pris en charge.",
     guideFaqTitle: 'FAQ',
     guideFaq1Q: 'typee est-il gratuit ?',
-    guideFaq1A: "Oui ! Le plan gratuit inclut 1 paquet avec jusqu'à 100 cartes, tous les modes de pratique et les statistiques de base. Passez à Pro pour des paquets illimités.",
+    guideFaq1A: "Oui ! Le plan gratuit inclut 3 paquets avec jusqu'à 200 cartes chacun, tous les modes de pratique et les statistiques de base. Passez à Pro pour des paquets illimités.",
     guideFaq2Q: 'Quelles langues sont prises en charge ?',
     guideFaq2A: "Toute langue qui fonctionne dans Anki fonctionne dans typee — japonais, coréen, chinois, espagnol, français, allemand et plus.",
     guideFaq3Q: 'Puis-je utiliser typee sans compte ?',
@@ -2883,5 +3574,105 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     showHint: 'Voir indice de sens',
     hintTimerLabel: 'Indice lettre',
     fillInMissing: 'Tapez le mot manquant',
+
+    // Onboarding
+    onboardingWelcomeTitle: 'Bienvenue sur typee !',
+    onboardingWelcomeDesc: "Apprenez les langues en tapant ce que vous aimez. Collez des paroles, sous-titres ou texte — l'IA crée des cartes de pratique instantanément.",
+    onboardingCreateTitle: 'Créez votre premier deck',
+    onboardingCreateDesc: "Collez des paroles, importez des sous-titres (.srt), un deck Anki, ou créez des cartes manuellement.",
+    onboardingStartTitle: 'Commencez à apprendre !',
+    onboardingStartDesc: 'Créez un deck pour commencer ou essayez la démo.',
+    onboardingNext: 'Suivant',
+    onboardingSkip: 'Passer',
+    onboardingDone: "C'est parti !",
+
+    // Community Gallery
+    explore: 'Explorer',
+    exploreTitle: 'Decks communautaires',
+    exploreSubtitle: 'Découvrez et clonez des decks partagés par la communauté',
+    searchDecks: 'Rechercher des decks...',
+    filterByLanguage: 'Filtrer par langue',
+    allLanguages: 'Toutes les langues',
+    sortRecent: 'Récent',
+    sortPopular: 'Populaire',
+    sortMostCloned: 'Plus clonés',
+    publishDeck: 'Publier',
+    unpublishDeck: 'Dépublier',
+    likeDeck: "J'aime",
+    cloneDeck: 'Cloner',
+    cloneSuccess: 'Cloné !',
+    cloneError: 'Échec du clonage. Réessayez.',
+    cloneDeckLimit: 'Limite de decks atteinte. Passez à Pro pour des decks illimités.',
+    publishedBy: 'par',
+    displayName: 'Nom affiché',
+    displayNamePlaceholder: 'Entrez votre nom public...',
+    setDisplayName: 'Définissez votre nom affiché pour publier',
+    noPublicDecks: 'Pas encore de decks publics. Soyez le premier à partager !',
+    cardPreviewCount: 'Affichage de {n} cartes',
+    anonymous: 'Anonyme',
+    signInToClone: 'Connectez-vous pour aimer et cloner des decks',
+
+    // Goals
+    goalSettings: "Objectifs d'entraînement",
+    goalSettingsDesc: 'Ajouter un nouvel objectif',
+    dailyGoal: 'Quotidien',
+    weeklyGoal: 'Hebdomadaire',
+    sessionsGoal: 'Sessions',
+    minutesGoal: 'Minutes',
+    cardsGoal: 'Cartes',
+    goalProgress: 'Progression',
+    goalComplete: 'Objectif atteint !',
+    goalCelebrationMsg: 'Objectif accompli ! Continuez comme ça !',
+    setGoal: "Définir l'objectif",
+    removeGoal: 'Supprimer',
+    noGoalsYet: 'Aucun objectif défini',
+
+    // AI Coaching
+    getAiTips: '✨ Obtenir des conseils IA',
+    aiCoachingTitle: 'Coaching IA',
+    aiCoachingLoading: 'Analyse de votre session...',
+    aiCoachingError: 'Impossible de récupérer les conseils. Réessayez.',
+    aiTipsRemaining: '{n} utilisations IA restantes aujourd\'hui',
+    retryBtn: 'Réessayer',
+
+    // SRS Difficulty Rating
+    rateAgain: 'Encore',
+    rateHard: 'Difficile',
+    rateGood: 'Bien',
+    rateEasy: 'Facile',
+    rateHint: 'À quel point vous en souvenez-vous ?',
+    reviewSummary: '{cards} cartes à réviser dans {decks} paquets',
+    reviewNow: 'Réviser maintenant',
+
+    // XP & Level
+    xpGained: '+{xp} XP',
+    levelLabel: 'Niveau {level}',
+    levelUp: 'Niveau supérieur !',
+    xpToNext: '{xp} XP pour le prochain niveau',
+    xpThisSession: 'XP de cette session',
+
+    // Achievements
+    achievementsTab: 'Succès',
+    achievementUnlocked: 'Succès débloqué !',
+    achievementLocked: 'Verrouillé',
+    achievStreak3: '3 jours consécutifs',
+    achievStreak7: 'Guerrier hebdomadaire',
+    achievStreak30: 'Maître mensuel',
+    achievStreak100: '100 jours consécutifs',
+    achievSessions10: 'Premiers pas',
+    achievSessions50: 'Apprenant assidu',
+    achievSessions100: 'Pro de la pratique',
+    achievSessions500: 'Machine à étudier',
+    achievMastery10: 'Première maîtrise',
+    achievMastery50: 'Érudit des cartes',
+    achievMastery100: 'Expert en maîtrise',
+    achievSpeed40: 'Doigts rapides',
+    achievSpeed60: 'Démon de vitesse',
+    achievSpeed80: 'Dactylographe éclair',
+    achievCards100: 'Collectionneur',
+    achievCards500: 'Passionné de cartes',
+    achievCards1000: 'Maître des cartes',
+    achievVariety3: 'Explorateur de modes',
+    achievVariety5: 'Touche-à-tout',
   },
 };

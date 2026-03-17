@@ -9,10 +9,17 @@ import { WpmTrendChart } from '@/components/charts/WpmTrendChart';
 import { CardStatsTable } from '@/components/CardStatsTable';
 import { MasteryProgress } from '@/components/MasteryProgress';
 import { useProgress } from '@/hooks/useProgress';
+import { useProfile } from '@/hooks/useProfile';
+import { ProGateOverlay } from '@/components/ProGateOverlay';
 import { createBrowserClient } from '@/lib/supabase/client';
-import type { CardStats, Deck } from '@/types';
+import { useXP } from '@/hooks/useXP';
+import { useAchievements } from '@/hooks/useAchievements';
+import { XPProgressBar } from '@/components/XPProgressBar';
+import { AchievementCard } from '@/components/AchievementCard';
+import { ACHIEVEMENTS } from '@/lib/achievements';
+import type { CardStats, Deck, AchievementCategory } from '@/types';
 
-type Tab = 'overview' | 'decks' | 'history';
+type Tab = 'overview' | 'decks' | 'history' | 'achievements';
 
 function formatTime(ms: number): string {
   const seconds = Math.floor(ms / 1000);
@@ -24,6 +31,9 @@ function formatTime(ms: number): string {
 export default function StatsPage() {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { isPro } = useProfile();
+  const { xp, level } = useXP();
+  const { unlocked: unlockedAchievements } = useAchievements();
   const [tab, setTab] = useState<Tab>('overview');
   const { sessions, dailyActivity, streak, personalBests, loading, error } = useProgress();
 
@@ -117,6 +127,7 @@ export default function StatsPage() {
     { key: 'overview', label: t.overview },
     { key: 'decks', label: t.decksTab },
     { key: 'history', label: t.historyTab },
+    { key: 'achievements', label: t.achievementsTab },
   ];
 
   return (
@@ -192,7 +203,13 @@ export default function StatsPage() {
                   style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
                 >
                   <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--text)' }}>Activity</h3>
-                  <ActivityHeatmap data={dailyActivity} />
+                  {isPro ? (
+                    <ActivityHeatmap data={dailyActivity} />
+                  ) : (
+                    <ProGateOverlay>
+                      <ActivityHeatmap data={dailyActivity} />
+                    </ProGateOverlay>
+                  )}
                 </div>
 
                 <div
@@ -200,12 +217,23 @@ export default function StatsPage() {
                   style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
                 >
                   <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--text)' }}>WPM Trend</h3>
-                  <WpmTrendChart
-                    sessions={sessions.slice(0, 30).reverse().map((s) => ({
-                      wpm: s.wpm,
-                      date: s.created_at.slice(0, 10),
-                    }))}
-                  />
+                  {isPro ? (
+                    <WpmTrendChart
+                      sessions={sessions.slice(0, 30).reverse().map((s) => ({
+                        wpm: s.wpm,
+                        date: s.created_at.slice(0, 10),
+                      }))}
+                    />
+                  ) : (
+                    <ProGateOverlay>
+                      <WpmTrendChart
+                        sessions={sessions.slice(0, 30).reverse().map((s) => ({
+                          wpm: s.wpm,
+                          date: s.created_at.slice(0, 10),
+                        }))}
+                      />
+                    </ProGateOverlay>
+                  )}
                 </div>
               </div>
             )}
@@ -285,6 +313,36 @@ export default function StatsPage() {
                     )}
                   </>
                 )}
+              </div>
+            )}
+
+            {/* ── Achievements Tab ── */}
+            {tab === 'achievements' && (
+              <div className="space-y-6">
+                <XPProgressBar xp={xp} level={level} />
+
+                {/* Group achievements by category */}
+                {(['streak', 'sessions', 'mastery', 'speed', 'cards', 'variety'] as AchievementCategory[]).map((category) => {
+                  const categoryAchievements = ACHIEVEMENTS.filter((a) => a.category === category);
+                  if (categoryAchievements.length === 0) return null;
+                  const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
+                  return (
+                    <div key={category}>
+                      <h3 className="text-sm font-medium mb-3" style={{ color: 'var(--text)' }}>
+                        {categoryLabel}
+                      </h3>
+                      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                        {categoryAchievements.map((achievement) => (
+                          <AchievementCard
+                            key={achievement.id}
+                            achievement={achievement}
+                            userAchievement={unlockedAchievements.find((ua) => ua.achievement_id === achievement.id)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
 

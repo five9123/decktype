@@ -19,14 +19,21 @@ export function DeckCard({ deck, dueCount }: { deck: Deck; dueCount?: number }) 
         <h3 className="font-bold text-base truncate" style={{ color: 'var(--text)' }}>
           {deck.name}
         </h3>
-        {dueCount != null && dueCount > 0 && (
-          <span
-            className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ml-2"
-            style={{ background: 'var(--accent)', color: '#fff' }}
-          >
-            {dueCount} {t.dueToday ?? 'due'}
-          </span>
-        )}
+        <div className="flex items-center gap-1 shrink-0 ml-2">
+          {deck.is_public && (
+            <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(189,147,249,0.15)', color: 'var(--accent)' }} title="Public">
+              🌐
+            </span>
+          )}
+          {dueCount != null && dueCount > 0 && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{ background: 'var(--accent)', color: '#fff' }}
+            >
+              {dueCount} {t.dueToday ?? 'due'}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>

@@ -10,8 +10,8 @@ import { TopToolbar } from '@/components/TopToolbar';
 type BillingInterval = 'monthly' | 'yearly';
 
 const FREE_FEATURES = [
-  '1 deck',
-  '100 cards per deck',
+  '3 decks',
+  '200 cards per deck',
   'All practice modes',
   'WPM & accuracy tracking',
   'Basic stats',

@@ -157,3 +157,39 @@ button:focus-visible, a:focus-visible, input:focus-visible {
   to { transform: translateX(0); opacity: 1; }
 }
 .train-slide { animation: train-slide 0.3s ease-out; }
+
+/* Coachmark overlay fade-in */
+@keyframes coachmark-fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.coachmark-overlay {
+  animation: coachmark-fadein 0.3s ease;
+}
+
+/* Coachmark spotlight pulse */
+@keyframes coachmark-pulse {
+  0%, 100% { box-shadow: 0 0 0 9999px rgba(0,0,0,0.7); }
+  50% { box-shadow: 0 0 0 9999px rgba(0,0,0,0.65); }
+}
+.coachmark-spotlight {
+  animation: coachmark-pulse 2s ease-in-out infinite;
+}
+
+/* Coachmark tooltip entrance */
+@keyframes coachmark-tooltip-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.coachmark-tooltip {
+  animation: coachmark-tooltip-in 0.25s ease-out;
+}
+
+/* Retention banner slide-down */
+@keyframes retention-slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.retention-banner {
+  animation: retention-slide-down 0.3s ease-out;
+}

@@ -8,15 +8,18 @@ import { TopToolbar } from '@/components/TopToolbar';
 import { MasteryProgress } from '@/components/MasteryProgress';
 import { MasteryBadge } from '@/components/MasteryBadge';
 import { useMastery } from '@/hooks/useMastery';
+import { useProfile } from '@/hooks/useProfile';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { encodeDeckForShare } from '@/lib/share-codec';
 import { BASE_URL } from '@/lib/constants';
+import { trackEvent } from '@/lib/analytics';
 import type { Deck, Card, PracticeMode, CardOrder } from '@/types';
 
 export default function DeckDetailPage() {
   const { deckId } = useParams<{ deckId: string }>();
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { displayName, updateDisplayName } = useProfile();
   const router = useRouter();
 
   const [deck, setDeck] = useState<Deck | null>(null);
@@ -33,6 +36,9 @@ export default function DeckDetailPage() {
   const [shareError, setShareError] = useState('');
   const [shareTrainCopied, setShareTrainCopied] = useState(false);
   const [shareTrainError, setShareTrainError] = useState('');
+  const [publishing, setPublishing] = useState(false);
+  const [showDisplayNamePrompt, setShowDisplayNamePrompt] = useState(false);
+  const [displayNameInput, setDisplayNameInput] = useState('');
 
   const { masteryMap, getDeckProgress } = useMastery(deckId);
   const progress = getDeckProgress();
@@ -112,6 +118,38 @@ export default function DeckDetailPage() {
       setShareTrainError(e instanceof Error ? e.message : 'Failed to generate link');
       setTimeout(() => setShareTrainError(''), 3000);
     }
+  };
+
+  const handleTogglePublish = async (withDisplayName?: string) => {
+    if (!deck) return;
+    setPublishing(true);
+    const supabase = createBrowserClient();
+    const makePublic = !deck.is_public;
+
+    if (makePublic && !displayName && !withDisplayName) {
+      setShowDisplayNamePrompt(true);
+      setPublishing(false);
+      return;
+    }
+
+    if (makePublic && withDisplayName) {
+      await updateDisplayName(withDisplayName);
+    }
+
+    const { error } = await supabase
+      .from('decks')
+      .update({
+        is_public: makePublic,
+        published_at: makePublic ? new Date().toISOString() : null,
+      })
+      .eq('id', deckId);
+
+    if (!error) {
+      setDeck((prev) => prev ? { ...prev, is_public: makePublic, published_at: makePublic ? new Date().toISOString() : null } : prev);
+      trackEvent(makePublic ? 'deck_published' : 'deck_unpublished', { deck_id: deckId });
+    }
+    setShowDisplayNamePrompt(false);
+    setPublishing(false);
   };
 
   if (loading) {
@@ -205,6 +243,19 @@ export default function DeckDetailPage() {
               )}
             </div>
             <button
+              onClick={() => handleTogglePublish()}
+              disabled={publishing}
+              className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
+              style={{
+                background: deck.is_public ? 'rgba(189,147,249,0.1)' : 'var(--surface)',
+                border: `1px solid ${deck.is_public ? 'rgba(189,147,249,0.3)' : 'var(--border)'}`,
+                color: deck.is_public ? 'var(--accent)' : 'var(--text)',
+                cursor: 'pointer',
+              }}
+            >
+              {publishing ? t.loading : deck.is_public ? `🌐 ${t.unpublishDeck}` : `🌐 ${t.publishDeck}`}
+            </button>
+            <button
               onClick={() => setShowDeleteConfirm(true)}
               className="px-3 py-1.5 rounded-lg text-sm transition-opacity hover:opacity-80"
               style={{
@@ -254,6 +305,43 @@ export default function DeckDetailPage() {
                 style={{ background: 'var(--incorrect)', color: '#fff', border: 'none', cursor: 'pointer' }}
               >
                 {t.confirm}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Display Name Prompt for Publish */}
+        {showDisplayNamePrompt && (
+          <div
+            className="px-4 py-3 rounded-xl mb-6"
+            style={{ background: 'rgba(189,147,249,0.08)', border: '1px solid rgba(189,147,249,0.2)' }}
+          >
+            <p className="text-sm font-bold mb-2" style={{ color: 'var(--accent)' }}>{t.setDisplayName}</p>
+            <p className="text-xs mb-3" style={{ color: 'var(--muted)' }}>{t.displayNamePlaceholder}</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={displayNameInput}
+                onChange={(e) => setDisplayNameInput(e.target.value)}
+                placeholder={t.displayNamePlaceholder}
+                maxLength={30}
+                className="flex-1 px-3 py-1.5 rounded-lg text-sm"
+                style={{ background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', outline: 'none' }}
+              />
+              <button
+                onClick={() => handleTogglePublish(displayNameInput.trim() || t.anonymous)}
+                disabled={publishing}
+                className="px-3 py-1.5 rounded-lg text-sm font-medium"
+                style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer' }}
+              >
+                {t.publishDeck}
+              </button>
+              <button
+                onClick={() => setShowDisplayNamePrompt(false)}
+                className="px-3 py-1.5 rounded-lg text-sm"
+                style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', cursor: 'pointer' }}
+              >
+                {t.cancel}
               </button>
             </div>
           </div>

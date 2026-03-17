@@ -19,11 +19,14 @@ import { usePersonalBest } from '@/hooks/usePersonalBest';
 import { AUTO_ADVANCE_DELAY } from '@/lib/constants';
 import { shuffle } from '@/lib/utils';
 import { STORAGE_KEY_SESSION } from '@/lib/storage-keys';
+import { trackEvent } from '@/lib/analytics';
 import dynamic from 'next/dynamic';
 const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
 const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
 const WordTrainGame = dynamic(() => import('@/components/WordTrainGame').then((m) => ({ default: m.WordTrainGame })), { ssr: false });
-import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
+import { DifficultyRating } from '@/components/DifficultyRating';
+import { autoRate } from '@/lib/fsrs';
+import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel, FSRSRating } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
 
@@ -41,7 +44,7 @@ export default function PracticePage() {
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
   const { play: playSound } = useSound();
-  const { masteryMap, loading: masteryLoading, updateMastery } = useMastery(deckId);
+  const { masteryMap, loading: masteryLoading, updateMastery, userAvgWpm: masteryAvgWpm } = useMastery(deckId);
   const { checkAndUpdate: checkPB } = usePersonalBest();
 
   // Keep a ref to the latest updateMastery to avoid adding it to effect deps
@@ -78,6 +81,9 @@ export default function PracticePage() {
 
   // Stable ref for handleSkip — lets Enter key effect reference it without ordering issues
   const handleSkipRef = useRef<() => void>(() => {});
+
+  // Pending mastery update: stores card info until user rates or auto-advance fires
+  const pendingMasteryRef = useRef<{ cardId: string; accuracy: number; wpm: number } | null>(null);
 
   // Guard: prevent duplicate result-saving when effect re-runs while isComplete=true
   const resultSavedRef = useRef(false);
@@ -138,6 +144,7 @@ export default function PracticePage() {
 
         setCards(cardList);
         setLoading(false);
+        trackEvent('practice_started', { deck_id: deckId, mode, card_count: cardList.length });
       });
   }, [user, deckId, order, masteryLoading, masteryMap]);
 
@@ -228,13 +235,10 @@ export default function PracticePage() {
         target_text: target,
       },
     ]);
-    if (currentCard?.id) {
-      updateMasteryRef.current(currentCard.id, cardAccuracy, cardWpm).then((newLevel) => {
-        if (newLevel) {
-          setLevelUps((prev) => [...prev, { cardId: currentCard.id, level: newLevel }]);
-        }
-      });
-    }
+    // Mastery update is deferred until user rates (or auto-advance fires)
+    pendingMasteryRef.current = currentCard?.id
+      ? { cardId: currentCard.id, accuracy: cardAccuracy, wpm: cardWpm }
+      : null;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, isComposing, sessionComplete]);
 
@@ -252,13 +256,18 @@ export default function PracticePage() {
       }
     };
     autoAdvanceRaf.current = requestAnimationFrame(animate);
-    autoAdvanceTimer.current = setTimeout(() => advanceToNext(), AUTO_ADVANCE_DELAY);
+    autoAdvanceTimer.current = setTimeout(() => {
+      // Auto-advance: rate with autoRate fallback
+      const pending = pendingMasteryRef.current;
+      const rating = pending ? autoRate(pending.accuracy, masteryAvgWpm > 0 ? pending.wpm / masteryAvgWpm : 1) : 3;
+      handleRateRef.current(rating as FSRSRating);
+    }, AUTO_ADVANCE_DELAY);
 
     return () => {
       if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
       if (autoAdvanceRaf.current) cancelAnimationFrame(autoAdvanceRaf.current);
     };
-  }, [isComplete, isComposing, sessionComplete, advanceToNext]);
+  }, [isComplete, isComposing, sessionComplete]);
 
   // RAF countdown animation for wrong-submit state (uses separate refs to avoid race with isComplete)
   useEffect(() => {
@@ -289,7 +298,10 @@ export default function PracticePage() {
       if (e.repeat) return;
       if (e.key === 'Enter' && isComplete) {
         e.preventDefault();
-        advanceToNext();
+        // Enter = autoRate fallback (Good=3 by default)
+        const pending = pendingMasteryRef.current;
+        const rating: FSRSRating = pending ? autoRate(pending.accuracy, masteryAvgWpm > 0 ? pending.wpm / masteryAvgWpm : 1) : 3;
+        handleRateRef.current(rating);
       } else if (e.key === 'Enter' && wrongSubmit) {
         if (performance.now() - wrongSubmitStart.current < 300) return;
         e.preventDefault();
@@ -298,7 +310,7 @@ export default function PracticePage() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isComplete, advanceToNext, wrongSubmit]);
+  }, [isComplete, wrongSubmit, masteryAvgWpm]);
 
   // Save session when complete
   useEffect(() => {
@@ -381,6 +393,22 @@ export default function PracticePage() {
     }
   }, [currentIdx, cards.length, reset, currentCard, elapsedSeconds]);
   useEffect(() => { handleSkipRef.current = handleSkip; });
+
+  // Rate card difficulty and advance — called by DifficultyRating, auto-advance, or Enter
+  const handleRateAndAdvance = useCallback((rating: FSRSRating) => {
+    const pending = pendingMasteryRef.current;
+    if (pending) {
+      pendingMasteryRef.current = null;
+      updateMasteryRef.current(pending.cardId, pending.accuracy, pending.wpm, rating).then((newLevel) => {
+        if (newLevel) {
+          setLevelUps((prev) => [...prev, { cardId: pending.cardId, level: newLevel }]);
+        }
+      });
+    }
+    advanceToNext();
+  }, [advanceToNext]);
+  const handleRateRef = useRef(handleRateAndAdvance);
+  useEffect(() => { handleRateRef.current = handleRateAndAdvance; });
 
   if (loading) {
     return (
@@ -529,19 +557,23 @@ export default function PracticePage() {
                   setWrongSubmit(true);
                   if (!resultSavedRef.current && currentCard) {
                     resultSavedRef.current = true;
+                    const cardWpm = wpm ?? 0;
+                    const cardAccuracy = accuracy ?? 0;
                     setSessionResults((prev) => [
                       ...prev,
                       {
                         id: '',
                         session_id: '',
                         card_id: currentCard.id,
-                        wpm: wpm ?? 0,
-                        accuracy: accuracy ?? 0,
+                        wpm: cardWpm,
+                        accuracy: cardAccuracy,
                         time_ms: elapsedSeconds * 1000,
                         typed_text: input,
                         target_text: target,
                       },
                     ]);
+                    // Set pending mastery for wrongSubmit path (will be rated as Again)
+                    pendingMasteryRef.current = { cardId: currentCard.id, accuracy: cardAccuracy, wpm: cardWpm };
                   }
                 } else {
                   handleSkip();
@@ -577,19 +609,22 @@ export default function PracticePage() {
                     setWrongSubmit(true);
                     if (!resultSavedRef.current && currentCard) {
                       resultSavedRef.current = true;
+                      const cardWpm = wpm ?? 0;
+                      const cardAccuracy = accuracy ?? 0;
                       setSessionResults((prev) => [
                         ...prev,
                         {
                           id: '',
                           session_id: '',
                           card_id: currentCard.id,
-                          wpm: wpm ?? 0,
-                          accuracy: accuracy ?? 0,
+                          wpm: cardWpm,
+                          accuracy: cardAccuracy,
                           time_ms: elapsedSeconds * 1000,
                           typed_text: input,
                           target_text: target,
                         },
                       ]);
+                      pendingMasteryRef.current = { cardId: currentCard.id, accuracy: cardAccuracy, wpm: cardWpm };
                     }
                   } else {
                     handleSkip();
@@ -603,23 +638,22 @@ export default function PracticePage() {
             </div>
           )}
           {isComplete && !isComposing && (
-            <button
-              onClick={() => advanceToNext()}
-              className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mt-2"
-              style={{ background: 'var(--correct)', color: '#fff', cursor: 'pointer', border: 'none' }}
-              role="status"
-              aria-live="assertive"
-            >
-              ✓ {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
-              <div
-                className="absolute bottom-0 left-0 h-1"
-                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.45)' }}
-              />
-            </button>
+            <DifficultyRating
+              onRate={(rating) => handleRateAndAdvance(rating)}
+              progress={autoAdvanceProgress}
+            />
           )}
           {wrongSubmit && (
             <button
-              onClick={() => handleSkip()}
+              onClick={() => {
+                // Wrong submit = Again (rating 1)
+                if (pendingMasteryRef.current) {
+                  const p = pendingMasteryRef.current;
+                  pendingMasteryRef.current = null;
+                  updateMasteryRef.current(p.cardId, p.accuracy, p.wpm, 1 as FSRSRating);
+                }
+                handleSkip();
+              }}
               className="relative w-full py-3 rounded-xl text-base font-bold overflow-hidden mt-2"
               style={{ background: 'var(--incorrect)', color: '#fff', cursor: 'pointer', border: 'none' }}
               role="status"

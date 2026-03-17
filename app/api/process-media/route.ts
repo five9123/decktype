@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { checkRateLimit, requireAuth } from '@/lib/api-middleware';
 import { getAiLimit, reserveAiUsage, rollbackAiUsage } from '@/lib/ai-usage';
-import { LANG_NAMES } from '@/lib/constants';
+import { LANG_NAMES, AI_DAILY_LIMIT_PRO } from '@/lib/constants';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds (Vercel Pro)
@@ -228,7 +228,7 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error: plan === 'free'
-            ? `Free plan: ${limit} AI requests per day. Upgrade to Pro for ${limit * 16}+ daily requests.`
+            ? `Free plan: ${limit} AI requests per day. Upgrade to Pro for ${AI_DAILY_LIMIT_PRO} daily requests.`
             : `Daily AI limit reached (${limit}). Resets at midnight UTC.`,
           code: 'QUOTA_EXCEEDED',
           used: used - 1, // subtract the rolled-back reservation

@@ -8,6 +8,7 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import { useProfile } from '@/hooks/useProfile';
 import { STORAGE_KEY_GUEST_DECK } from '@/lib/storage-keys';
 import { saveDeckWithCards, type CardToSave } from '@/lib/deck-save';
+import { trackEvent } from '@/lib/analytics';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { MediaTabContent, type MediaCardsResult } from '@/components/MediaTabContent';
@@ -71,6 +72,7 @@ export default function CreateDeckPage() {
       return;
     }
 
+    trackEvent('deck_created', { deck_id: result.deckId, card_count: cards.length });
     router.push(`/deck/${result.deckId}`);
   };
 

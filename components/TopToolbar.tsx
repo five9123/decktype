@@ -3,11 +3,14 @@ import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useProfile } from '@/hooks/useProfile';
+import { useXP } from '@/hooks/useXP';
+import { LevelBadge } from '@/components/LevelBadge';
 
 export function TopToolbar() {
   const { user, signOut } = useAuth();
   const { t } = useLanguage();
   const { isPro } = useProfile();
+  const { level } = useXP();
   return (
     <header
       className="top-toolbar sticky top-0 z-40 flex items-center justify-between px-4 sm:px-6 py-3"
@@ -44,6 +47,13 @@ export function TopToolbar() {
               {t.myDecks}
             </Link>
             <Link
+              href="/explore"
+              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              style={{ color: 'var(--text)' }}
+            >
+              {t.explore}
+            </Link>
+            <Link
               href="/stats"
               className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
@@ -57,6 +67,7 @@ export function TopToolbar() {
             >
               {t.createDeck}
             </Link>
+            <LevelBadge level={level} />
             {isPro ? (
               <Link
                 href="/billing"
