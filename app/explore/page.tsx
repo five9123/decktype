@@ -57,8 +57,8 @@ export default function ExplorePage() {
       query = query.order('published_at', { ascending: false });
     }
 
-    query.then(({ data }) => {
-      setDecks((data as PublicDeck[]) ?? []);
+    query.then(({ data }: { data: PublicDeck[] | null }) => {
+      setDecks(data ?? []);
       setLoading(false);
     });
   }, [search, lang, sort]);
