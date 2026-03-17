@@ -27,11 +27,11 @@ export function TopToolbar() {
         <span className="font-bold tracking-tight" style={{ color: 'var(--accent)', fontSize: '1.95rem' }}>typee</span>
       </Link>
 
-      <nav className="flex items-center gap-2 sm:gap-3">
+      <nav className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
         {!user && (
           <Link
             href="/blog"
-            className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+            className="hidden md:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
             style={{ color: 'var(--text)' }}
           >
             {t.footerBlog}
@@ -48,21 +48,21 @@ export function TopToolbar() {
             </Link>
             <Link
               href="/explore"
-              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              className="hidden md:inline-flex px-2 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
             >
               {t.explore}
             </Link>
             <Link
               href="/stats"
-              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              className="hidden md:inline-flex px-2 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
             >
               {t.statsTitle}
             </Link>
             <Link
               href="/create"
-              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline transition-opacity hover:opacity-80"
+              className="hidden lg:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
             >
               {t.createDeck}
@@ -79,7 +79,7 @@ export function TopToolbar() {
             ) : (
               <Link
                 href="/pricing"
-                className="hidden sm:inline-flex px-3 py-1.5 rounded-lg text-sm font-bold no-underline transition-opacity hover:opacity-80"
+                className="hidden lg:inline-flex px-3 py-1.5 rounded-lg text-sm font-bold no-underline whitespace-nowrap transition-opacity hover:opacity-80"
                 style={{ color: 'var(--accent)' }}
               >
                 {t.upgradeToPro}
