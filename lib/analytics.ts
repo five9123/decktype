@@ -49,7 +49,7 @@ export function trackEvent(
 
   try {
     const supabase = createBrowserClient();
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(({ data }: { data: { user: { id: string } | null } }) => {
       supabase
         .from('analytics_events')
         .insert({
