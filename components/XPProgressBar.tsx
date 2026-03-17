@@ -5,15 +5,17 @@ import { xpToNextLevel } from '@/lib/achievements';
 interface XPProgressBarProps {
   xp: number;
   level: number;
+  /** Remove bottom margin for inline usage */
+  inline?: boolean;
 }
 
-export function XPProgressBar({ xp, level }: XPProgressBarProps) {
+export function XPProgressBar({ xp, level, inline }: XPProgressBarProps) {
   const { currentLevelXP, nextLevelXP, progress } = xpToNextLevel(xp);
   const currentInLevel = xp - currentLevelXP;
   const needed = nextLevelXP - currentLevelXP;
 
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2 mb-4">
+    <div className={`flex items-center gap-1.5 sm:gap-2${inline ? '' : ' mb-4'}`}>
       <span className="text-xs font-bold" style={{ color: 'var(--accent)', minWidth: 32 }}>
         Lv.{level}
       </span>

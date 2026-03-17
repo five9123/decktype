@@ -130,27 +130,33 @@ export default function DashboardPage() {
     <>
       <TopToolbar />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-        {/* Streak Counter */}
-        {!progressLoading && (
-          <div className="mb-4">
-            <StreakCounter streak={streak} />
+        {/* Streak + XP inline row */}
+        {(!progressLoading || (!xpLoading && user)) && (
+          <div className="flex items-center justify-between gap-4 mb-4">
+            {!progressLoading && <StreakCounter streak={streak} compact />}
+            {!xpLoading && user && (
+              <div className="flex-1 min-w-0">
+                <XPProgressBar xp={xp} level={level} inline />
+              </div>
+            )}
           </div>
         )}
 
-        {/* XP Progress Bar */}
-        {!xpLoading && user && (
-          <XPProgressBar xp={xp} level={level} />
-        )}
-
-        {/* Retention Banner */}
-        {!progressLoading && !loading && (
-          <RetentionBanner
-            streak={streak}
-            dueCount={Object.values(dueCounts).reduce((a, b) => a + b, 0)}
-            lastSessionDate={sessions[0]?.created_at}
-            firstDeckId={decks[0]?.id}
-          />
-        )}
+        {/* Smart Banner (due cards / retention) */}
+        {!progressLoading && !loading && (() => {
+          const totalDue = Object.values(dueCounts).reduce((a, b) => a + b, 0);
+          const dueDecksArr = Object.entries(dueCounts).filter(([, c]) => c > 0);
+          const firstDueDeckId = dueDecksArr[0]?.[0] ?? decks[0]?.id;
+          return (
+            <RetentionBanner
+              streak={streak}
+              dueCount={totalDue}
+              dueDecks={dueDecksArr.length}
+              lastSessionDate={sessions[0]?.created_at}
+              firstDeckId={firstDueDeckId}
+            />
+          );
+        })()}
 
         {/* Goal Progress */}
         {!progressLoading && (
@@ -159,37 +165,6 @@ export default function DashboardPage() {
             onOpenSettings={() => setShowGoalSettings(true)}
           />
         )}
-
-        {/* Review Summary Banner */}
-        {(() => {
-          const totalDue = Object.values(dueCounts).reduce((a, b) => a + b, 0);
-          const dueDecks = Object.entries(dueCounts).filter(([, c]) => c > 0);
-          if (totalDue === 0) return null;
-          const firstDueDeckId = dueDecks[0]?.[0];
-          return (
-            <div
-              className="flex items-center justify-between gap-3 px-3 sm:px-4 py-3 rounded-xl mb-6"
-              style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
-            >
-              <div className="flex items-center gap-2">
-                <span style={{ fontSize: 18 }}>📚</span>
-                <span className="text-xs sm:text-sm font-medium" style={{ color: 'var(--text)' }}>
-                  {t.reviewSummary
-                    .replace('{cards}', String(totalDue)).replace('{decks}', String(dueDecks.length))}
-                </span>
-              </div>
-              {firstDueDeckId && (
-                <Link
-                  href={`/deck/${firstDueDeckId}/practice?order=smart_review`}
-                  className="px-3 py-1.5 rounded-lg text-xs font-bold no-underline whitespace-nowrap flex-shrink-0"
-                  style={{ background: 'var(--accent)', color: '#fff' }}
-                >
-                  {t.reviewNow}
-                </Link>
-              )}
-            </div>
-          );
-        })()}
 
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

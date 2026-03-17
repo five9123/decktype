@@ -9,6 +9,8 @@ import type { PracticeStreak } from '@/types';
 interface RetentionBannerProps {
   streak: PracticeStreak;
   dueCount: number;
+  /** Number of decks that have due cards */
+  dueDecks?: number;
   lastSessionDate?: string;
   /** deck id to link practice button to (first deck) */
   firstDeckId?: string;
@@ -24,7 +26,7 @@ interface BannerConfig {
   emoji: string;
 }
 
-export function RetentionBanner({ streak, dueCount, lastSessionDate, firstDeckId }: RetentionBannerProps) {
+export function RetentionBanner({ streak, dueCount, dueDecks, lastSessionDate, firstDeckId }: RetentionBannerProps) {
   const { t } = useLanguage();
   const [dismissed, setDismissed] = useState(true); // Start dismissed to avoid flash
 
@@ -44,7 +46,7 @@ export function RetentionBanner({ streak, dueCount, lastSessionDate, firstDeckId
   const bannerType = getBannerType(streak, dueCount, lastSessionDate);
   if (!bannerType) return null;
 
-  const config = getBannerConfig(bannerType, streak, dueCount, t);
+  const config = getBannerConfig(bannerType, streak, dueCount, dueDecks ?? 0, t);
 
   return (
     <div
@@ -58,11 +60,11 @@ export function RetentionBanner({ streak, dueCount, lastSessionDate, firstDeckId
       <div className="flex items-center gap-2 flex-shrink-0">
         {firstDeckId && bannerType !== 'streak_milestone' && (
           <Link
-            href={`/deck/${firstDeckId}/practice`}
-            className="text-xs font-bold px-3 py-1.5 rounded-lg no-underline transition-opacity hover:opacity-90"
+            href={bannerType === 'due_cards' ? `/deck/${firstDeckId}/practice?order=smart_review` : `/deck/${firstDeckId}/practice`}
+            className="text-xs font-bold px-3 py-1.5 rounded-lg no-underline transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{ background: config.color, color: config.bg.includes('accent') ? '#fff' : '#000' }}
           >
-            {t.retentionStartBtn}
+            {bannerType === 'due_cards' ? t.reviewNow : t.retentionStartBtn}
           </Link>
         )}
         <button
@@ -107,6 +109,7 @@ function getBannerConfig(
   type: BannerType,
   streak: PracticeStreak,
   dueCount: number,
+  dueDecks: number,
   t: ReturnType<typeof useLanguage>['t'],
 ): BannerConfig {
   switch (type) {
@@ -136,7 +139,9 @@ function getBannerConfig(
       };
     case 'due_cards':
       return {
-        message: t.retentionDueCards.replace('{n}', String(dueCount)),
+        message: dueDecks > 0
+          ? t.reviewSummary.replace('{cards}', String(dueCount)).replace('{decks}', String(dueDecks))
+          : t.retentionDueCards.replace('{n}', String(dueCount)),
         bg: 'rgba(189,147,249,0.08)',
         border: 'rgba(189,147,249,0.2)',
         color: 'var(--accent)',
