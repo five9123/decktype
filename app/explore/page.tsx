@@ -100,7 +100,7 @@ export default function ExplorePage() {
               <option key={l} value={l}>{l.toUpperCase()}</option>
             ))}
           </select>
-          <div className="flex gap-1">
+          <div className="flex flex-wrap gap-1">
             {([
               { value: 'recent', label: t.sortRecent },
               { value: 'popular', label: t.sortPopular },

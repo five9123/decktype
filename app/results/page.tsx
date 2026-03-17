@@ -348,7 +348,7 @@ function ResultsContent() {
           <h3 className="text-sm font-medium mb-2" style={{ color: 'var(--text)' }}>
             {t.vsLastSession ?? 'vs Previous'}
           </h3>
-          <div className="flex gap-4 sm:gap-6 text-xs sm:text-sm">
+          <div className="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm">
             <ComparisonStat label="WPM" current={session.wpm} previous={prevAvg.wpm} />
             <ComparisonStat label={t.accuracyLabel} current={session.accuracy} previous={prevAvg.accuracy} suffix="%" />
           </div>
