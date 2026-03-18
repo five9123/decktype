@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -32,7 +32,7 @@ function getDefaultDemoLang(uiLang: string): DemoLang {
   return 'ko';
 }
 
-export default function DemoPage() {
+function DemoContent() {
   const { t, lang: uiLang } = useLanguage();
   const searchParams = useSearchParams();
   const tabs = getDemoTabs(uiLang);
@@ -197,5 +197,13 @@ export default function DemoPage() {
         </div>
       </main>
     </>
+  );
+}
+
+export default function DemoPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center py-20"><p style={{ color: 'var(--muted)' }}>Loading...</p></div>}>
+      <DemoContent />
+    </Suspense>
   );
 }
