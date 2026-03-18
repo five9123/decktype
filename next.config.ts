@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.typee.app' }],
+        destination: 'https://typee.app/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
