@@ -568,7 +568,8 @@ export default function PracticePage() {
                     pendingMasteryRef.current = { cardId: currentCard.id, accuracy: cardAccuracy, wpm: cardWpm };
                   }
                 } else {
-                  handleSkip();
+                  // Do nothing — empty Enter should not skip the card.
+                  // Prevents accidental skip from rapid Enter presses when advancing between cards.
                 }
               }
             }}

@@ -88,7 +88,7 @@ export function ActivityHeatmap({ data, days = 180 }: ActivityHeatmapProps) {
         {/* Cells */}
         {grid.map((cell, i) => {
           const intensity = getIntensity(cell.count);
-          const opacityMap = [0.06, 0.25, 0.45, 0.7, 1];
+          const opacityMap = [1, 0.3, 0.5, 0.75, 1];
 
           return (
             <rect
@@ -98,8 +98,10 @@ export function ActivityHeatmap({ data, days = 180 }: ActivityHeatmapProps) {
               width={CELL_SIZE}
               height={CELL_SIZE}
               rx={2}
-              fill={intensity === 0 ? 'var(--surface2)' : 'var(--accent)'}
+              fill={intensity === 0 ? 'var(--surface)' : 'var(--accent)'}
               opacity={opacityMap[intensity]}
+              stroke={intensity === 0 ? 'var(--border)' : 'transparent'}
+              strokeWidth={1}
               style={{ cursor: 'pointer' }}
               onMouseEnter={(e) => {
                 const rect = (e.target as SVGRectElement).getBoundingClientRect();
