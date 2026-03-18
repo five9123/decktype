@@ -24,9 +24,7 @@ import dynamic from 'next/dynamic';
 const AcidRainGame = dynamic(() => import('@/components/AcidRainGame').then((m) => ({ default: m.AcidRainGame })), { ssr: false });
 const FillBlankGame = dynamic(() => import('@/components/FillBlankGame').then((m) => ({ default: m.FillBlankGame })), { ssr: false });
 const WordTrainGame = dynamic(() => import('@/components/WordTrainGame').then((m) => ({ default: m.WordTrainGame })), { ssr: false });
-import { DifficultyRating } from '@/components/DifficultyRating';
-import { autoRate } from '@/lib/fsrs';
-import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel, FSRSRating } from '@/types';
+import type { Card, PracticeMode, CardOrder, CardResult, TypingSession, MasteryLevel } from '@/types';
 import type { ScriptLang } from '@/lib/lang-detect';
 
 
@@ -44,7 +42,7 @@ export default function PracticePage() {
   const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
   const { play: playSound } = useSound();
-  const { masteryMap, loading: masteryLoading, updateMastery, userAvgWpm: masteryAvgWpm } = useMastery(deckId);
+  const { masteryMap, loading: masteryLoading, updateMastery } = useMastery(deckId);
   const { checkAndUpdate: checkPB } = usePersonalBest();
 
   // Keep a ref to the latest updateMastery to avoid adding it to effect deps
@@ -257,10 +255,7 @@ export default function PracticePage() {
     };
     autoAdvanceRaf.current = requestAnimationFrame(animate);
     autoAdvanceTimer.current = setTimeout(() => {
-      // Auto-advance: rate with autoRate fallback
-      const pending = pendingMasteryRef.current;
-      const rating = pending ? autoRate(pending.accuracy, masteryAvgWpm > 0 ? pending.wpm / masteryAvgWpm : 1) : 3;
-      handleRateRef.current(rating as FSRSRating);
+      handleRateRef.current();
     }, AUTO_ADVANCE_DELAY);
 
     return () => {
@@ -298,10 +293,7 @@ export default function PracticePage() {
       if (e.repeat) return;
       if (e.key === 'Enter' && isComplete) {
         e.preventDefault();
-        // Enter = autoRate fallback (Good=3 by default)
-        const pending = pendingMasteryRef.current;
-        const rating: FSRSRating = pending ? autoRate(pending.accuracy, masteryAvgWpm > 0 ? pending.wpm / masteryAvgWpm : 1) : 3;
-        handleRateRef.current(rating);
+        handleRateRef.current();
       } else if (e.key === 'Enter' && wrongSubmit) {
         if (performance.now() - wrongSubmitStart.current < 300) return;
         e.preventDefault();
@@ -310,7 +302,7 @@ export default function PracticePage() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isComplete, wrongSubmit, masteryAvgWpm]);
+  }, [isComplete, wrongSubmit]);
 
   // Save session when complete
   useEffect(() => {
@@ -394,12 +386,12 @@ export default function PracticePage() {
   }, [currentIdx, cards.length, reset, currentCard, elapsedSeconds]);
   useEffect(() => { handleSkipRef.current = handleSkip; });
 
-  // Rate card difficulty and advance — called by DifficultyRating, auto-advance, or Enter
-  const handleRateAndAdvance = useCallback((rating: FSRSRating) => {
+  // Advance to next card with mastery update — called by auto-advance or Enter
+  const handleRateAndAdvance = useCallback(() => {
     const pending = pendingMasteryRef.current;
     if (pending) {
       pendingMasteryRef.current = null;
-      updateMasteryRef.current(pending.cardId, pending.accuracy, pending.wpm, rating).then((newLevel) => {
+      updateMasteryRef.current(pending.cardId, pending.accuracy, pending.wpm).then((newLevel) => {
         if (newLevel) {
           setLevelUps((prev) => [...prev, { cardId: pending.cardId, level: newLevel }]);
         }
@@ -638,19 +630,27 @@ export default function PracticePage() {
             </div>
           )}
           {isComplete && !isComposing && (
-            <DifficultyRating
-              onRate={(rating) => handleRateAndAdvance(rating)}
-              progress={autoAdvanceProgress}
-            />
+            <div className="relative mt-2 overflow-hidden rounded-xl">
+              <button
+                onClick={() => handleRateAndAdvance()}
+                className="w-full py-2.5 rounded-xl text-sm font-bold"
+                style={{ background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer' }}
+              >
+                {currentIdx + 1 >= cards.length ? t.seeResults : t.nextCard} →
+              </button>
+              <div
+                className="absolute bottom-0 left-0 h-0.5"
+                style={{ width: `${(1 - autoAdvanceProgress) * 100}%`, background: 'rgba(255,255,255,0.5)' }}
+              />
+            </div>
           )}
           {wrongSubmit && (
             <button
               onClick={() => {
-                // Wrong submit = Again (rating 1)
                 if (pendingMasteryRef.current) {
                   const p = pendingMasteryRef.current;
                   pendingMasteryRef.current = null;
-                  updateMasteryRef.current(p.cardId, p.accuracy, p.wpm, 1 as FSRSRating);
+                  updateMasteryRef.current(p.cardId, p.accuracy, p.wpm);
                 }
                 handleSkip();
               }}
