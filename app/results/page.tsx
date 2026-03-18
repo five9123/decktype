@@ -14,7 +14,6 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import { STORAGE_KEY_SESSION } from '@/lib/storage-keys';
 import { useProfile } from '@/hooks/useProfile';
 import { trackEvent } from '@/lib/analytics';
-import { AiCoachingTip } from '@/components/AiCoachingTip';
 import { XPGainAnimation } from '@/components/XPGainAnimation';
 import { AchievementPopup } from '@/components/AchievementPopup';
 import { useXP } from '@/hooks/useXP';
@@ -390,19 +389,6 @@ function ResultsContent() {
           </div>
         );
       })()}
-
-      {/* AI Coaching Tips */}
-      {user && (
-        <AiCoachingTip
-          accuracy={session.accuracy}
-          wpm={session.wpm}
-          compositeScore={session.composite_score}
-          errorPatterns={analyzeErrorPatterns(
-            (session.cardResults ?? []).filter((cr) => cr.typed_text && cr.target_text && cr.accuracy < 100) as { typed_text: string; target_text: string }[]
-          )}
-          mode={session.mode}
-        />
-      )}
 
       {/* Wrong Cards Review */}
       {session.cardResults && session.cards && (
