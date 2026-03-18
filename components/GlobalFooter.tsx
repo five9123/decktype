@@ -125,7 +125,7 @@ export function GlobalFooter() {
         >
           <LanguageSwitcher />
           <p className="text-xs" style={{ color: 'var(--muted)' }}>
-            &copy; {new Date().getFullYear()} typee. All rights reserved.
+            &copy; 2025 typee. All rights reserved.
           </p>
         </div>
       </div>

@@ -418,6 +418,10 @@ export type Translations = {
   mediaPreview: string;
   generateMode: string;
   lineCount: string;
+  sourceLangLabel: string;
+  targetLangLabel: string;
+  sourceLangTooltip: string;
+  targetLangTooltip: string;
 
   // Game modes
   acidRain: string;
@@ -946,6 +950,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mediaPreview: 'Preview',
     generateMode: 'Card Type',
     lineCount: 'lines',
+    sourceLangLabel: 'Source',
+    targetLangLabel: 'Target',
+    sourceLangTooltip: 'The language of your content (e.g. the language of the song or subtitle)',
+    targetLangTooltip: 'The language you want to learn / translate into',
 
     // Game modes
     acidRain: 'Word Rain',
@@ -1469,6 +1477,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mediaPreview: '미리보기',
     generateMode: '카드 유형',
     lineCount: '줄',
+    sourceLangLabel: '원본 언어',
+    targetLangLabel: '학습 언어',
+    sourceLangTooltip: '콘텐츠의 언어 (예: 노래나 자막의 언어)',
+    targetLangTooltip: '배우고 싶은 언어 / 번역할 언어',
 
     acidRain: '워드 레인',
     fillBlank: '빈칸 채우기',
@@ -1989,6 +2001,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mediaPreview: 'プレビュー',
     generateMode: 'カードタイプ',
     lineCount: '行',
+    sourceLangLabel: '元の言語',
+    targetLangLabel: '学習言語',
+    sourceLangTooltip: 'コンテンツの言語（例：曲や字幕の言語）',
+    targetLangTooltip: '学びたい言語・翻訳先の言語',
 
     acidRain: 'ワードレイン',
     fillBlank: '穴埋め',
@@ -2509,6 +2525,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mediaPreview: 'Vista previa',
     generateMode: 'Tipo de tarjeta',
     lineCount: 'líneas',
+    sourceLangLabel: 'Idioma origen',
+    targetLangLabel: 'Idioma destino',
+    sourceLangTooltip: 'El idioma de tu contenido (p. ej. el idioma de la canción o subtítulo)',
+    targetLangTooltip: 'El idioma que quieres aprender / al que traducir',
 
     acidRain: 'Word Rain',
     fillBlank: 'Rellena espacios',
@@ -3029,6 +3049,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mediaPreview: '预览',
     generateMode: '卡片类型',
     lineCount: '行',
+    sourceLangLabel: '源语言',
+    targetLangLabel: '目标语言',
+    sourceLangTooltip: '内容所用的语言（例如歌曲或字幕的语言）',
+    targetLangTooltip: '你想学习/翻译成的语言',
 
     acidRain: 'Word Rain',
     fillBlank: '填空',
@@ -3549,6 +3573,10 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     mediaPreview: 'Aperçu',
     generateMode: 'Type de carte',
     lineCount: 'lignes',
+    sourceLangLabel: 'Langue source',
+    targetLangLabel: 'Langue cible',
+    sourceLangTooltip: 'La langue de votre contenu (ex : la langue de la chanson ou du sous-titre)',
+    targetLangTooltip: 'La langue que vous souhaitez apprendre / dans laquelle traduire',
 
     acidRain: 'Word Rain',
     fillBlank: 'Texte à trous',

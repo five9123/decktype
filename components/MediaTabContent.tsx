@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { detectAndParse, type ParsedMedia } from '@/lib/media-parser';
 import { detectLang } from '@/lib/lang-detect';
-import { TARGET_LANGS } from '@/lib/constants';
+import { TARGET_LANGS, LANG_LABELS_LOCALIZED } from '@/lib/constants';
 import { ErrorAlert } from '@/components/ErrorAlert';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { friendlyError } from '@/lib/api-errors';
@@ -46,7 +46,7 @@ const MAX_INPUT_CHARS = 8000;
 // ── Component ──────────────────────────────────────────────────────────
 
 export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceLangChange, isPro: _isPro }: Props) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [state, setState] = useState<MediaState>('idle');
@@ -371,9 +371,18 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
           {/* Language selection */}
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="text-xs font-medium block mb-1" style={{ color: 'var(--muted)' }}>
-                Source
-              </label>
+              <div className="flex items-center gap-1 mb-1">
+                <label className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                  {t.sourceLangLabel ?? 'Source'}
+                </label>
+                <span
+                  title={t.sourceLangTooltip}
+                  className="text-xs rounded-full px-1 cursor-help leading-none"
+                  style={{ background: 'var(--surface2)', color: 'var(--muted)', fontSize: '10px' }}
+                >
+                  ?
+                </span>
+              </div>
               <select
                 value={sourceLang}
                 onChange={(e) => { setSourceLang(e.target.value); onSourceLangChange?.(e.target.value); }}
@@ -381,15 +390,26 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
               >
                 {TARGET_LANGS.map((l) => (
-                  <option key={l.code} value={l.code}>{l.label}</option>
+                  <option key={l.code} value={l.code}>
+                    {LANG_LABELS_LOCALIZED[lang]?.[l.code] ?? l.label}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="flex items-end pb-2 text-sm" style={{ color: 'var(--muted)' }}>→</div>
             <div className="flex-1">
-              <label className="text-xs font-medium block mb-1" style={{ color: 'var(--muted)' }}>
-                Target
-              </label>
+              <div className="flex items-center gap-1 mb-1">
+                <label className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                  {t.targetLangLabel ?? 'Target'}
+                </label>
+                <span
+                  title={t.targetLangTooltip}
+                  className="text-xs rounded-full px-1 cursor-help leading-none"
+                  style={{ background: 'var(--surface2)', color: 'var(--muted)', fontSize: '10px' }}
+                >
+                  ?
+                </span>
+              </div>
               <select
                 value={targetLang}
                 onChange={(e) => setTargetLang(e.target.value)}
@@ -397,7 +417,9 @@ export function MediaTabContent({ deckName, setDeckName, onCardsReady, onSourceL
                 style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
               >
                 {TARGET_LANGS.map((l) => (
-                  <option key={l.code} value={l.code}>{l.label}</option>
+                  <option key={l.code} value={l.code}>
+                    {LANG_LABELS_LOCALIZED[lang]?.[l.code] ?? l.label}
+                  </option>
                 ))}
               </select>
             </div>
