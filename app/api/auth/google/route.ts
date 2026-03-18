@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   // so we must send the hashed nonce to Google and store the raw nonce.
   const encoder = new TextEncoder();
   const digest = await crypto.subtle.digest('SHA-256', encoder.encode(rawNonce));
-  const hashedNonce = btoa(String.fromCharCode(...new Uint8Array(digest)));
+  const hashedNonce = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
 
   const params = new URLSearchParams({
     client_id: clientId,

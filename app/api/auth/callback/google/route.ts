@@ -52,7 +52,8 @@ export async function GET(request: Request) {
 
   if (supabaseError || !data.user) {
     console.error('Supabase signInWithIdToken error:', supabaseError);
-    return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`);
+    const msg = encodeURIComponent(supabaseError?.message ?? 'no_user');
+    return NextResponse.redirect(`${origin}/auth/login?error=auth_failed&detail=${msg}`);
   }
 
   // Ensure profile exists
