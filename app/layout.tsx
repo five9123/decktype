@@ -12,25 +12,29 @@ import { Analytics } from '@vercel/analytics/next';
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'typee — Paste what you love. Type it. Learn it.',
+    default: 'typee — Free Typing Practice App for Language Learning',
     template: '%s | typee',
   },
   description:
-    'Paste lyrics, subtitles, or articles — AI creates typing cards instantly. Learn any language through content you love.',
+    'typee is a free typing practice app for language learners. Paste song lyrics, subtitles, or any text — AI creates typing flashcards instantly. Learn Japanese, Korean, Spanish and more.',
   keywords: [
+    'typing practice app',
+    'language learning app',
+    'typing practice',
     'language learning',
     'song lyrics learning',
     'SRT subtitles',
-    'typing practice',
     'fill in the blank',
     'K-pop learning',
     'anime vocabulary',
     'Japanese learning',
     'Korean learning',
     'AI flashcards',
-    'Anki',
-    'WPM',
+    'Anki typing',
+    'WPM tracker',
     'memory training',
+    'active recall',
+    'vocabulary typing',
     'K-POP 歌詞 韓国語学習',
     '推し活 韓国語',
     '韓国語 タイピング 練習',
@@ -52,16 +56,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'typee',
-    title: 'typee — Paste what you love. Type it. Learn it.',
+    title: 'typee — Free Typing Practice App for Language Learning',
     description:
-      'Paste lyrics, subtitles, or articles — AI creates typing cards and games instantly. Learn any language through content you love.',
+      'typee is a free typing practice app for language learners. Paste song lyrics, subtitles, or any text — AI creates typing flashcards and games instantly.',
     url: BASE_URL,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'typee — Paste what you love. Type it. Learn it.',
+    title: 'typee — Free Typing Practice App for Language Learning',
     description:
-      'Paste lyrics, subtitles, or articles — AI creates typing cards instantly. Learn any language through content you love.',
+      'typee is a free typing practice app for language learners. Paste song lyrics, subtitles, or any text — AI creates typing flashcards instantly.',
   },
 };
 
@@ -79,9 +83,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 '@type': 'Organization',
                 name: 'typee',
                 url: 'https://www.typee.app',
-                logo: 'https://www.typee.app/icon',
+                logo: {
+                  '@type': 'ImageObject',
+                  url: 'https://www.typee.app/icon',
+                  width: 512,
+                  height: 512,
+                },
                 description:
-                  'typee turns songs, movies, and any content you love into interactive language practice — typing, fill-in-the-blank, and word games powered by AI.',
+                  'typee is a free typing practice app for language learners. Turn songs, movies, and content you love into interactive typing exercises — powered by AI.',
+                foundingDate: '2024',
+                areaServed: 'Worldwide',
+                knowsAbout: [
+                  'Language Learning',
+                  'Typing Practice',
+                  'Spaced Repetition',
+                  'Active Recall',
+                  'AI Flashcards',
+                ],
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  contactType: 'customer support',
+                  url: 'https://www.typee.app/contact',
+                  availableLanguage: ['English', 'Japanese', 'Korean', 'Spanish', 'French', 'Chinese'],
+                },
                 sameAs: [
                   'https://github.com/a-type-web',
                 ],
@@ -92,7 +116,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 name: 'typee',
                 url: 'https://www.typee.app',
                 description:
-                  'Learn any language through songs and movies you love. Paste lyrics or drop SRT subtitles — AI creates typing cards instantly.',
+                  'Free typing practice app for language learning. Paste lyrics or subtitles — AI creates typing flashcards instantly. Learn Japanese, Korean, Spanish and more.',
+                inLanguage: ['en', 'ja', 'ko', 'es', 'zh', 'fr'],
+                speakable: {
+                  '@type': 'SpeakableSpecification',
+                  cssSelector: ['h1', 'h2', '.hero-description'],
+                },
               },
             ]),
           }}

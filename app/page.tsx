@@ -29,16 +29,27 @@ export default function HomePage() {
             operatingSystem: 'Web Browser',
             url: 'https://www.typee.app',
             description:
-              'Upload your Anki deck and turn flashcards into typing practice. Track WPM, accuracy, and master your cards faster.',
-            featureList:
-              'Anki deck upload, WPM tracking, accuracy statistics, spaced repetition, multi-language support, 10+ color themes',
+              'typee is a free typing practice app for language learners. Paste song lyrics, movie subtitles, or any text — AI instantly generates typing flashcards, fill-in-the-blank exercises, and word games. Supports Japanese, Korean, Spanish, French, Chinese and 50+ languages.',
+            featureList: [
+              'AI-powered flashcard generation from lyrics and subtitles',
+              'Typing practice with WPM and accuracy tracking',
+              'Fill-in-the-blank exercise mode',
+              'Word Rain and Word Train game modes',
+              'Anki deck (.apkg) import',
+              'Spaced repetition and mastery tracking',
+              'Multi-language support (50+ languages)',
+              '10+ color themes',
+            ],
+            screenshot: 'https://www.typee.app/og-image.png',
+            inLanguage: ['en', 'ja', 'ko', 'es', 'zh', 'fr'],
             offers: [
               {
                 '@type': 'Offer',
                 price: '0',
                 priceCurrency: 'USD',
                 name: 'Free',
-                description: '1 deck, up to 100 cards',
+                description: '3 decks, all practice modes, WPM and accuracy tracking',
+                availability: 'https://schema.org/InStock',
               },
               {
                 '@type': 'Offer',
@@ -46,9 +57,22 @@ export default function HomePage() {
                 priceCurrency: 'USD',
                 name: 'Pro Monthly',
                 description: 'Unlimited decks, advanced stats, priority support',
+                availability: 'https://schema.org/InStock',
                 priceSpecification: {
                   '@type': 'UnitPriceSpecification',
                   billingDuration: 'P1M',
+                },
+              },
+              {
+                '@type': 'Offer',
+                price: '48',
+                priceCurrency: 'USD',
+                name: 'Pro Annual',
+                description: 'Unlimited decks, advanced stats, priority support — save 20%',
+                availability: 'https://schema.org/InStock',
+                priceSpecification: {
+                  '@type': 'UnitPriceSpecification',
+                  billingDuration: 'P1Y',
                 },
               },
             ],
@@ -61,7 +85,7 @@ export default function HomePage() {
                 name: 'What is typee and how does it work?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'typee is a typing practice app for Anki flashcard users. Upload your .apkg deck file, and typee converts each card into a typing exercise. You see the front of a card and type the answer. The app tracks your WPM (words per minute), accuracy, and mastery level for every card.',
+                  text: 'typee is a free typing practice app for language learners. Paste song lyrics, movie subtitles, or any text and AI instantly creates typing flashcards. You see the word or phrase and type the answer, building active recall and muscle memory. The app tracks WPM (words per minute), accuracy, and mastery level for every card.',
                 },
               },
               {
@@ -69,23 +93,23 @@ export default function HomePage() {
                 name: 'Is typee free to use?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Yes. The free plan includes 1 deck with up to 100 cards, all practice modes, all themes, and basic statistics. The Pro plan ($5/month or $48/year) unlocks unlimited decks, advanced progress tracking, and priority support.',
+                  text: 'Yes. The free plan includes 3 decks, all practice modes (typing, fill-in-the-blank, Word Rain, Word Train), all themes, and WPM/accuracy statistics. The Pro plan ($5/month or $48/year) unlocks unlimited decks, advanced progress tracking, and priority support.',
                 },
               },
               {
                 '@type': 'Question',
-                name: 'What languages does typee support?',
+                name: 'What languages does typee support for typing practice?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'typee supports any language that works in Anki. This includes Japanese, Korean, Chinese, Spanish, French, German, Arabic, Thai, and many more.',
+                  text: 'typee supports any language you can type — Japanese, Korean, Chinese, Spanish, French, German, Arabic, Thai, and 50+ more. It works with any script including Latin, CJK, Hangul, Devanagari, and Arabic.',
                 },
               },
               {
                 '@type': 'Question',
-                name: 'Do I need an Anki account to use typee?',
+                name: 'Can I use typee without an Anki account?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'No. typee is a standalone web app. You just need an .apkg file exported from Anki. You can also try the built-in demo decks without uploading anything or creating an account.',
+                  text: 'Yes. typee is a standalone web app. You can paste any text directly or upload an .apkg file exported from Anki. You can also try the built-in demo decks without uploading anything or creating an account.',
                 },
               },
               {
@@ -93,7 +117,15 @@ export default function HomePage() {
                 name: 'How is typee different from regular Anki review?',
                 acceptedAnswer: {
                   '@type': 'Answer',
-                  text: 'Anki uses passive recognition. typee adds active recall through typing. You must physically type the answer, which builds stronger muscle memory and deeper retention.',
+                  text: 'Anki uses passive recognition (just seeing the answer). typee adds active recall through typing — you must physically type each answer, which builds stronger muscle memory and 2–3× deeper retention than passive review.',
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'How do I learn a language through songs with typee?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Paste the lyrics of any song into typee. AI automatically splits the text into individual cards. Then practice typing each word or phrase — this turns passive listening into active vocabulary acquisition.',
                 },
               },
             ],

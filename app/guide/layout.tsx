@@ -5,7 +5,18 @@ export const metadata: Metadata = {
   title: 'Usage Guide',
   description:
     'Learn how to use typee: paste song lyrics, drop SRT subtitles, or import Anki decks to create typing practice cards. Play Fill Blank and Word Game modes.',
-  alternates: { canonical: 'https://www.typee.app/guide' },
+  alternates: {
+    canonical: 'https://www.typee.app/guide',
+    languages: {
+      'en': 'https://www.typee.app/guide',
+      'ja': 'https://www.typee.app/guide',
+      'ko': 'https://www.typee.app/guide',
+      'es': 'https://www.typee.app/guide',
+      'zh': 'https://www.typee.app/guide',
+      'fr': 'https://www.typee.app/guide',
+      'x-default': 'https://www.typee.app/guide',
+    },
+  },
   openGraph: {
     title: 'Usage Guide — typee',
     description: 'Step-by-step guide: create cards from lyrics & subtitles, then practice with typing, Fill Blank, and Word Game modes.',

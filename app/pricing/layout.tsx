@@ -5,7 +5,18 @@ export const metadata: Metadata = {
   title: 'Pricing',
   description:
     'Start free with 1 deck. Upgrade to typee Pro for unlimited decks, advanced stats, and priority support. $5/month or $48/year.',
-  alternates: { canonical: 'https://www.typee.app/pricing' },
+  alternates: {
+    canonical: 'https://www.typee.app/pricing',
+    languages: {
+      'en': 'https://www.typee.app/pricing',
+      'ja': 'https://www.typee.app/pricing',
+      'ko': 'https://www.typee.app/pricing',
+      'es': 'https://www.typee.app/pricing',
+      'zh': 'https://www.typee.app/pricing',
+      'fr': 'https://www.typee.app/pricing',
+      'x-default': 'https://www.typee.app/pricing',
+    },
+  },
   openGraph: {
     title: 'Pricing — typee',
     description: 'Free plan available. Upgrade to Pro from $5/month.',
