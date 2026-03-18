@@ -53,11 +53,11 @@ export default function AdminReferralsPage() {
       .eq('event_name', 'social_referral')
       .order('created_at', { ascending: false })
       .limit(500)
-      .then(({ data }) => {
+      .then(({ data }: { data: { event_data: Record<string, string>; created_at: string }[] | null }) => {
         if (!data) return;
         const map = new Map<string, { count: number; lastSeen: string }>();
         for (const row of data) {
-          const src = (row.event_data as Record<string, string>)?.source ?? 'unknown';
+          const src = row.event_data?.source ?? 'unknown';
           const existing = map.get(src);
           if (existing) {
             existing.count++;
