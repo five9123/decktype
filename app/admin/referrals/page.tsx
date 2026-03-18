@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { TopToolbar } from '@/components/TopToolbar';
+import { createBrowserClient } from '@/lib/supabase/client';
 
 interface ReferralRow {
   id: string;
@@ -13,11 +14,18 @@ interface ReferralRow {
   conversion_count: number;
 }
 
+interface SocialRefStat {
+  source: string;
+  count: number;
+  lastSeen: string;
+}
+
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? '';
 
 export default function AdminReferralsPage() {
   const { user, loading: authLoading } = useAuth();
   const [rows, setRows] = useState<ReferralRow[]>([]);
+  const [socialRefs, setSocialRefs] = useState<SocialRefStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -27,6 +35,7 @@ export default function AdminReferralsPage() {
     if (authLoading) return;
     if (!isAdmin) { setLoading(false); return; }
 
+    // Load referral codes
     fetch('/api/admin/referrals')
       .then(r => r.json())
       .then((data: { rows?: ReferralRow[]; error?: string }) => {
@@ -35,6 +44,32 @@ export default function AdminReferralsPage() {
       })
       .catch(() => setError('Network error'))
       .finally(() => setLoading(false));
+
+    // Load social media referral stats
+    const supabase = createBrowserClient();
+    supabase
+      .from('analytics_events')
+      .select('event_data, created_at')
+      .eq('event_name', 'social_referral')
+      .order('created_at', { ascending: false })
+      .limit(500)
+      .then(({ data }) => {
+        if (!data) return;
+        const map = new Map<string, { count: number; lastSeen: string }>();
+        for (const row of data) {
+          const src = (row.event_data as Record<string, string>)?.source ?? 'unknown';
+          const existing = map.get(src);
+          if (existing) {
+            existing.count++;
+          } else {
+            map.set(src, { count: 1, lastSeen: row.created_at });
+          }
+        }
+        const stats: SocialRefStat[] = Array.from(map.entries())
+          .map(([source, v]) => ({ source, ...v }))
+          .sort((a, b) => b.count - a.count);
+        setSocialRefs(stats);
+      });
   }, [isAdmin, authLoading]);
 
   if (authLoading || loading) {
@@ -129,6 +164,33 @@ export default function AdminReferralsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+        )}
+
+        {/* Social Media Referral Stats */}
+        {socialRefs.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text)' }}>
+              소셜 미디어 유입
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+              {socialRefs.map((ref) => (
+                <div
+                  key={ref.source}
+                  className="p-4 rounded-xl text-center"
+                  style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+                >
+                  <p className="text-2xl font-bold" style={{ color: 'var(--accent)' }}>{ref.count}</p>
+                  <p className="text-xs font-medium mt-1" style={{ color: 'var(--text)' }}>{ref.source}</p>
+                  <p className="text-[10px] mt-0.5" style={{ color: 'var(--muted)' }}>
+                    최근: {new Date(ref.lastSeen).toLocaleDateString('ko-KR')}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs" style={{ color: 'var(--muted)' }}>
+              UTM 링크: typee.app?ref=tiktok, typee.app?ref=youtube, typee.app?ref=instagram
+            </p>
           </div>
         )}
 

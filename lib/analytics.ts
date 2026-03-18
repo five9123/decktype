@@ -24,7 +24,8 @@ export type AnalyticsEvent =
   | 'achievement_unlocked'
   | 'level_up'
   | 'xp_gained'
-  | 'card_rated';
+  | 'card_rated'
+  | 'social_referral';
 
 function getSessionId(): string {
   if (typeof window === 'undefined') return '';

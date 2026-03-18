@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { DEMO_DECKS } from '@/lib/demo-decks';
 import type { DemoLang } from '@/lib/demo-decks';
 import type { PracticeMode } from '@/types';
+import { trackEvent } from '@/lib/analytics';
 
 const ALL_TABS: { value: DemoLang; label: string; flag: string }[] = [
   { value: 'ko', label: '한국어', flag: '🇰🇷' },
@@ -32,14 +34,31 @@ function getDefaultDemoLang(uiLang: string): DemoLang {
 
 export default function DemoPage() {
   const { t, lang: uiLang } = useLanguage();
+  const searchParams = useSearchParams();
   const tabs = getDemoTabs(uiLang);
-  const [mode, setMode] = useState<PracticeMode>('back_to_front');
-  const [lang, setLang] = useState<DemoLang>(() => getDefaultDemoLang(uiLang));
 
-  // Reset selected tab when UI language changes (hidden tab may match current selection)
+  // Deep link support: ?lang=ko&mode=acid_rain&deck=kpop-vocab&ref=tiktok
+  const paramLang = searchParams.get('lang') as DemoLang | null;
+  const paramMode = searchParams.get('mode') as PracticeMode | null;
+  const paramRef = searchParams.get('ref');
+
+  const [mode, setMode] = useState<PracticeMode>(paramMode ?? 'back_to_front');
+  const [lang, setLang] = useState<DemoLang>(() => {
+    if (paramLang && ALL_TABS.some(t => t.value === paramLang)) return paramLang;
+    return getDefaultDemoLang(uiLang);
+  });
+
+  // Track referral source from social media
   useEffect(() => {
-    setLang(getDefaultDemoLang(uiLang));
-  }, [uiLang]);
+    if (paramRef) {
+      trackEvent('page_view', { source: paramRef, page: 'demo' });
+    }
+  }, [paramRef]);
+
+  // Reset selected tab when UI language changes (only if no deep link)
+  useEffect(() => {
+    if (!paramLang) setLang(getDefaultDemoLang(uiLang));
+  }, [uiLang, paramLang]);
 
   const filteredDecks = DEMO_DECKS.filter((d) => d.lang === lang);
 

@@ -5,6 +5,7 @@ import { PreferencesProvider } from '@/contexts/PreferencesContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { HtmlLangSetter } from '@/components/HtmlLangSetter';
 import { GlobalFooter } from '@/components/GlobalFooter';
+import { RefTracker } from '@/components/RefTracker';
 import { BASE_URL } from '@/lib/constants';
 import { THEMES } from '@/lib/themes';
 import { Analytics } from '@vercel/analytics/next';
@@ -107,7 +108,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   availableLanguage: ['English', 'Japanese', 'Korean', 'Spanish', 'French', 'Chinese'],
                 },
                 sameAs: [
-                  'https://github.com/a-type-web',
+                  'https://www.tiktok.com/@typee.app',
+                  'https://www.youtube.com/@typee.app',
+                  'https://www.instagram.com/typee.app',
                 ],
               },
               {
@@ -155,6 +158,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LanguageProvider>
             <AuthProvider>
               <HtmlLangSetter />
+              <RefTracker />
               {children}
               <GlobalFooter />
             </AuthProvider>

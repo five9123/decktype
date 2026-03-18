@@ -20,6 +20,7 @@ import { useXP } from '@/hooks/useXP';
 import { useAchievements, type AchievementContext } from '@/hooks/useAchievements';
 import { useProgress } from '@/hooks/useProgress';
 import { calculateSessionXP } from '@/lib/achievements';
+import { useShareCard } from '@/components/ShareCard';
 import type { MasteryLevel, Achievement } from '@/types';
 
 interface CardResult {
@@ -419,19 +420,18 @@ function ResultsContent() {
         >
           {t.practiceAgain}
         </Link>
-        <button
-          type="button"
-          onClick={() => {
-            trackEvent('share_clicked', { platform: 'x', score: session.composite_score });
-            const text = `🎤 Score ${session.composite_score} | ${session.accuracy}% accuracy | ${session.wpm} WPM\n\ntypee — learn languages through music & movies\nhttps://www.typee.app`;
-            const url = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank', 'noopener,noreferrer,width=550,height=420');
-          }}
-          className="px-6 py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-80 cursor-pointer"
-          style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
-        >
-          𝕏 {t.shareResult}
-        </button>
+
+        {/* Share buttons */}
+        <ShareButtons
+          score={session.composite_score}
+          accuracy={session.accuracy}
+          wpm={session.wpm}
+          cardCount={session.card_count}
+          mode={session.mode}
+          ratingLabel={rating.label}
+          ratingColor={rating.color}
+        />
+
         <Link
           href={`/deck/${deckId}`}
           className="px-6 py-3 rounded-xl text-sm font-medium no-underline transition-opacity hover:opacity-80"
@@ -441,6 +441,90 @@ function ResultsContent() {
         </Link>
       </div>
     </main>
+  );
+}
+
+function ShareButtons({ score, accuracy, wpm, cardCount, mode, ratingLabel, ratingColor }: {
+  score: number; accuracy: number; wpm: number; cardCount: number;
+  mode: string; ratingLabel: string; ratingColor: string;
+}) {
+  const { t } = useLanguage();
+  const { generateImage } = useShareCard();
+  const [copying, setCopying] = useState(false);
+
+  const shareText = `🎤 Score ${score} | ${accuracy}% accuracy | ${wpm} WPM\n\ntypee — learn languages through music & movies\nhttps://www.typee.app?ref=social`;
+
+  const handleDownloadImage = async () => {
+    trackEvent('share_clicked', { platform: 'image', score });
+    const blob = await generateImage({ score, accuracy, wpm, cardCount, mode, ratingLabel, ratingColor });
+    if (!blob) return;
+
+    // Try native share with image if available
+    if (navigator.share && navigator.canShare) {
+      const file = new File([blob], 'typee-results.png', { type: 'image/png' });
+      const shareData = { files: [file], text: shareText };
+      if (navigator.canShare(shareData)) {
+        try {
+          await navigator.share(shareData);
+          return;
+        } catch { /* user cancelled */ }
+      }
+    }
+
+    // Fallback: download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'typee-results.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleCopyText = async () => {
+    trackEvent('share_clicked', { platform: 'copy', score });
+    await navigator.clipboard.writeText(shareText);
+    setCopying(true);
+    setTimeout(() => setCopying(false), 2000);
+  };
+
+  return (
+    <div className="space-y-2">
+      {/* Share Image (for TikTok/Instagram/Stories) */}
+      <button
+        type="button"
+        onClick={handleDownloadImage}
+        className="w-full px-6 py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-80 cursor-pointer"
+        style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
+      >
+        📸 {t.shareResult ?? 'Share Result'}
+      </button>
+
+      <div className="flex gap-2">
+        {/* X/Twitter */}
+        <button
+          type="button"
+          onClick={() => {
+            trackEvent('share_clicked', { platform: 'x', score });
+            const url = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}`;
+            window.open(url, '_blank', 'noopener,noreferrer,width=550,height=420');
+          }}
+          className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium transition-opacity hover:opacity-80 cursor-pointer"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
+        >
+          𝕏
+        </button>
+
+        {/* Copy text */}
+        <button
+          type="button"
+          onClick={handleCopyText}
+          className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium transition-opacity hover:opacity-80 cursor-pointer"
+          style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: copying ? 'var(--correct)' : 'var(--text)' }}
+        >
+          {copying ? '✓' : '📋'}
+        </button>
+      </div>
+    </div>
   );
 }
 

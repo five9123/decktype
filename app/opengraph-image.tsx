@@ -15,7 +15,7 @@ export default function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#0f0f12',
+          background: 'linear-gradient(135deg, #1a1028 0%, #0d1117 100%)',
           fontFamily: 'sans-serif',
           position: 'relative',
         }}
@@ -24,10 +24,10 @@ export default function Image() {
         <div
           style={{
             position: 'absolute',
-            top: '-100px',
-            width: '800px',
-            height: '400px',
-            background: 'radial-gradient(ellipse, rgba(139,92,246,0.25) 0%, transparent 70%)',
+            top: '-120px',
+            width: '900px',
+            height: '450px',
+            background: 'radial-gradient(ellipse, rgba(139,92,246,0.3) 0%, transparent 70%)',
             borderRadius: '50%',
           }}
         />
@@ -35,11 +35,11 @@ export default function Image() {
         {/* Logo */}
         <div
           style={{
-            fontSize: 72,
+            fontSize: 80,
             fontWeight: 800,
             color: '#8b5cf6',
-            letterSpacing: '-2px',
-            marginBottom: 24,
+            letterSpacing: '-3px',
+            marginBottom: 20,
           }}
         >
           typee
@@ -48,16 +48,16 @@ export default function Image() {
         {/* Headline */}
         <div
           style={{
-            fontSize: 40,
+            fontSize: 42,
             fontWeight: 700,
             color: '#f4f4f5',
             textAlign: 'center',
-            marginBottom: 20,
+            marginBottom: 16,
             maxWidth: 800,
             lineHeight: 1.2,
           }}
         >
-          Paste what you love. Type it. Learn it.
+          Learn Languages Through Music & Movies
         </div>
 
         {/* Subtitle */}
@@ -67,21 +67,48 @@ export default function Image() {
             color: '#a1a1aa',
             textAlign: 'center',
             maxWidth: 640,
+            marginBottom: 32,
           }}
         >
-          AI creates typing cards from lyrics, subtitles & articles instantly.
+          Paste lyrics or subtitles — AI creates typing flashcards instantly
+        </div>
+
+        {/* Feature badges */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 16,
+          }}
+        >
+          {['AI Cards', '4 Game Modes', '9+ Languages', 'Free'].map((badge) => (
+            <div
+              key={badge}
+              style={{
+                padding: '8px 20px',
+                borderRadius: 24,
+                background: 'rgba(139,92,246,0.15)',
+                border: '1px solid rgba(139,92,246,0.3)',
+                color: '#c4b5fd',
+                fontSize: 16,
+                fontWeight: 600,
+              }}
+            >
+              {badge}
+            </div>
+          ))}
         </div>
 
         {/* Domain */}
         <div
           style={{
             position: 'absolute',
-            bottom: 40,
+            bottom: 36,
             fontSize: 18,
-            color: '#52525b',
+            color: '#71717a',
+            fontWeight: 600,
           }}
         >
-          typee.app
+          typee.app — Free Typing Practice for Language Learning
         </div>
       </div>
     ),
