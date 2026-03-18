@@ -656,7 +656,7 @@ export function HeroCarousel() {
         <span
           className="text-xs font-medium"
           style={{
-            color: 'var(--muted)',
+            color: 'rgba(255, 255, 255, 0.8)',
             transition: 'opacity 0.2s',
           }}
         >

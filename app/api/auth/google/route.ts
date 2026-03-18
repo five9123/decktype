@@ -10,7 +10,13 @@ export async function GET(request: Request) {
   }
 
   // Generate a random nonce for security
-  const nonce = crypto.randomUUID();
+  const rawNonce = crypto.randomUUID();
+
+  // Supabase hashes the nonce internally before comparing to the token,
+  // so we must send the hashed nonce to Google and store the raw nonce.
+  const encoder = new TextEncoder();
+  const digest = await crypto.subtle.digest('SHA-256', encoder.encode(rawNonce));
+  const hashedNonce = btoa(String.fromCharCode(...new Uint8Array(digest)));
 
   const params = new URLSearchParams({
     client_id: clientId,
@@ -19,12 +25,12 @@ export async function GET(request: Request) {
     scope: 'openid email profile',
     access_type: 'offline',
     prompt: 'select_account',
-    nonce,
+    nonce: hashedNonce,
   });
 
-  // Store nonce in a short-lived cookie for verification
+  // Store raw nonce in a short-lived cookie for verification
   const cookieStore = await cookies();
-  cookieStore.set('google_oauth_nonce', nonce, {
+  cookieStore.set('google_oauth_nonce', rawNonce, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
