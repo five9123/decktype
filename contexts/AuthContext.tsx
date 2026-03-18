@@ -45,11 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase]);
 
   const signInWithGoogle = useCallback(async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
-  }, [supabase]);
+    window.location.href = '/api/auth/google';
+  }, []);
 
   const signInWithTwitter = useCallback(async () => {
     await supabase.auth.signInWithOAuth({

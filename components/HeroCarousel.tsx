@@ -347,7 +347,7 @@ const MILESTONES = [
 function WordTrainSlide({ phase }: { phase: number }) {
   const cardIdx = phase >= 3 ? 1 : 0;
   const card = TRAIN_CARDS[cardIdx];
-  const inputText = phase === 0 ? '' : phase === 1 ? 'ch' : phase === 2 ? 'chingu' : '';
+  const inputText = phase === 0 ? '' : phase === 1 ? '친' : phase === 2 ? '친구' : '';
   const isCorrect = phase === 2;
   const showBonus = phase === 3;
   const timerSec = [45, 44, 43, 44][phase] ?? 44;
