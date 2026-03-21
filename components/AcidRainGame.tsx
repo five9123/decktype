@@ -56,7 +56,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { play: playSound } = useSound();
-  const { viewportH, mainRef } = useViewport();
+  const { viewportH, compact, mainRef } = useViewport();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -404,7 +404,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
     >
       {/* HUD */}
       <div
-        className="flex items-center justify-between px-4 py-2"
+        className={`flex items-center justify-between px-4 ${compact ? 'py-1' : 'py-2'}`}
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-4 text-sm">
@@ -422,7 +422,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
         </div>
         <div className="flex items-center gap-1">
           {Array.from({ length: MAX_LIVES }).map((_, i) => (
-            <span key={i} className="text-sm" style={{ opacity: i < lives ? 1 : 0.2 }}>
+            <span key={i} className={compact ? 'text-xs' : 'text-sm'} style={{ opacity: i < lives ? 1 : 0.2 }}>
               ❤️
             </span>
           ))}
@@ -439,7 +439,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
       {/* Game Container */}
       <div
         ref={containerRef}
-        className={`acid-rain-container relative flex-1 overflow-hidden mx-4 my-2 rounded-xl${shaking ? ' wrong-shake' : ''}`}
+        className={`acid-rain-container relative flex-1 overflow-hidden mx-4 ${compact ? 'my-1 rounded-lg' : 'my-2 rounded-xl'}${shaking ? ' wrong-shake' : ''}`}
         style={{
           minHeight: 0,
           background: 'linear-gradient(180deg, #1a1d2e 0%, #0d1117 60%, #151922 100%)',
@@ -502,7 +502,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
       </div>
 
       {/* Input */}
-      <div className="px-4 pb-4 max-w-2xl mx-auto w-full">
+      <div className={`px-4 ${compact ? 'pb-1' : 'pb-4'} max-w-2xl mx-auto w-full`}>
         <input
           ref={inputRef}
           type="text"
@@ -516,7 +516,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
           }}
           placeholder={t.typeHere}
           autoFocus
-          className="w-full px-4 py-3 rounded-xl text-base text-center transition-colors"
+          className={`w-full px-4 ${compact ? 'py-2 rounded-lg text-sm' : 'py-3 rounded-xl text-base'} text-center transition-colors`}
           style={{
             background: 'var(--surface)',
             border: wrongFlash ? '1.5px solid var(--incorrect)' : '1.5px solid var(--border)',

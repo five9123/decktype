@@ -49,7 +49,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { play: playSound } = useSound();
-  const { viewportH, mainRef } = useViewport();
+  const { viewportH, compact, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Game state
@@ -380,12 +380,12 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
     >
       {/* HUD */}
       <div
-        className="flex items-center justify-between px-4 py-2"
+        className={`flex items-center justify-between px-4 ${compact ? 'py-1' : 'py-2'}`}
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-2">
-          <span className="text-lg">🚂</span>
-          <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>
+          {!compact && <span className="text-lg">🚂</span>}
+          <span className={`${compact ? 'text-xs' : 'text-sm'} font-bold`} style={{ color: 'var(--text)' }}>
             {t.wordTrain}
           </span>
         </div>
@@ -438,9 +438,9 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
       </div>
 
       {/* Combo Meter */}
-      <div className="px-4 py-3 max-w-lg mx-auto w-full">
+      <div className={`px-4 ${compact ? 'py-1' : 'py-3'} max-w-lg mx-auto w-full`}>
         <div className="relative">
-          <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--surface2)' }}>
+          <div className={`${compact ? 'h-2' : 'h-3'} rounded-full overflow-hidden`} style={{ background: 'var(--surface2)' }}>
             <div
               className="h-full rounded-full transition-all duration-200"
               style={{
@@ -449,7 +449,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
               }}
             />
           </div>
-          {COMBO_MILESTONES.map((m, i) => (
+          {!compact && COMBO_MILESTONES.map((m, i) => (
             <div
               key={i}
               className="absolute top-0 flex flex-col items-center"
@@ -483,7 +483,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
             </div>
           )}
         </div>
-        {combo > 0 && (
+        {!compact && combo > 0 && (
           <p className="text-xs text-center mt-1.5 font-bold" style={{ color: 'var(--accent)' }}>
             x{combo} combo
           </p>
@@ -493,12 +493,12 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
       {/* Word display (above track, large text) */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 min-h-0">
         {currentCard && (
-          <div className="text-center mb-6">
-            <p className="text-3xl sm:text-4xl font-bold mb-1" style={{ color: 'var(--text)' }}>
+          <div className={`text-center ${compact ? 'mb-2' : 'mb-6'}`}>
+            <p className={`${compact ? 'text-xl' : 'text-3xl sm:text-4xl'} font-bold mb-1`} style={{ color: 'var(--text)' }}>
               {currentCard.back}
             </p>
             {showPronunciation && currentCard.pronunciation && (
-              <p className="text-sm" style={{ color: 'var(--accent)', opacity: 0.85 }}>
+              <p className={compact ? 'text-xs' : 'text-sm'} style={{ color: 'var(--accent)', opacity: 0.85 }}>
                 [{currentCard.pronunciation}]
               </p>
             )}
@@ -514,7 +514,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
           <div
             className="relative overflow-hidden"
             style={{
-              height: 72,
+              height: compact ? 52 : 72,
               background: 'linear-gradient(180deg, #3a3428 0%, #2d2a22 100%)',
               borderLeft: '3px solid #5a4530',
               borderRight: '3px solid #5a4530',
@@ -579,7 +579,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
           {/* Ground below track */}
           <div
             style={{
-              height: 10,
+              height: compact ? 4 : 10,
               background: 'linear-gradient(180deg, #5a4530 0%, #4a3a28 40%, #3d3020 100%)',
               borderRadius: '0 0 4px 4px',
               boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)',
@@ -589,7 +589,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
       </div>
 
       {/* Completed train cars */}
-      <div className="px-4 max-w-lg mx-auto w-full mt-2">
+      {!compact && <div className="px-4 max-w-lg mx-auto w-full mt-2">
         <div className="flex items-center gap-0.5 overflow-hidden h-6 mb-2">
           {results.slice(-MAX_VISIBLE_CARS).map((r, i, arr) => (
             <span
@@ -601,10 +601,10 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
             </span>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* Input */}
-      <div className="px-4 pb-4 max-w-lg mx-auto w-full">
+      <div className={`px-4 ${compact ? 'pb-1' : 'pb-4'} max-w-lg mx-auto w-full`}>
         <input
           ref={inputRef}
           type="text"
@@ -624,7 +624,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
           }}
           placeholder={t.typeHere}
           autoFocus
-          className={`w-full px-4 py-3 rounded-xl text-base text-center transition-all duration-200 ${inputWrong ? 'wrong-shake' : ''}`}
+          className={`w-full px-4 ${compact ? 'py-2 rounded-lg text-sm' : 'py-3 rounded-xl text-base'} text-center transition-all duration-200 ${inputWrong ? 'wrong-shake' : ''}`}
           style={{
             background: inputCorrect
               ? 'color-mix(in srgb, var(--correct) 15%, var(--surface))'
