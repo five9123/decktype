@@ -111,8 +111,8 @@ function DemoContent() {
             {([
               { value: 'back_to_front' as PracticeMode, label: t.backToFront, desc: t.backToFrontDesc },
               { value: 'fill_blank' as PracticeMode, label: t.fillBlank, desc: t.fillBlankDesc },
-              { value: 'acid_rain' as PracticeMode, label: t.acidRain, desc: t.acidRainDesc },
-              { value: 'word_train' as PracticeMode, label: t.wordTrain, desc: t.wordTrainDesc },
+              { value: 'acid_rain' as PracticeMode, label: `🌧️ ${t.acidRain}`, desc: t.acidRainDesc },
+              { value: 'word_train' as PracticeMode, label: `🚂 ${t.wordTrain}`, desc: t.wordTrainDesc },
             ] as const).map((opt) => (
               <div key={opt.value} className="relative group/tip">
                 <button

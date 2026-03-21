@@ -47,7 +47,7 @@ const DESTROY_ANIMATION_MS = 400;
 // Word element approx height (text-sm + hint line + py-1.5 padding) — used to
 // trigger floor hit when the word's *bottom* edge crosses the 4px danger line
 const WORD_HIT_HEIGHT = 56;
-const FLOOR_LINE_HEIGHT = 4;
+const FLOOR_LINE_HEIGHT = 8;
 
 // ── Component ──────────────────────────────────────────────────────────
 
@@ -433,11 +433,11 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
       {/* Game Container */}
       <div
         ref={containerRef}
-        className={`relative flex-1 overflow-hidden mx-4 my-2 rounded-xl${shaking ? ' wrong-shake' : ''}`}
+        className={`acid-rain-container relative flex-1 overflow-hidden mx-4 my-2 rounded-xl${shaking ? ' wrong-shake' : ''}`}
         style={{
           minHeight: 200,
           maxHeight: DEFAULT_CONTAINER_HEIGHT,
-          background: 'var(--surface)',
+          background: 'linear-gradient(180deg, #1a1d2e 0%, #0d1117 60%, #151922 100%)',
           border: borderFlash
             ? '2px solid var(--incorrect)'
             : lives <= 2
@@ -457,20 +457,25 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
           return (
             <div
               key={w.id}
-              className="absolute text-sm font-bold px-3 py-1.5 rounded-lg select-none transition-transform text-center"
+              className={`absolute text-sm font-bold px-3 py-1.5 select-none text-center${w.destroyed ? ' rain-splash' : ''}`}
               style={{
                 left: `${w.x}%`,
                 top: w.y,
-                transform: w.destroyed ? 'scale(1.3)' : 'scale(1)',
-                opacity: w.destroyed ? 0 : 1,
-                transition: w.destroyed ? 'all 300ms ease-out' : 'none',
                 background: isPartialMatch
                   ? 'var(--accent)'
                   : w.destroyed
-                    ? 'var(--correct)'
-                    : 'var(--surface2)',
-                color: isPartialMatch || w.destroyed ? '#fff' : 'var(--text)',
-                border: isPartialMatch ? '1px solid var(--accent)' : '1px solid var(--border)',
+                    ? 'rgba(100,180,255,0.5)'
+                    : 'rgba(120,170,255,0.28)',
+                color: '#fff',
+                border: isPartialMatch
+                  ? '1px solid var(--accent)'
+                  : '1px solid rgba(140,180,255,0.35)',
+                borderRadius: '12px 12px 12px 4px',
+                boxShadow: isPartialMatch
+                  ? '0 0 12px rgba(189,147,249,0.4)'
+                  : '0 2px 10px rgba(80,140,255,0.25), inset 0 1px 0 rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(6px)',
+                textShadow: '0 1px 3px rgba(0,0,0,0.5)',
                 whiteSpace: 'nowrap',
                 zIndex: isPartialMatch ? 10 : 1,
               }}
@@ -478,7 +483,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
               {w.word}
               <span
                 className="block text-xs font-normal"
-                style={{ color: isPartialMatch ? 'rgba(255,255,255,0.7)' : 'var(--muted)', marginTop: 1 }}
+                style={{ color: isPartialMatch ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.6)', marginTop: 1 }}
               >
                 {w.hint}
               </span>
@@ -486,15 +491,8 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
           );
         })}
 
-        {/* Bottom danger zone */}
-        <div
-          className="absolute bottom-0 left-0 right-0"
-          style={{
-            height: 4,
-            background: 'var(--incorrect)',
-            opacity: 0.5,
-          }}
-        />
+        {/* Bottom puddle zone */}
+        <div className="absolute bottom-0 left-0 right-0 puddle-zone" />
 
       </div>
 

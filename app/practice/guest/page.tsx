@@ -274,8 +274,8 @@ function GuestPracticePageInner() {
     const modeOptions: { value: PracticeMode; label: string; count: number }[] = [
       { value: 'back_to_front', label: t.backToFront, count: basicCount },
       { value: 'fill_blank', label: t.fillBlank, count: clozeCount },
-      { value: 'acid_rain', label: t.acidRain, count: basicCount },
-      { value: 'word_train', label: t.wordTrain, count: basicCount },
+      { value: 'acid_rain', label: `🌧️ ${t.acidRain}`, count: basicCount },
+      { value: 'word_train', label: `🚂 ${t.wordTrain}`, count: basicCount },
     ];
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12" style={{ background: 'var(--bg)' }}>

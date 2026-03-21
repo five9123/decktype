@@ -500,14 +500,19 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
         )}
 
         {/* Railway Track Area */}
-        <div className="w-full max-w-lg mx-auto">
+        <div className="w-full max-w-lg mx-auto track-vibrating">
           {/* Upper rail */}
           <div className="rail-track w-full" />
 
           {/* Track area with scrolling train car */}
           <div
             className="relative overflow-hidden"
-            style={{ height: 64, background: 'var(--surface)', borderLeft: '3px solid var(--border)', borderRight: '3px solid var(--border)' }}
+            style={{
+              height: 72,
+              background: 'linear-gradient(180deg, #3a3428 0%, #2d2a22 100%)',
+              borderLeft: '3px solid #5a4530',
+              borderRight: '3px solid #5a4530',
+            }}
           >
             {currentCard && (
               <div
@@ -521,19 +526,42 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
                 }}
                 onAnimationEnd={captureAnim ? undefined : handleMiss}
               >
-                <div
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 70%, var(--correct)))',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  <span style={{ fontSize: 24 }}>🚃</span>
-                  {showTargetWord && (
-                    <span className="text-sm font-bold" style={{ color: '#fff' }}>
-                      {currentCard.front}
-                    </span>
-                  )}
+                <div className="train-smoke" style={{ position: 'relative' }}>
+                  {/* Car body */}
+                  <div
+                    className="flex items-center gap-2 px-4 py-2"
+                    style={{
+                      background: 'linear-gradient(180deg, #7a8db8 0%, #5a6f98 40%, #4a5f82 100%)',
+                      boxShadow: '0 3px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.2)',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      borderBottom: '2.5px solid #3a3a3a',
+                      borderRadius: '6px 6px 2px 2px',
+                      minHeight: 34,
+                    }}
+                  >
+                    {/* Window stripe */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 5,
+                        left: 10,
+                        right: 10,
+                        height: 7,
+                        background: 'repeating-linear-gradient(90deg, rgba(150,200,255,0.25) 0px, rgba(150,200,255,0.25) 10px, rgba(40,60,90,0.5) 10px, rgba(40,60,90,0.5) 14px)',
+                        borderRadius: 2,
+                      }}
+                    />
+                    {showTargetWord && (
+                      <span className="text-sm font-bold" style={{ color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,0.5)', position: 'relative', zIndex: 1 }}>
+                        {currentCard.front}
+                      </span>
+                    )}
+                  </div>
+                  {/* Wheels */}
+                  <div className="flex justify-between" style={{ width: '70%', margin: '-1px auto 0', padding: '0 4px' }}>
+                    <div className="train-wheel" />
+                    <div className="train-wheel" />
+                  </div>
                 </div>
               </div>
             )}
@@ -541,6 +569,16 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
 
           {/* Lower rail */}
           <div className="rail-track w-full" />
+
+          {/* Ground below track */}
+          <div
+            style={{
+              height: 10,
+              background: 'linear-gradient(180deg, #5a4530 0%, #4a3a28 40%, #3d3020 100%)',
+              borderRadius: '0 0 4px 4px',
+              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)',
+            }}
+          />
         </div>
       </div>
 
