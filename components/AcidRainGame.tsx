@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSound } from '@/hooks/useSound';
+import { useViewport } from '@/hooks/useViewport';
 import { createBrowserClient } from '@/lib/supabase/client';
 import { shuffle } from '@/lib/utils';
 import { VirtualKeyboard } from '@/components/VirtualKeyboard';
@@ -55,6 +56,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { play: playSound } = useSound();
+  const { viewportH, mainRef } = useViewport();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -395,7 +397,11 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
 
   // ── Playing screen ──
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div
+      ref={mainRef as React.RefObject<HTMLDivElement>}
+      className="fixed inset-x-0 flex flex-col"
+      style={{ height: viewportH || '100vh', background: 'var(--bg)', zIndex: 10 }}
+    >
       {/* HUD */}
       <div
         className="flex items-center justify-between px-4 py-2"
@@ -435,8 +441,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
         ref={containerRef}
         className={`acid-rain-container relative flex-1 overflow-hidden mx-4 my-2 rounded-xl${shaking ? ' wrong-shake' : ''}`}
         style={{
-          minHeight: 200,
-          maxHeight: DEFAULT_CONTAINER_HEIGHT,
+          minHeight: 0,
           background: 'linear-gradient(180deg, #1a1d2e 0%, #0d1117 60%, #151922 100%)',
           border: borderFlash
             ? '2px solid var(--incorrect)'

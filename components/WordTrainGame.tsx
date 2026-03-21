@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useSound } from '@/hooks/useSound';
+import { useViewport } from '@/hooks/useViewport';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { ToggleSwitch } from '@/components/ToggleSwitch';
 import { createBrowserClient } from '@/lib/supabase/client';
@@ -48,6 +49,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
   const { user } = useAuth();
   const { t } = useLanguage();
   const { play: playSound } = useSound();
+  const { viewportH, mainRef } = useViewport();
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Game state
@@ -371,7 +373,11 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
 
   // ── Playing screen ──
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg)' }}>
+    <div
+      ref={mainRef as React.RefObject<HTMLDivElement>}
+      className="fixed inset-x-0 flex flex-col"
+      style={{ height: viewportH || '100vh', background: 'var(--bg)', zIndex: 10 }}
+    >
       {/* HUD */}
       <div
         className="flex items-center justify-between px-4 py-2"
