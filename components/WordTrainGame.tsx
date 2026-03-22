@@ -535,14 +535,15 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
                 <div className="train-smoke" style={{ position: 'relative' }}>
                   {/* Car body */}
                   <div
-                    className="flex items-center gap-2 px-4 py-2"
+                    className="flex items-center justify-center px-6 py-2"
                     style={{
                       background: 'linear-gradient(180deg, #7a8db8 0%, #5a6f98 40%, #4a5f82 100%)',
                       boxShadow: '0 3px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.2)',
                       border: '1px solid rgba(255,255,255,0.12)',
                       borderBottom: '2.5px solid #3a3a3a',
                       borderRadius: '6px 6px 2px 2px',
-                      minHeight: 34,
+                      minHeight: 38,
+                      minWidth: 100,
                     }}
                   >
                     {/* Window stripe */}
@@ -563,13 +564,8 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
                       </span>
                     )}
                   </div>
-                  {/* Wheels */}
-                  <div className="flex justify-between" style={{ width: '85%', margin: '-1px auto 0', padding: '0 2px' }}>
-                    <div className="train-wheel" />
-                    <div className="train-wheel" />
-                    <div className="train-wheel" />
-                    <div className="train-wheel" />
-                  </div>
+                  {/* Undercarriage bar */}
+                  <div style={{ width: '90%', height: 3, background: 'rgba(255,255,255,0.7)', borderRadius: 2, margin: '1px auto 0' }} />
                 </div>
               </div>
             )}
