@@ -535,7 +535,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
                 <div className="train-smoke" style={{ position: 'relative' }}>
                   {/* Car body */}
                   <div
-                    className="flex items-center justify-center px-6 py-2"
+                    className="flex items-center justify-center px-6 pt-4 pb-2"
                     style={{
                       background: 'linear-gradient(180deg, #7a8db8 0%, #5a6f98 40%, #4a5f82 100%)',
                       boxShadow: '0 3px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.2)',
