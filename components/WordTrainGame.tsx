@@ -506,7 +506,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
         )}
 
         {/* Railway Track Area */}
-        <div className="w-full max-w-lg mx-auto track-vibrating">
+        <div className="w-full max-w-lg mx-auto">
           {/* Upper rail */}
           <div className="rail-track w-full" />
 
@@ -564,7 +564,9 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
                     )}
                   </div>
                   {/* Wheels */}
-                  <div className="flex justify-between" style={{ width: '70%', margin: '-1px auto 0', padding: '0 4px' }}>
+                  <div className="flex justify-between" style={{ width: '85%', margin: '-1px auto 0', padding: '0 2px' }}>
+                    <div className="train-wheel" />
+                    <div className="train-wheel" />
                     <div className="train-wheel" />
                     <div className="train-wheel" />
                   </div>
