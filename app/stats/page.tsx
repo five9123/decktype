@@ -1,13 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { StreakCounter } from '@/components/StreakCounter';
-import { ActivityHeatmap } from '@/components/charts/ActivityHeatmap';
-import { WpmTrendChart } from '@/components/charts/WpmTrendChart';
-import { CardStatsTable } from '@/components/CardStatsTable';
 import { MasteryProgress } from '@/components/MasteryProgress';
+import { SkeletonStatsOverview } from '@/components/Skeleton';
 import { useProgress } from '@/hooks/useProgress';
 import { useProfile } from '@/hooks/useProfile';
 import { ProGateOverlay } from '@/components/ProGateOverlay';
@@ -18,6 +17,11 @@ import { XPProgressBar } from '@/components/XPProgressBar';
 import { AchievementCard } from '@/components/AchievementCard';
 import { ACHIEVEMENTS } from '@/lib/achievements';
 import type { CardStats, Deck, AchievementCategory } from '@/types';
+
+// Lazy-load heavy chart components
+const ActivityHeatmap = dynamic(() => import('@/components/charts/ActivityHeatmap').then(m => ({ default: m.ActivityHeatmap })), { ssr: false });
+const WpmTrendChart = dynamic(() => import('@/components/charts/WpmTrendChart').then(m => ({ default: m.WpmTrendChart })), { ssr: false });
+const CardStatsTable = dynamic(() => import('@/components/CardStatsTable').then(m => ({ default: m.CardStatsTable })), { ssr: false });
 
 type Tab = 'overview' | 'decks' | 'history' | 'achievements';
 
@@ -164,9 +168,7 @@ export default function StatsPage() {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
-          </div>
+          <SkeletonStatsOverview />
         ) : sessions.length === 0 ? (
           <div
             className="text-center py-20 rounded-2xl"

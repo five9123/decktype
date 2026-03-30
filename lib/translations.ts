@@ -488,6 +488,32 @@ export type Translations = {
   anonymous: string;
   signInToClone: string;
 
+  // AI Deck Generation
+  aiTopicLabel: string;
+  aiTopicPlaceholder: string;
+  aiTopicRequired: string;
+  aiTargetLang: string;
+  aiLevel: string;
+  aiBeginner: string;
+  aiIntermediate: string;
+  aiAdvanced: string;
+  aiCardCount: string;
+  aiGenerate: string;
+  aiGenerating: string;
+  aiPreview: string;
+  aiQuotaRemaining: string;
+  aiQuotaExceeded: string;
+
+  // Leaderboard
+  leaderboardTitle: string;
+  leaderboardSubtitle: string;
+  leaderboardDaily: string;
+  leaderboardWeekly: string;
+  leaderboardAllTime: string;
+  leaderboardPlayer: string;
+  leaderboardScore: string;
+  leaderboardEmpty: string;
+
   // Goals
   goalSettings: string;
   goalSettingsDesc: string;
@@ -1020,6 +1046,32 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     anonymous: 'Anonymous',
     signInToClone: 'Sign in to like and clone decks',
 
+    // AI Deck Generation
+    aiTopicLabel: 'Topic',
+    aiTopicPlaceholder: 'e.g., K-POP vocabulary, Travel phrases, Food & cooking...',
+    aiTopicRequired: 'Please enter a topic',
+    aiTargetLang: 'Language',
+    aiLevel: 'Level',
+    aiBeginner: 'Beginner',
+    aiIntermediate: 'Intermediate',
+    aiAdvanced: 'Advanced',
+    aiCardCount: 'Cards',
+    aiGenerate: 'Generate Cards',
+    aiGenerating: 'Generating...',
+    aiPreview: 'Preview',
+    aiQuotaRemaining: 'AI uses remaining',
+    aiQuotaExceeded: 'Daily AI limit reached. Upgrade to Pro for more.',
+
+    // Leaderboard
+    leaderboardTitle: 'Leaderboard',
+    leaderboardSubtitle: 'Top scores from the community',
+    leaderboardDaily: 'Today',
+    leaderboardWeekly: 'This Week',
+    leaderboardAllTime: 'All Time',
+    leaderboardPlayer: 'Player',
+    leaderboardScore: 'Score',
+    leaderboardEmpty: 'No scores yet. Be the first!',
+
     // Goals
     goalSettings: 'Practice Goals',
     goalSettingsDesc: 'Add a new goal',
@@ -1543,6 +1595,30 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardPreviewCount: '{n}개 카드 미리보기',
     anonymous: '익명',
     signInToClone: '좋아요와 복제는 로그인 후 이용할 수 있어요',
+
+    aiTopicLabel: '주제',
+    aiTopicPlaceholder: '예: K-POP 어휘, 여행 회화, 음식 & 요리...',
+    aiTopicRequired: '주제를 입력해주세요',
+    aiTargetLang: '언어',
+    aiLevel: '레벨',
+    aiBeginner: '초급',
+    aiIntermediate: '중급',
+    aiAdvanced: '고급',
+    aiCardCount: '카드 수',
+    aiGenerate: '카드 생성',
+    aiGenerating: '생성 중...',
+    aiPreview: '미리보기',
+    aiQuotaRemaining: 'AI 잔여 횟수',
+    aiQuotaExceeded: '일일 AI 한도에 도달했습니다. Pro로 업그레이드하세요.',
+
+    leaderboardTitle: '리더보드',
+    leaderboardSubtitle: '커뮤니티 최고 점수',
+    leaderboardDaily: '오늘',
+    leaderboardWeekly: '이번 주',
+    leaderboardAllTime: '전체',
+    leaderboardPlayer: '플레이어',
+    leaderboardScore: '점수',
+    leaderboardEmpty: '아직 점수가 없습니다. 첫 번째가 되어보세요!',
 
     // Goals
     goalSettings: '연습 목표',
@@ -2068,6 +2144,30 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     anonymous: '匿名',
     signInToClone: 'いいねとクローンはサインイン後にご利用いただけます',
 
+    aiTopicLabel: 'トピック',
+    aiTopicPlaceholder: '例：K-POP語彙、旅行フレーズ、食べ物＆料理...',
+    aiTopicRequired: 'トピックを入力してください',
+    aiTargetLang: '言語',
+    aiLevel: 'レベル',
+    aiBeginner: '初級',
+    aiIntermediate: '中級',
+    aiAdvanced: '上級',
+    aiCardCount: 'カード数',
+    aiGenerate: 'カードを生成',
+    aiGenerating: '生成中...',
+    aiPreview: 'プレビュー',
+    aiQuotaRemaining: 'AI残り回数',
+    aiQuotaExceeded: '本日のAI上限に達しました。Proにアップグレードしてください。',
+
+    leaderboardTitle: 'リーダーボード',
+    leaderboardSubtitle: 'コミュニティのトップスコア',
+    leaderboardDaily: '今日',
+    leaderboardWeekly: '今週',
+    leaderboardAllTime: '全期間',
+    leaderboardPlayer: 'プレイヤー',
+    leaderboardScore: 'スコア',
+    leaderboardEmpty: 'まだスコアがありません。最初の一人になりましょう！',
+
     // Goals
     goalSettings: '練習目標',
     goalSettingsDesc: '新しい目標を追加',
@@ -2591,6 +2691,30 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardPreviewCount: 'Mostrando {n} tarjetas',
     anonymous: 'Anónimo',
     signInToClone: 'Inicia sesión para dar me gusta y clonar mazos',
+
+    aiTopicLabel: 'Tema',
+    aiTopicPlaceholder: 'Ej: Vocabulario K-POP, Frases de viaje, Comida y cocina...',
+    aiTopicRequired: 'Por favor ingresa un tema',
+    aiTargetLang: 'Idioma',
+    aiLevel: 'Nivel',
+    aiBeginner: 'Principiante',
+    aiIntermediate: 'Intermedio',
+    aiAdvanced: 'Avanzado',
+    aiCardCount: 'Tarjetas',
+    aiGenerate: 'Generar tarjetas',
+    aiGenerating: 'Generando...',
+    aiPreview: 'Vista previa',
+    aiQuotaRemaining: 'Usos de IA restantes',
+    aiQuotaExceeded: 'Límite diario de IA alcanzado. Actualiza a Pro para más.',
+
+    leaderboardTitle: 'Clasificación',
+    leaderboardSubtitle: 'Mejores puntuaciones de la comunidad',
+    leaderboardDaily: 'Hoy',
+    leaderboardWeekly: 'Esta semana',
+    leaderboardAllTime: 'Todo el tiempo',
+    leaderboardPlayer: 'Jugador',
+    leaderboardScore: 'Puntuación',
+    leaderboardEmpty: 'Aún no hay puntuaciones. ¡Sé el primero!',
 
     // Goals
     goalSettings: 'Metas de práctica',
@@ -3116,6 +3240,30 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     anonymous: '匿名',
     signInToClone: '登录后可点赞和克隆牌组',
 
+    aiTopicLabel: '主题',
+    aiTopicPlaceholder: '例如：K-POP词汇、旅行短语、美食与烹饪...',
+    aiTopicRequired: '请输入主题',
+    aiTargetLang: '语言',
+    aiLevel: '级别',
+    aiBeginner: '初级',
+    aiIntermediate: '中级',
+    aiAdvanced: '高级',
+    aiCardCount: '卡片数',
+    aiGenerate: '生成卡片',
+    aiGenerating: '生成中...',
+    aiPreview: '预览',
+    aiQuotaRemaining: 'AI剩余次数',
+    aiQuotaExceeded: '已达每日AI上限。升级到Pro获取更多次数。',
+
+    leaderboardTitle: '排行榜',
+    leaderboardSubtitle: '社区最高分',
+    leaderboardDaily: '今天',
+    leaderboardWeekly: '本周',
+    leaderboardAllTime: '全部',
+    leaderboardPlayer: '玩家',
+    leaderboardScore: '分数',
+    leaderboardEmpty: '暂无分数。成为第一个！',
+
     // Goals
     goalSettings: '练习目标',
     goalSettingsDesc: '添加新目标',
@@ -3639,6 +3787,30 @@ export const TRANSLATIONS: Record<Lang, Translations> = {
     cardPreviewCount: 'Affichage de {n} cartes',
     anonymous: 'Anonyme',
     signInToClone: 'Connectez-vous pour aimer et cloner des decks',
+
+    aiTopicLabel: 'Sujet',
+    aiTopicPlaceholder: 'Ex : Vocabulaire K-POP, Phrases de voyage, Cuisine...',
+    aiTopicRequired: 'Veuillez entrer un sujet',
+    aiTargetLang: 'Langue',
+    aiLevel: 'Niveau',
+    aiBeginner: 'Débutant',
+    aiIntermediate: 'Intermédiaire',
+    aiAdvanced: 'Avancé',
+    aiCardCount: 'Cartes',
+    aiGenerate: 'Générer des cartes',
+    aiGenerating: 'Génération...',
+    aiPreview: 'Aperçu',
+    aiQuotaRemaining: 'Utilisations IA restantes',
+    aiQuotaExceeded: 'Limite quotidienne IA atteinte. Passez à Pro pour plus.',
+
+    leaderboardTitle: 'Classement',
+    leaderboardSubtitle: 'Meilleurs scores de la communauté',
+    leaderboardDaily: "Aujourd'hui",
+    leaderboardWeekly: 'Cette semaine',
+    leaderboardAllTime: 'Tout le temps',
+    leaderboardPlayer: 'Joueur',
+    leaderboardScore: 'Score',
+    leaderboardEmpty: 'Pas encore de scores. Soyez le premier !',
 
     // Goals
     goalSettings: "Objectifs d'entraînement",

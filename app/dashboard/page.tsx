@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
@@ -8,9 +9,7 @@ import { StreakCounter } from '@/components/StreakCounter';
 import { UpgradeBanner } from '@/components/UpgradeBanner';
 import { RetentionBanner } from '@/components/RetentionBanner';
 import { GoalProgressBar } from '@/components/GoalProgressBar';
-import { GoalSettingsModal } from '@/components/GoalSettingsModal';
-import { GoalCelebration } from '@/components/GoalCelebration';
-import { Coachmark } from '@/components/Coachmark';
+import { SkeletonCardGrid } from '@/components/Skeleton';
 import { useProgress } from '@/hooks/useProgress';
 import { useGoals } from '@/hooks/useGoals';
 import { trackEvent } from '@/lib/analytics';
@@ -22,6 +21,11 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import type { Deck } from '@/types';
 import { FREE_DECK_LIMIT } from '@/lib/constants';
 import { STORAGE_KEY_ONBOARDING } from '@/lib/storage-keys';
+
+// Lazy-load modal/overlay components (only needed on interaction)
+const GoalSettingsModal = dynamic(() => import('@/components/GoalSettingsModal').then(m => ({ default: m.GoalSettingsModal })), { ssr: false });
+const GoalCelebration = dynamic(() => import('@/components/GoalCelebration').then(m => ({ default: m.GoalCelebration })), { ssr: false });
+const Coachmark = dynamic(() => import('@/components/Coachmark').then(m => ({ default: m.Coachmark })), { ssr: false });
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -201,23 +205,33 @@ export default function DashboardPage() {
           </div>
         )}
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
-          </div>
+          <SkeletonCardGrid count={6} />
         ) : decks.length === 0 ? (
           <div
-            className="text-center py-20 rounded-2xl"
+            className="text-center py-16 rounded-2xl"
             style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
           >
             <p className="text-4xl mb-4">📦</p>
-            <p style={{ color: 'var(--muted)' }}>{t.noDeckYet}</p>
-            <Link
-              href="/create"
-              className="inline-block mt-4 px-6 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity hover:opacity-90"
-              style={{ background: 'var(--accent)', color: '#fff' }}
-            >
-              {t.createDeck}
-            </Link>
+            <p className="text-lg font-semibold mb-2" style={{ color: 'var(--text)' }}>{t.noDeckYet}</p>
+            <p className="text-sm mb-6" style={{ color: 'var(--muted)', maxWidth: 360, margin: '0 auto' }}>
+              {t.createDeckSubtitle}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold no-underline transition-opacity hover:opacity-90"
+                style={{ background: 'var(--accent)', color: '#fff' }}
+              >
+                {t.createDeck}
+              </Link>
+              <Link
+                href="/explore"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium no-underline transition-opacity hover:opacity-80"
+                style={{ background: 'var(--surface2, var(--surface))', border: '1px solid var(--border)', color: 'var(--text)' }}
+              >
+                {t.explore}
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

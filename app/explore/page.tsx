@@ -7,6 +7,7 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import { EXPLORE_PAGE_SIZE } from '@/lib/constants';
 import { trackEvent } from '@/lib/analytics';
 import { getSeedPublicDecks } from '@/lib/seed-public-decks';
+import { SkeletonCardGrid } from '@/components/Skeleton';
 
 type SortOption = 'recent' | 'popular' | 'most_cloned';
 
@@ -151,9 +152,7 @@ export default function ExplorePage() {
 
         {/* Deck Grid */}
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <p style={{ color: 'var(--muted)' }}>{t.loading}</p>
-          </div>
+          <SkeletonCardGrid count={6} />
         ) : decks.length === 0 ? (
           <div
             className="text-center py-20 rounded-2xl"

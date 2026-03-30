@@ -14,10 +14,11 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { MediaTabContent, type MediaCardsResult } from '@/components/MediaTabContent';
 import { UploadTabContent } from '@/components/UploadTabContent';
 import { TextTabContent, type CardData } from '@/components/TextTabContent';
+import { AiTabContent } from '@/components/AiTabContent';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
-type Tab = 'text' | 'media' | 'upload';
+type Tab = 'text' | 'media' | 'upload' | 'ai';
 
 // ─── Component ──────────────────────────────────────────────────────────
 
@@ -115,6 +116,7 @@ export default function CreateDeckPage() {
             { key: 'media' as const, label: '🎬 Media' },
             { key: 'text' as const, label: '📝 Text' },
             { key: 'upload' as const, label: '📦 Anki' },
+            { key: 'ai' as const, label: '🤖 AI' },
           ]).map((tabItem) => (
             <button
               key={tabItem.key}
@@ -171,6 +173,8 @@ export default function CreateDeckPage() {
         )}
 
         {tab === 'upload' && <UploadTabContent />}
+
+        {tab === 'ai' && <AiTabContent onSave={(cards, sourceLang) => handleSave(cards, sourceLang)} isPro={isPro} />}
 
         {/* Saving overlay */}
         {saving && <LoadingSpinner title={t.savingLabel} />}

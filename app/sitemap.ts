@@ -18,6 +18,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
   ];
 
+  // Language-specific landing pages
+  const langPages: MetadataRoute.Sitemap = ['ja', 'ko', 'es', 'zh', 'fr'].map((lang) => ({
+    url: `https://www.typee.app/${lang}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.9,
+  }));
+
   return [
     {
       url: 'https://www.typee.app',
@@ -25,6 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1.0,
     },
+    ...langPages,
     {
       url: 'https://www.typee.app/demo',
       lastModified: new Date(),
@@ -54,6 +63,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 0.5,
+    },
+    {
+      url: 'https://www.typee.app/leaderboard',
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
     },
     {
       url: 'https://www.typee.app/about',

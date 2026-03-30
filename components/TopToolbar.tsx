@@ -61,6 +61,13 @@ export function TopToolbar() {
               {t.statsTitle}
             </Link>
             <Link
+              href="/leaderboard"
+              className="hidden md:inline-flex px-2 lg:px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
+              style={{ color: 'var(--text)' }}
+            >
+              {t.leaderboardTitle ?? 'Leaderboard'}
+            </Link>
+            <Link
               href="/create"
               className="hidden lg:inline-flex px-3 py-1.5 rounded-lg text-sm font-medium no-underline whitespace-nowrap transition-opacity hover:opacity-80"
               style={{ color: 'var(--text)' }}
