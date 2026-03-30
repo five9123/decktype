@@ -87,3 +87,23 @@ BEGIN
       EXECUTE FUNCTION public.update_updated_at();
   END IF;
 END $$;
+
+-- ── RPC: increment card count ──
+CREATE OR REPLACE FUNCTION public.increment_card_count(deck_id_param UUID)
+RETURNS void AS $$
+BEGIN
+  UPDATE public.decks
+  SET card_count = card_count + 1, updated_at = now()
+  WHERE id = deck_id_param;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ── RPC: increment clone count (for gallery) ──
+CREATE OR REPLACE FUNCTION public.increment_clone_count(deck_id_param UUID)
+RETURNS void AS $$
+BEGIN
+  UPDATE public.decks
+  SET clone_count = COALESCE(clone_count, 0) + 1, updated_at = now()
+  WHERE id = deck_id_param;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
