@@ -8,6 +8,7 @@ import { DeckCard } from '@/components/DeckCard';
 import { StreakCounter } from '@/components/StreakCounter';
 import { UpgradeBanner } from '@/components/UpgradeBanner';
 import { RetentionBanner } from '@/components/RetentionBanner';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { GoalProgressBar } from '@/components/GoalProgressBar';
 import { SkeletonCardGrid } from '@/components/Skeleton';
 import { useProgress } from '@/hooks/useProgress';
@@ -132,8 +133,9 @@ export default function DashboardPage() {
 
   return (
     <>
+      <BreadcrumbSchema items={[{ name: 'Home', href: '/' }, { name: 'Dashboard', href: '/dashboard' }]} />
       <TopToolbar />
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         {/* Streak + XP inline row */}
         {(!progressLoading || (!xpLoading && user)) && (
           <div className="flex items-center justify-between gap-4 mb-4">

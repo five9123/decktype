@@ -7,6 +7,7 @@ import { TopToolbar } from '@/components/TopToolbar';
 import { StreakCounter } from '@/components/StreakCounter';
 import { MasteryProgress } from '@/components/MasteryProgress';
 import { SkeletonStatsOverview } from '@/components/Skeleton';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { useProgress } from '@/hooks/useProgress';
 import { useProfile } from '@/hooks/useProfile';
 import { ProGateOverlay } from '@/components/ProGateOverlay';
@@ -136,8 +137,9 @@ export default function StatsPage() {
 
   return (
     <>
+      <BreadcrumbSchema items={[{ name: 'Home', href: '/' }, { name: 'Stats', href: '/stats' }]} />
       <TopToolbar />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <main id="main-content" className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--text)' }}>{t.statsTitle}</h1>
         <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>{t.statsSubtitle}</p>
 

@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { SkeletonStatRow } from '@/components/Skeleton';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 
 type Period = 'daily' | 'weekly' | 'alltime';
 
@@ -42,8 +43,9 @@ export default function LeaderboardPage() {
 
   return (
     <>
+      <BreadcrumbSchema items={[{ name: 'Home', href: '/' }, { name: 'Leaderboard', href: '/leaderboard' }]} />
       <TopToolbar />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <main id="main-content" className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--text)' }}>
           {t.leaderboardTitle ?? 'Leaderboard'}
         </h1>

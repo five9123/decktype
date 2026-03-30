@@ -8,6 +8,7 @@ import { EXPLORE_PAGE_SIZE } from '@/lib/constants';
 import { trackEvent } from '@/lib/analytics';
 import { getSeedPublicDecks } from '@/lib/seed-public-decks';
 import { SkeletonCardGrid } from '@/components/Skeleton';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 
 type SortOption = 'recent' | 'popular' | 'most_cloned';
 
@@ -94,8 +95,9 @@ export default function ExplorePage() {
 
   return (
     <>
+      <BreadcrumbSchema items={[{ name: 'Home', href: '/' }, { name: 'Explore', href: '/explore' }]} />
       <TopToolbar />
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--text)' }}>{t.exploreTitle}</h1>
           <p className="text-sm" style={{ color: 'var(--muted)' }}>{t.exploreSubtitle}</p>

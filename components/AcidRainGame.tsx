@@ -399,6 +399,8 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
   return (
     <div
       ref={mainRef as React.RefObject<HTMLDivElement>}
+      role="application"
+      aria-label="Word Rain game"
       className="fixed inset-x-0 flex flex-col"
       style={{ height: viewportH || '100vh', background: 'var(--bg)', zIndex: 10 }}
     >
@@ -515,6 +517,7 @@ export function AcidRainGame({ cards, deckId, deckLang, onExit }: Props) {
             handleCompositionEnd();
           }}
           placeholder={t.typeHere}
+          aria-label="Type falling words"
           autoFocus
           className={`w-full px-4 ${compact ? 'py-2 rounded-lg text-sm' : 'py-3 rounded-xl text-base'} text-center transition-colors`}
           style={{

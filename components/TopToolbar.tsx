@@ -27,7 +27,7 @@ export function TopToolbar() {
         <span className="font-bold tracking-tight" style={{ color: 'var(--accent)', fontSize: '1.95rem' }}>typee</span>
       </Link>
 
-      <nav className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
+      <nav aria-label="Main navigation" className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
         {!user && (
           <Link
             href="/blog"

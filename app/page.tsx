@@ -133,7 +133,7 @@ export default function HomePage() {
           }]),
         }}
       />
-      <main style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+      <main id="main-content" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
 
         {/* ── Hero ── */}
         <section

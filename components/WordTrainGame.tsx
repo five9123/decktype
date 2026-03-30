@@ -375,6 +375,8 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
   return (
     <div
       ref={mainRef as React.RefObject<HTMLDivElement>}
+      role="application"
+      aria-label="Word Train game"
       className="fixed inset-x-0 flex flex-col"
       style={{ height: viewportH || '100vh', background: 'var(--bg)', zIndex: 10 }}
     >
@@ -621,6 +623,7 @@ export function WordTrainGame({ cards, deckId, deckLang, onExit }: Props) {
             }
           }}
           placeholder={t.typeHere}
+          aria-label="Type the word shown above"
           autoFocus
           className={`w-full px-4 ${compact ? 'py-2 rounded-lg text-sm' : 'py-3 rounded-xl text-base'} text-center transition-all duration-200 ${inputWrong ? 'wrong-shake' : ''}`}
           style={{
