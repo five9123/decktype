@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { TopToolbar } from '@/components/TopToolbar';
 import { HeroCarousel } from '@/components/HeroCarousel';
+import { HeroHeadlineAnim } from '@/components/HeroHeadlineAnim';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -161,14 +162,12 @@ export default function HomePage() {
           </div>
 
           {/* Headline */}
-          <h1 className="font-bold leading-tight mb-6" style={{ wordBreak: 'keep-all' }}>
-            <span className="block" style={{ fontSize: 'clamp(2.25rem, 6.5vw, 4.75rem)', color: 'var(--text)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}>
-              {t.landingHero1}
-            </span>
-            <span className="block" style={{ fontSize: 'clamp(2.25rem, 6.5vw, 4.75rem)', color: 'var(--accent)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}>
-              {t.landingHero2}
-            </span>
-          </h1>
+          <HeroHeadlineAnim
+            line1={t.landingHero1}
+            line2={t.landingHero2}
+            line1Style={{ fontSize: 'clamp(2.25rem, 6.5vw, 4.75rem)', color: 'var(--text)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+            line2Style={{ fontSize: 'clamp(2.25rem, 6.5vw, 4.75rem)', color: 'var(--accent)', textWrap: 'balance' as React.CSSProperties['textWrap'] }}
+          />
 
           {/* Subtext */}
           <p
