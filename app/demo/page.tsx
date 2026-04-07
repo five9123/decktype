@@ -13,10 +13,6 @@ const ALL_TABS: { value: DemoLang; label: string; flag: string }[] = [
   { value: 'ko', label: '한국어', flag: '🇰🇷' },
   { value: 'ja', label: '日本語', flag: '🇯🇵' },
   { value: 'en', label: 'English', flag: '🇺🇸' },
-  { value: 'fr', label: 'Français', flag: '🇫🇷' },
-  { value: 'es', label: 'Español', flag: '🇪🇸' },
-  { value: 'zh', label: '中文', flag: '🇨🇳' },
-  { value: 'de', label: 'Deutsch', flag: '🇩🇪' },
 ];
 
 function getDemoTabs(uiLang: string) {
