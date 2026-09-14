@@ -1,8 +1,8 @@
-# typee — learn languages by typing
+# decktype — learn languages by typing
 
-**Live:** https://decktype.vercel.app (also https://www.typee.app)
+**Live:** https://decktype.vercel.app
 
-typee turns any text — song lyrics, `.srt` subtitles, pasted articles, or an Anki `.apkg` deck — into typing practice. The OpenAI API extracts vocabulary and builds fill-in-the-blank exercises; a spaced-repetition scheduler (FSRS) decides what you practice next. Supports Japanese, Korean, Spanish, French, Chinese and more. Free tier + Stripe-billed Pro plan.
+decktype turns any text — song lyrics, `.srt` subtitles, pasted articles, or an Anki `.apkg` deck — into typing practice. The OpenAI API extracts vocabulary and builds fill-in-the-blank exercises; a spaced-repetition scheduler (FSRS) decides what you practice next. Supports Japanese, Korean, Spanish, French, Chinese and more. Free tier + Stripe-billed Pro plan.
 
 Solo project: product, design, code, and operations by [Jungmin Oh](https://github.com/five9123).
 
