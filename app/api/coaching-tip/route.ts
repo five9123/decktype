@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/api-middleware';
 import { getAiLimit, reserveAiUsage, rollbackAiUsage } from '@/lib/ai-usage';
-import OpenAI from 'openai';
+import { AiError, aiErrorResponse, jsonCompletion } from '@/lib/openai-client';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -38,8 +38,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'quota_exceeded', limit, plan }, { status: 429 });
   }
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
   const errorSummary = (body.errorPatterns ?? [])
     .slice(0, 5)
     .map((p) => `"${p.expected}" → "${p.actual}" (×${p.count})`)
@@ -54,14 +52,7 @@ ${errorSummary ? `Common errors: ${errorSummary}.` : ''}
 Give exactly 3 short, specific, actionable improvement tips. Be concise and encouraging. Format as a JSON array of strings.`;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 300,
-      response_format: { type: 'json_object' },
-    });
-
-    const raw = completion.choices[0]?.message?.content ?? '{}';
+    const { content: raw } = await jsonCompletion(prompt, { maxTokens: 300, timeoutMs: 20_000 });
     let tips: string[] = [];
     try {
       const parsed = JSON.parse(raw);
@@ -74,7 +65,11 @@ Give exactly 3 short, specific, actionable improvement tips. Be concise and enco
     return NextResponse.json({ tips: tips.slice(0, 3), quotaRemaining });
   } catch (err) {
     if (reservationId) await rollbackAiUsage(supabase, reservationId);
+    if (err instanceof AiError) {
+      const { body, init } = aiErrorResponse(err);
+      return NextResponse.json(body, init);
+    }
     const msg = err instanceof Error ? err.message : 'AI request failed';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json({ error: msg, code: 'UNKNOWN' }, { status: 500 });
   }
 }

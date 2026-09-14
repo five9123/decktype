@@ -10,6 +10,20 @@ export function friendlyError(msg: string, code?: string): string {
   if (code === 'QUOTA_EXCEEDED') {
     return msg; // Already user-friendly from server
   }
+  // Structured codes from lib/openai-client.ts (already user-friendly, but keep
+  // a couple of overrides where the UI can give better guidance)
+  if (code === 'RATE_LIMITED') {
+    return 'AI service is busy right now. Please wait a moment and try again.';
+  }
+  if (code === 'TIMEOUT') {
+    return 'Processing timed out. Try reducing the text or lowering the max words count.';
+  }
+  if (code === 'MALFORMED_JSON') {
+    return 'AI returned a malformed response. Please try again — sometimes reducing max words helps.';
+  }
+  if (code === 'NOT_CONFIGURED' || code === 'UPSTREAM_ERROR' || code === 'EMPTY_RESPONSE' || code === 'BAD_REQUEST') {
+    return msg;
+  }
 
   // Pattern-based fallback for unstructured errors
   if (msg.includes('timeout') || msg.includes('aborted')) {

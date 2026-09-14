@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/api-middleware';
 import { getAiLimit, reserveAiUsage, rollbackAiUsage } from '@/lib/ai-usage';
-import OpenAI from 'openai';
+import { AiError, aiErrorResponse, jsonCompletion } from '@/lib/openai-client';
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -40,8 +40,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'quota_exceeded', limit, plan }, { status: 429 });
   }
 
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
   const prompt = `Generate exactly ${count} vocabulary flashcards for a ${level} learner studying ${targetLang}.
 Topic: ${topic}.
 
@@ -58,33 +56,29 @@ Rules:
 - Pronunciation must be accurate romanization`;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 2000,
-      response_format: { type: 'json_object' },
-    });
-
-    const raw = completion.choices[0]?.message?.content ?? '{}';
+    const { content: raw } = await jsonCompletion(prompt, { maxTokens: 2000, timeoutMs: 25_000 });
     let cards: { front: string; back: string; pronunciation: string }[] = [];
     try {
       const parsed = JSON.parse(raw);
       cards = Array.isArray(parsed.cards) ? parsed.cards : [];
     } catch {
-      if (reservationId) await rollbackAiUsage(supabase, reservationId);
-      return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
+      throw new AiError('MALFORMED_JSON', 'AI returned a malformed response. Please try again.', 502);
     }
 
     if (cards.length === 0) {
-      if (reservationId) await rollbackAiUsage(supabase, reservationId);
-      return NextResponse.json({ error: 'AI generated no cards' }, { status: 500 });
+      throw new AiError('EMPTY_RESPONSE', 'AI generated no cards. Try a different topic.', 502);
     }
 
     const quotaRemaining = limit - used;
     return NextResponse.json({ cards: cards.slice(0, count), quotaRemaining });
   } catch (err) {
+    // Don't charge quota for failed attempts
     if (reservationId) await rollbackAiUsage(supabase, reservationId);
+    if (err instanceof AiError) {
+      const { body, init } = aiErrorResponse(err);
+      return NextResponse.json(body, init);
+    }
     const msg = err instanceof Error ? err.message : 'AI request failed';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json({ error: msg, code: 'UNKNOWN' }, { status: 500 });
   }
 }

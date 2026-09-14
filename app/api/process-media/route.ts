@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { checkRateLimit, requireAuth } from '@/lib/api-middleware';
 import { getAiLimit, reserveAiUsage, rollbackAiUsage } from '@/lib/ai-usage';
 import { LANG_NAMES, AI_DAILY_LIMIT_PRO } from '@/lib/constants';
+import { AiError, aiErrorResponse, jsonCompletion } from '@/lib/openai-client';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds (Vercel Pro)
@@ -145,38 +146,13 @@ function repairJSON(raw: string): unknown | null {
 }
 
 async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cloze: ClozeItem[] }> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error('OPENAI_API_KEY is not configured');
-  }
-
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
-      max_tokens: MAX_TOKENS,
-      temperature: 0.3,
-    }),
-    signal: AbortSignal.timeout(55_000),
+  // Retries (429/5xx/timeouts, exponential backoff + Retry-After) and error
+  // classification live in lib/openai-client.ts.
+  const { content, truncated: wasTruncated } = await jsonCompletion(prompt, {
+    maxTokens: MAX_TOKENS,
+    temperature: 0.3,
+    timeoutMs: 55_000,
   });
-
-  if (!res.ok) {
-    const errText = await res.text().catch(() => 'unknown error');
-    throw new Error(`OpenAI API error ${res.status}: ${errText}`);
-  }
-
-  const data = await res.json();
-  const choice = data?.choices?.[0];
-  const content = choice?.message?.content;
-  if (!content) throw new Error('Empty response from OpenAI');
-
-  const wasTruncated = choice.finish_reason === 'length';
 
   let parsed: Record<string, unknown>;
   try {
@@ -185,10 +161,12 @@ async function callOpenAI(prompt: string): Promise<{ vocabulary: VocabItem[]; cl
     // Response was likely truncated — try to repair
     const repaired = repairJSON(content);
     if (!repaired || typeof repaired !== 'object') {
-      throw new Error(
+      throw new AiError(
+        'MALFORMED_JSON',
         wasTruncated
           ? 'AI response was too long and got cut off. Try reducing max words count.'
           : 'AI returned invalid JSON. Please try again.',
+        502,
       );
     }
     parsed = repaired as Record<string, unknown>;
@@ -282,13 +260,12 @@ export async function POST(req: Request) {
       quota: { used, limit },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal server error';
-
-    // Return partial success with error info so UI can fallback
-    if (message.includes('OPENAI_API_KEY')) {
-      return NextResponse.json({ error: 'AI processing is not configured', vocabulary: [], cloze: [] }, { status: 503 });
+    // Return a stable error code + empty arrays so the UI can fall back gracefully
+    if (err instanceof AiError) {
+      const { body, init } = aiErrorResponse(err, { vocabulary: [], cloze: [] });
+      return NextResponse.json(body, init);
     }
-
-    return NextResponse.json({ error: message, vocabulary: [], cloze: [] }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Internal server error';
+    return NextResponse.json({ error: message, code: 'UNKNOWN', vocabulary: [], cloze: [] }, { status: 500 });
   }
 }
